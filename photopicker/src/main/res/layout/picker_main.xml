@@ -1,0 +1,41 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/black">
+
+    <include layout="@layout/picker_toolbar" />
+
+    <GridView
+        android:id="@+id/grid"
+        android:layout_below="@+id/pickerToolbar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:horizontalSpacing="@dimen/space_size"
+        android:verticalSpacing="@dimen/space_size"
+        android:paddingBottom="?android:attr/actionBarSize"
+        android:clipToPadding="false"
+        android:columnWidth="@dimen/image_size"/>
+
+    <RelativeLayout
+        android:id="@+id/photo_picker_footer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:minHeight="?android:attr/actionBarSize"
+        android:background="#cc000000">
+
+        <Button
+            android:id="@+id/btnAlbum"
+            style="@style/Widget.AppCompat.ActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/all_image"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:textSize="14sp"
+            android:textColor="@color/default_text_color"
+            android:drawableRight="@drawable/text_indicator"/>
+    </RelativeLayout>
+</RelativeLayout>
