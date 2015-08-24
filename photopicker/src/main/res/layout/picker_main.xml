@@ -34,8 +34,22 @@
             android:text="@string/all_image"
             android:layout_centerVertical="true"
             android:background="@null"
-            android:textSize="14sp"
+            android:textSize="16sp"
             android:textColor="@color/default_text_color"
             android:drawableRight="@drawable/text_indicator"/>
+
+        <Button
+            android:id="@+id/btnPreview"
+            style="@style/Widget.AppCompat.ActionButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/preview"
+            android:layout_centerVertical="true"
+            android:background="@null"
+            android:textSize="16sp"
+            android:enabled="false"
+            android:textColor="@color/default_text_color"
+            android:layout_alignParentRight="true"/>
     </RelativeLayout>
 </RelativeLayout>

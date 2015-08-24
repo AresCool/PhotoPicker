@@ -42,6 +42,7 @@ public class ImageGridAdapter extends BaseAdapter {
         this.mItemSize = itemSize;
         mItemLayoutParams = new GridView.LayoutParams(mItemSize, mItemSize);
     }
+
     /**
      * 显示选择指示器
      * @param b
@@ -91,7 +92,7 @@ public class ImageGridAdapter extends BaseAdapter {
     }
 
     private Image getImageByPath(String path){
-        if(mImages != null && mImages.size()>0){
+        if(mImages != null && mImages.size() > 0){
             for(Image image : mImages){
                 if(image.path.equalsIgnoreCase(path)){
                     return image;
@@ -108,7 +109,7 @@ public class ImageGridAdapter extends BaseAdapter {
     public void setData(List<Image> images) {
         mSelectedImages.clear();
 
-        if(images != null && images.size()>0){
+        if(images != null && images.size() > 0){
             mImages = images;
         }else{
             mImages.clear();
@@ -141,14 +142,14 @@ public class ImageGridAdapter extends BaseAdapter {
     @Override
     public int getItemViewType(int position) {
         if(showCamera){
-            return position==0 ? TYPE_CAMERA : TYPE_NORMAL;
+            return position == 0 ? TYPE_CAMERA : TYPE_NORMAL;
         }
         return TYPE_NORMAL;
     }
 
     @Override
     public int getCount() {
-        return showCamera ? mImages.size()+1 : mImages.size();
+        return showCamera ? mImages.size() + 1 : mImages.size();
     }
 
     @Override
@@ -157,7 +158,7 @@ public class ImageGridAdapter extends BaseAdapter {
             if(i == 0){
                 return null;
             }
-            return mImages.get(i-1);
+            return mImages.get(i - 1);
         }else{
             return mImages.get(i);
         }

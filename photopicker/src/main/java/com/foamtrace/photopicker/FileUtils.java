@@ -20,17 +20,16 @@ public class FileUtils {
             // 已挂载
             File pic = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA).format(new Date());
-            String fileName = "multi_image_"+timeStamp+"";
-            File tmpFile = new File(pic, fileName+".jpg");
+            String fileName = "multi_image_" + timeStamp + "";
+            File tmpFile = new File(pic, fileName + ".jpg");
             return tmpFile;
         }else{
             File cacheDir = context.getCacheDir();
             String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss", Locale.CHINA).format(new Date());
             String fileName = "multi_image_"+timeStamp+"";
-            File tmpFile = new File(cacheDir, fileName+".jpg");
+            File tmpFile = new File(cacheDir, fileName + ".jpg");
             return tmpFile;
         }
-
     }
 
 }

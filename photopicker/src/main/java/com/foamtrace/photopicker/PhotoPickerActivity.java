@@ -37,20 +37,23 @@ public class PhotoPickerActivity extends AppCompatActivity{
 
     private Context mCxt;
 
-    /** 最大图片选择次数，int类型 */
-    public static final String EXTRA_SELECT_COUNT = "max_select_count";
     /** 图片选择模式，int类型 */
     public static final String EXTRA_SELECT_MODE = "select_count_mode";
+    /** 单选 */
+    public static final int MODE_SINGLE = 0;
+    /** 多选 */
+    public static final int MODE_MULTI = 1;
+    /** 最大图片选择次数，int类型 */
+    public static final String EXTRA_SELECT_COUNT = "max_select_count";
+    /** 默认最大照片数量 */
+    public static final int DEFAULT_MAX_TOTAL= 9;
     /** 是否显示相机，boolean类型 */
     public static final String EXTRA_SHOW_CAMERA = "show_camera";
     /** 默认选择的数据集 */
     public static final String EXTRA_DEFAULT_SELECTED_LIST = "default_result";
     /** 选择结果，返回为 ArrayList&lt;String&gt; 图片路径集合  */
     public static final String EXTRA_RESULT = "select_result";
-    /** 单选 */
-    public static final int MODE_SINGLE = 0;
-    /** 多选 */
-    public static final int MODE_MULTI = 1;
+
     // 请求加载系统照相机
     private static final int REQUEST_CAMERA = 100;
 
@@ -63,12 +66,14 @@ public class PhotoPickerActivity extends AppCompatActivity{
     private static final int LOADER_ALL = 0;
     private static final int LOADER_CATEGORY = 1;
 
-    private MenuItem menuDoneItem; // 完成
+    private MenuItem menuDoneItem;
 
+    private GridView mGridView;
     private View mPopupAnchorView;
     private Button btnAlbum;
-    private GridView mGridView;
+    private Button btnPreview;
 
+    // 最大照片数量
     private int mDesireImageCount;
 
     private ImageGridAdapter mImageAdapter;
@@ -92,7 +97,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
         getSupportLoaderManager().initLoader(LOADER_ALL, null, mLoaderCallback);
 
         // 选择图片数量
-        mDesireImageCount = getIntent().getIntExtra(EXTRA_SELECT_COUNT, 9);
+        mDesireImageCount = getIntent().getIntExtra(EXTRA_SELECT_COUNT, DEFAULT_MAX_TOTAL);
 
         // 图片选择模式
         final int mode = getIntent().getIntExtra(EXTRA_SELECT_MODE, MODE_MULTI);
@@ -107,7 +112,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
 
         // 是否显示照相机
         mIsShowCamera = getIntent().getBooleanExtra(EXTRA_SHOW_CAMERA, true);
-        mImageAdapter = new ImageGridAdapter(mCxt, mIsShowCamera, getGridItemWidth());
+        mImageAdapter = new ImageGridAdapter(mCxt, mIsShowCamera, getItemImageWidth());
         // 是否显示选择指示器
         mImageAdapter.showSelectIndicator(mode == MODE_MULTI);
         mGridView.setAdapter(mImageAdapter);
@@ -152,7 +157,17 @@ public class PhotoPickerActivity extends AppCompatActivity{
                 }
             }
         });
+
+        // 预览
+        btnPreview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+            }
+        });
     }
+
+
 
     private void initViews(){
         mCxt = this;
@@ -166,6 +181,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
 
         mPopupAnchorView = findViewById(R.id.photo_picker_footer);
         btnAlbum = (Button) findViewById(R.id.btnAlbum);
+        btnPreview = (Button) findViewById(R.id.btnPreview);
     }
 
     private void createPopupFolderList(){
@@ -199,11 +215,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
                         if (index == 0) {
                             getSupportLoaderManager().restartLoader(LOADER_ALL, null, mLoaderCallback);
                             btnAlbum.setText(R.string.all_image);
-                            if (mIsShowCamera) {
-                                mImageAdapter.setShowCamera(true);
-                            } else {
-                                mImageAdapter.setShowCamera(false);
-                            }
+                            mImageAdapter.setShowCamera(mIsShowCamera);
                         } else {
                             Folder folder = (Folder) v.getAdapter().getItem(index);
                             if (null != folder) {
@@ -237,23 +249,14 @@ public class PhotoPickerActivity extends AppCompatActivity{
         if(!resultList.contains(path)) {
             resultList.add(path);
         }
-        // 有图片之后，改变按钮状态
-        if(resultList.size() > 0){
-            menuDoneItem.setVisible(true);
-            menuDoneItem.setTitle(getString(R.string.done_with_count, resultList.size(), mDesireImageCount));
-        }
+        refreshStatus(resultList);
     }
 
     public void onImageUnselected(String path) {
         if(resultList.contains(path)){
             resultList.remove(path);
-            menuDoneItem.setTitle(getString(R.string.done_with_count, resultList.size(), mDesireImageCount));
-        }else{
-            menuDoneItem.setTitle(getString(R.string.done_with_count, resultList.size(), mDesireImageCount));
         }
-        menuDoneItem.setTitle(getString(R.string.done_with_count, resultList.size(), mDesireImageCount));
-        // 当为选择图片时候的状态
-        menuDoneItem.setVisible(!(resultList.size() == 0));
+        refreshStatus(resultList);
     }
 
     public void onCameraShot(File imageFile) {
@@ -290,7 +293,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
         // 重置列数
         mGridView.setNumColumns(getNumColnums());
         // 重置Item宽度
-        mImageAdapter.setItemSize(getGridItemWidth());
+        mImageAdapter.setItemSize(getItemImageWidth());
 
         if(mFolderPopupWindow != null){
             if(mFolderPopupWindow.isShowing()){
@@ -335,13 +338,6 @@ public class PhotoPickerActivity extends AppCompatActivity{
             if(mode == MODE_MULTI) {
                 if (resultList.contains(image.path)) {
                     resultList.remove(image.path);
-//                    if(resultList.size() != 0) {
-//                        mPreviewBtn.setEnabled(true);
-//                        mPreviewBtn.setText(getResources().getString(R.string.preview) + "(" + resultList.size() + ")");
-//                    }else{
-//                        mPreviewBtn.setEnabled(false);
-//                        mPreviewBtn.setText(R.string.preview);
-//                    }
                       onImageUnselected(image.path);
                 } else {
                     // 判断选择数量问题
@@ -349,17 +345,27 @@ public class PhotoPickerActivity extends AppCompatActivity{
                         Toast.makeText(mCxt, R.string.msg_amount_limit, Toast.LENGTH_SHORT).show();
                         return;
                     }
-
                     resultList.add(image.path);
-//                    mPreviewBtn.setEnabled(true);
-//                    mPreviewBtn.setText(getResources().getString(R.string.preview) + "(" + resultList.size() + ")");
-                      onImageSelected(image.path);
+                    onImageSelected(image.path);
                 }
                 mImageAdapter.select(image);
             }else if(mode == MODE_SINGLE){
                 // 单选模式
                 onSingleImageSelected(image.path);
             }
+        }
+    }
+
+    private void refreshStatus(ArrayList<String> resultList){
+        String text = getString(R.string.done_with_count, resultList.size(), mDesireImageCount);
+        menuDoneItem.setTitle(text);
+        boolean hasSelected = resultList.size() > 0;
+        menuDoneItem.setVisible(hasSelected);
+        btnPreview.setEnabled(hasSelected);
+        if(hasSelected){
+            btnPreview.setText(getResources().getString(R.string.preview) + "(" + resultList.size() + ")");
+        } else {
+            btnPreview.setText(getResources().getString(R.string.preview));
         }
     }
 
@@ -447,7 +453,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
      * 获取GridView Item宽度
      * @return
      */
-    private int getGridItemWidth(){
+    private int getItemImageWidth(){
         int cols = getNumColnums();
         int screenWidth = getResources().getDisplayMetrics().widthPixels;
         int columnSpace = getResources().getDimensionPixelOffset(R.dimen.space_size);
@@ -475,6 +481,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if(item.getItemId() == android.R.id.home){
+            finish();
             return true;
         }
 
