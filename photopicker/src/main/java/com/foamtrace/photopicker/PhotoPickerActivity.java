@@ -55,9 +55,6 @@ public class PhotoPickerActivity extends AppCompatActivity{
     /** 选择结果，返回为 ArrayList&lt;String&gt; 图片路径集合  */
     public static final String EXTRA_RESULT = "select_result";
 
-    // RequestCode
-    public static final int REQUEST_PHOTO_PICKER = 99;
-
     // 结果数据
     private ArrayList<String> resultList = new ArrayList<>();
     // 文件夹数据
@@ -68,7 +65,6 @@ public class PhotoPickerActivity extends AppCompatActivity{
     private static final int LOADER_CATEGORY = 1;
 
     private MenuItem menuDoneItem;
-
     private GridView mGridView;
     private View mPopupAnchorView;
     private Button btnAlbum;
@@ -84,8 +80,6 @@ public class PhotoPickerActivity extends AppCompatActivity{
 
     private boolean hasFolderGened = false;
     private boolean mIsShowCamera = false;
-
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
