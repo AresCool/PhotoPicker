@@ -509,4 +509,16 @@ public class PhotoPickerActivity extends AppCompatActivity{
         setResult(RESULT_OK, data);
         finish();
     }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        captureManager.onSaveInstanceState(outState);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+        captureManager.onRestoreInstanceState(savedInstanceState);
+        super.onRestoreInstanceState(savedInstanceState);
+    }
 }
