@@ -381,7 +381,12 @@ public class PhotoPickerActivity extends AppCompatActivity{
                 MediaStore.Images.Media.DATA,
                 MediaStore.Images.Media.DISPLAY_NAME,
                 MediaStore.Images.Media.DATE_ADDED,
+                MediaStore.Images.Media.WIDTH,
+                MediaStore.Images.Media.HEIGHT,
                 MediaStore.Images.Media._ID };
+
+        // 根据图片设置参数新增验证条件
+
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
@@ -393,7 +398,8 @@ public class PhotoPickerActivity extends AppCompatActivity{
             }else if(id == LOADER_CATEGORY){
                 CursorLoader cursorLoader = new CursorLoader(mCxt,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
-                        IMAGE_PROJECTION[0]+" like '%"+args.getString("path")+"%'", null, IMAGE_PROJECTION[2] + " DESC");
+                        IMAGE_PROJECTION[0] + " like '%" + args.getString("path") + "%'", null,
+                        IMAGE_PROJECTION[2] + " DESC");
                 return cursorLoader;
             }
 
@@ -411,7 +417,10 @@ public class PhotoPickerActivity extends AppCompatActivity{
                         String path = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
                         String name = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
                         long dateTime = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
+                        int width = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3]));
+                        int height = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[4]));
 
+                        Log.e("--", width + " -- " + height);
 
                         Image image = new Image(path, name, dateTime);
                         images.add(image);

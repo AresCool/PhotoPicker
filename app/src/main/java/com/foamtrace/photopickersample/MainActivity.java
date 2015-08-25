@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.foamtrace.photopicker.ImageCaptureManager;
 import com.foamtrace.photopicker.PhotoPickerActivity;
 import com.foamtrace.photopicker.SelectModel;
 import com.foamtrace.photopicker.intent.PhotoPickerIntent;
@@ -18,6 +19,7 @@ public class MainActivity extends AppCompatActivity {
     private Button button;
     private TextView tvUrls;
 
+    private static final int REQUEST_CAMERA_CODE = 1;
     private ArrayList<String> imagePaths = null;
 
     @Override
@@ -34,7 +36,7 @@ public class MainActivity extends AppCompatActivity {
                 intent.setShowCarema(true);
                 intent.setMaxTotal(6);
                 intent.setSelectedPaths(imagePaths);
-                startActivityForResult(intent, PhotoPickerActivity.REQUEST_PHOTO_PICKER);
+                startActivityForResult(intent, REQUEST_CAMERA_CODE);
             }
         });
     }
@@ -44,7 +46,7 @@ public class MainActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         if(resultCode == RESULT_OK) {
             switch (requestCode) {
-                case PhotoPickerActivity.REQUEST_PHOTO_PICKER:
+                case REQUEST_CAMERA_CODE:
                     imagePaths = data.getStringArrayListExtra(PhotoPickerActivity.EXTRA_RESULT);
                     if (imagePaths != null) {
                         tvUrls.setText(imagePaths.toString());
