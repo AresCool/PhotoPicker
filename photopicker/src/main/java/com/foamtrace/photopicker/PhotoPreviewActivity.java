@@ -34,7 +34,7 @@ public class PhotoPreviewActivity extends AppCompatActivity implements PhotoPage
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        setContentView(R.layout.fragment_image_pager);
+        setContentView(R.layout.activity_image_preview);
 
         initViews();
 

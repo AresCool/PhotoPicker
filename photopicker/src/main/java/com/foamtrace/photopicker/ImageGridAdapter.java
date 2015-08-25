@@ -173,17 +173,17 @@ public class ImageGridAdapter extends BaseAdapter {
 
         int type = getItemViewType(i);
         if(type == TYPE_CAMERA){
-            view = mInflater.inflate(R.layout.list_item_camera, viewGroup, false);
+            view = mInflater.inflate(R.layout.item_camera, viewGroup, false);
             view.setTag(null);
         }else if(type == TYPE_NORMAL){
             ViewHolde holde;
             if(view == null){
-                view = mInflater.inflate(R.layout.list_item_image, viewGroup, false);
+                view = mInflater.inflate(R.layout.item_select_image, viewGroup, false);
                 holde = new ViewHolde(view);
             }else{
                 holde = (ViewHolde) view.getTag();
                 if(holde == null){
-                    view = mInflater.inflate(R.layout.list_item_image, viewGroup, false);
+                    view = mInflater.inflate(R.layout.item_select_image, viewGroup, false);
                     holde = new ViewHolde(view);
                 }
             }

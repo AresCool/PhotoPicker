@@ -1,17 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="Encoding">
-    <file url="file://$PROJECT_DIR$/photopicker/src/main/java/com/foamtrace/photopicker/FileUtils.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/photopicker/src/main/java/com/foamtrace/photopicker/Folder.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/photopicker/src/main/java/com/foamtrace/photopicker/FolderAdapter.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/photopicker/src/main/java/com/foamtrace/photopicker/Image.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/photopicker/src/main/java/com/foamtrace/photopicker/ImageGridAdapter.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/photopicker/src/main/res/color/action_text_color.xml" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/photopicker/src/main/res/color/default_text_color.xml" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/photopicker/src/main/res/color/folder_text_color.xml" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/photopicker/src/main/res/layout/list_item_camera.xml" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/photopicker/src/main/res/layout/list_item_folder.xml" charset="GBK" />
-    <file url="file://$PROJECT_DIR$/photopicker/src/main/res/layout/list_item_image.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/photopicker/src/main/res/layout/item_camera.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/photopicker/src/main/res/layout/item_folder.xml" charset="GBK" />
+    <file url="file://$PROJECT_DIR$/photopicker/src/main/res/layout/item_select_image.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/photopicker/src/main/res/mipmap-xxhdpi/asv.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/photopicker/src/main/res/mipmap-xxhdpi/asy.png" charset="GBK" />
     <file url="file://$PROJECT_DIR$/photopicker/src/main/res/mipmap-xxhdpi/btn_selected.png" charset="GBK" />
