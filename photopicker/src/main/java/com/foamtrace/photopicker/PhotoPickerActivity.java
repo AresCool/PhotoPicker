@@ -26,7 +26,10 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.foamtrace.photopicker.intent.PhotoPreviewIntent;
+
 import java.io.File;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -54,6 +57,8 @@ public class PhotoPickerActivity extends AppCompatActivity{
     /** 选择结果，返回为 ArrayList&lt;String&gt; 图片路径集合  */
     public static final String EXTRA_RESULT = "select_result";
 
+    /** 预览 */
+    public static final int REQUEST_PREVIEW = 99;
     // 请求加载系统照相机
     private static final int REQUEST_CAMERA = 100;
 
@@ -107,6 +112,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
             ArrayList<String> tmp = getIntent().getStringArrayListExtra(EXTRA_DEFAULT_SELECTED_LIST);
             if(tmp != null && tmp.size() > 0) {
                 resultList = tmp;
+                refreshStatus(resultList);
             }
         }
 
@@ -162,12 +168,13 @@ public class PhotoPickerActivity extends AppCompatActivity{
         btnPreview.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                PhotoPreviewIntent intent = new PhotoPreviewIntent(mCxt);
+                intent.setCurrentItem(0);
+                intent.setPhotoPaths(resultList);
+                startActivityForResult(intent, REQUEST_PREVIEW);
             }
         });
     }
-
-
 
     private void initViews(){
         mCxt = this;
@@ -282,6 +289,16 @@ public class PhotoPickerActivity extends AppCompatActivity{
                 if(mTmpFile != null && mTmpFile.exists()){
                     mTmpFile.delete();
                 }
+            }
+        }
+        // 照片预览返回地址
+        else if (requestCode == REQUEST_PREVIEW && resultCode == RESULT_OK){
+            ArrayList<String> pathArr = data.getStringArrayListExtra(EXTRA_RESULT);
+            // 刷新页面
+            if(pathArr != null && pathArr.size() != resultList.size()){
+                resultList = pathArr;
+                refreshStatus(resultList);
+                mImageAdapter.setDefaultSelected(resultList);
             }
         }
     }

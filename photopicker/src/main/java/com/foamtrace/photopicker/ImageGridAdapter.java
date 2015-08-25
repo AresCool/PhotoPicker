@@ -80,15 +80,14 @@ public class ImageGridAdapter extends BaseAdapter {
      * @param resultList
      */
     public void setDefaultSelected(ArrayList<String> resultList) {
+        mSelectedImages.clear();
         for(String path : resultList){
             Image image = getImageByPath(path);
             if(image != null){
                 mSelectedImages.add(image);
             }
         }
-        if(mSelectedImages.size() > 0){
-            notifyDataSetChanged();
-        }
+        notifyDataSetChanged();
     }
 
     private Image getImageByPath(String path){
