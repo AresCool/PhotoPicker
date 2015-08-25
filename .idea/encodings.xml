@@ -6,6 +6,7 @@
     <file url="file://$PROJECT_DIR$/photopicker/src/main/java/com/foamtrace/photopicker/FolderAdapter.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/photopicker/src/main/java/com/foamtrace/photopicker/Image.java" charset="UTF-8" />
     <file url="file://$PROJECT_DIR$/photopicker/src/main/java/com/foamtrace/photopicker/ImageGridAdapter.java" charset="UTF-8" />
+    <file url="file://$PROJECT_DIR$/photopicker/src/main/res/color/action_text_color.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/photopicker/src/main/res/color/default_text_color.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/photopicker/src/main/res/color/folder_text_color.xml" charset="GBK" />
     <file url="file://$PROJECT_DIR$/photopicker/src/main/res/layout/list_item_camera.xml" charset="GBK" />

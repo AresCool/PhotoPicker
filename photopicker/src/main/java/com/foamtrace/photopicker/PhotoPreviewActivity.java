@@ -22,6 +22,9 @@ public class PhotoPreviewActivity extends AppCompatActivity implements PhotoPage
     public static final String EXTRA_PHOTOS = "extra_photos";
     public static final String EXTRA_CURRENT_ITEM = "extra_current_item";
 
+    /** 预览请求状态码 */
+    public static final int REQUEST_PREVIEW = 99;
+
     private ArrayList<String> paths;
     private ViewPager mViewPager;
     private PhotoPagerAdapter mPagerAdapter;

@@ -1,13 +1,11 @@
 package com.foamtrace.photopicker;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -29,7 +27,7 @@ import android.widget.Toast;
 import com.foamtrace.photopicker.intent.PhotoPreviewIntent;
 
 import java.io.File;
-import java.lang.reflect.Array;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -57,10 +55,8 @@ public class PhotoPickerActivity extends AppCompatActivity{
     /** 选择结果，返回为 ArrayList&lt;String&gt; 图片路径集合  */
     public static final String EXTRA_RESULT = "select_result";
 
-    /** 预览 */
-    public static final int REQUEST_PREVIEW = 99;
-    // 请求加载系统照相机
-    private static final int REQUEST_CAMERA = 100;
+    // RequestCode
+    public static final int REQUEST_PHOTO_PICKER = 99;
 
     // 结果数据
     private ArrayList<String> resultList = new ArrayList<>();
@@ -79,17 +75,17 @@ public class PhotoPickerActivity extends AppCompatActivity{
     private Button btnPreview;
 
     // 最大照片数量
+    private ImageCaptureManager captureManager;
     private int mDesireImageCount;
 
     private ImageGridAdapter mImageAdapter;
     private FolderAdapter mFolderAdapter;
-
     private ListPopupWindow mFolderPopupWindow;
 
     private boolean hasFolderGened = false;
     private boolean mIsShowCamera = false;
 
-    private File mTmpFile;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -105,19 +101,18 @@ public class PhotoPickerActivity extends AppCompatActivity{
         mDesireImageCount = getIntent().getIntExtra(EXTRA_SELECT_COUNT, DEFAULT_MAX_TOTAL);
 
         // 图片选择模式
-        final int mode = getIntent().getIntExtra(EXTRA_SELECT_MODE, MODE_MULTI);
+        final int mode = getIntent().getExtras().getInt(EXTRA_SELECT_MODE, MODE_SINGLE);
 
         // 默认选择
         if(mode == MODE_MULTI) {
             ArrayList<String> tmp = getIntent().getStringArrayListExtra(EXTRA_DEFAULT_SELECTED_LIST);
             if(tmp != null && tmp.size() > 0) {
-                resultList = tmp;
-                refreshStatus(resultList);
+                resultList.addAll(tmp);
             }
         }
 
         // 是否显示照相机
-        mIsShowCamera = getIntent().getBooleanExtra(EXTRA_SHOW_CAMERA, true);
+        mIsShowCamera = getIntent().getBooleanExtra(EXTRA_SHOW_CAMERA, false);
         mImageAdapter = new ImageGridAdapter(mCxt, mIsShowCamera, getItemImageWidth());
         // 是否显示选择指示器
         mImageAdapter.showSelectIndicator(mode == MODE_MULTI);
@@ -129,6 +124,13 @@ public class PhotoPickerActivity extends AppCompatActivity{
                 if (mImageAdapter.isShowCamera()) {
                     // 如果显示照相机，则第一个Grid显示为照相机，处理特殊逻辑
                     if (i == 0) {
+                        if(mode == MODE_MULTI){
+                            // 判断选择数量问题
+                            if(mDesireImageCount == resultList.size()){
+                                Toast.makeText(mCxt, R.string.msg_amount_limit, Toast.LENGTH_SHORT).show();
+                                return;
+                            }
+                        }
                         showCameraAction();
                     } else {
                         // 正常操作
@@ -171,16 +173,19 @@ public class PhotoPickerActivity extends AppCompatActivity{
                 PhotoPreviewIntent intent = new PhotoPreviewIntent(mCxt);
                 intent.setCurrentItem(0);
                 intent.setPhotoPaths(resultList);
-                startActivityForResult(intent, REQUEST_PREVIEW);
+                startActivityForResult(intent, PhotoPreviewActivity.REQUEST_PREVIEW);
             }
         });
+
     }
 
     private void initViews(){
         mCxt = this;
+        captureManager = new ImageCaptureManager(mCxt);
         // ActionBar Setting
         Toolbar toolbar = (Toolbar) findViewById(R.id.pickerToolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setTitle(getResources().getString(R.string.image));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
         mGridView = (GridView) findViewById(R.id.grid);
@@ -256,49 +261,40 @@ public class PhotoPickerActivity extends AppCompatActivity{
         if(!resultList.contains(path)) {
             resultList.add(path);
         }
-        refreshStatus(resultList);
+        refreshActionStatus();
     }
 
     public void onImageUnselected(String path) {
         if(resultList.contains(path)){
             resultList.remove(path);
         }
-        refreshStatus(resultList);
-    }
-
-    public void onCameraShot(File imageFile) {
-        if(imageFile != null) {
-            Intent data = new Intent();
-            resultList.add(imageFile.getAbsolutePath());
-            data.putStringArrayListExtra(EXTRA_RESULT, resultList);
-            setResult(RESULT_OK, data);
-            finish();
-        }
+        refreshActionStatus();
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        // 相机拍照完成后，返回图片路径
-        if(requestCode == REQUEST_CAMERA){
-            if(resultCode == Activity.RESULT_OK) {
-                if (mTmpFile != null) {
-                    onCameraShot(mTmpFile);
-                }
-            }else{
-                if(mTmpFile != null && mTmpFile.exists()){
-                    mTmpFile.delete();
-                }
-            }
-        }
-        // 照片预览返回地址
-        else if (requestCode == REQUEST_PREVIEW && resultCode == RESULT_OK){
-            ArrayList<String> pathArr = data.getStringArrayListExtra(EXTRA_RESULT);
-            // 刷新页面
-            if(pathArr != null && pathArr.size() != resultList.size()){
-                resultList = pathArr;
-                refreshStatus(resultList);
-                mImageAdapter.setDefaultSelected(resultList);
+
+        if(resultCode == RESULT_OK){
+            switch (requestCode){
+                // 相机拍照完成后，返回图片路径
+                case ImageCaptureManager.REQUEST_TAKE_PHOTO:
+                    if(captureManager.getCurrentPhotoPath() != null) {
+                        captureManager.galleryAddPic();
+                        resultList.add(captureManager.getCurrentPhotoPath());
+                    }
+                    complete();
+                    break;
+                // 预览照片
+                case PhotoPreviewActivity.REQUEST_PREVIEW:
+                    ArrayList<String> pathArr = data.getStringArrayListExtra(EXTRA_RESULT);
+                    // 刷新页面
+                    if(pathArr != null && pathArr.size() != resultList.size()){
+                        resultList = pathArr;
+                        refreshActionStatus();
+                        mImageAdapter.setDefaultSelected(resultList);
+                    }
+                    break;
             }
         }
     }
@@ -332,16 +328,12 @@ public class PhotoPickerActivity extends AppCompatActivity{
      * 选择相机
      */
     private void showCameraAction() {
-        // 跳转到系统照相机
-        Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        if(cameraIntent.resolveActivity(mCxt.getPackageManager()) != null){
-            // 设置系统相机拍照后的输出路径
-            // 创建临时文件
-            mTmpFile = FileUtils.createTmpFile(mCxt);
-            cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mTmpFile));
-            startActivityForResult(cameraIntent, REQUEST_CAMERA);
-        }else{
+        try {
+            Intent intent = captureManager.dispatchTakePictureIntent();
+            startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO);
+        } catch (IOException e) {
             Toast.makeText(mCxt, R.string.msg_no_camera, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
         }
     }
 
@@ -355,7 +347,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
             if(mode == MODE_MULTI) {
                 if (resultList.contains(image.path)) {
                     resultList.remove(image.path);
-                      onImageUnselected(image.path);
+                    onImageUnselected(image.path);
                 } else {
                     // 判断选择数量问题
                     if(mDesireImageCount == resultList.size()){
@@ -373,7 +365,10 @@ public class PhotoPickerActivity extends AppCompatActivity{
         }
     }
 
-    private void refreshStatus(ArrayList<String> resultList){
+    /**
+     * 刷新操作按钮状态
+     */
+    private void refreshActionStatus(){
         String text = getString(R.string.done_with_count, resultList.size(), mDesireImageCount);
         menuDoneItem.setTitle(text);
         boolean hasSelected = resultList.size() > 0;
@@ -422,6 +417,8 @@ public class PhotoPickerActivity extends AppCompatActivity{
                         String path = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
                         String name = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
                         long dateTime = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
+
+
                         Image image = new Image(path, name, dateTime);
                         images.add(image);
                         if( !hasFolderGened ) {
@@ -491,6 +488,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
         getMenuInflater().inflate(R.menu.menu_picker, menu);
         menuDoneItem = menu.findItem(R.id.action_picker_done);
         menuDoneItem.setVisible(false);
+        refreshActionStatus();
         return true;
     }
 
@@ -503,9 +501,18 @@ public class PhotoPickerActivity extends AppCompatActivity{
         }
 
         if(item.getItemId() == R.id.action_picker_done){
+            complete();
             return true;
         }
 
         return super.onOptionsItemSelected(item);
+    }
+
+    // 返回已选择的图片数据
+    private void complete(){
+        Intent data = new Intent();
+        data.putStringArrayListExtra(EXTRA_RESULT, resultList);
+        setResult(RESULT_OK, data);
+        finish();
     }
 }

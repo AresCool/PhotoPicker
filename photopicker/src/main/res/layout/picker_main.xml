@@ -34,8 +34,8 @@
             android:text="@string/all_image"
             android:layout_centerVertical="true"
             android:background="@null"
-            android:textSize="16sp"
-            android:textColor="@color/default_text_color"
+            android:textSize="@dimen/action_text_size"
+            android:textColor="@color/action_text_color"
             android:drawableRight="@drawable/text_indicator"/>
 
         <Button
@@ -47,9 +47,9 @@
             android:text="@string/preview"
             android:layout_centerVertical="true"
             android:background="@null"
-            android:textSize="16sp"
+            android:textSize="@dimen/action_text_size"
             android:enabled="false"
-            android:textColor="@color/default_text_color"
+            android:textColor="@color/action_text_color"
             android:layout_alignParentRight="true"/>
     </RelativeLayout>
 </RelativeLayout>
