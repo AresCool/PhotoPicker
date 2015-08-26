@@ -3,6 +3,7 @@ package com.foamtrace.photopicker.intent;
 import android.content.Context;
 import android.content.Intent;
 
+import com.foamtrace.photopicker.ImageConfig;
 import com.foamtrace.photopicker.PhotoPickerActivity;
 import com.foamtrace.photopicker.SelectModel;
 
@@ -40,5 +41,13 @@ public class PhotoPickerIntent extends Intent{
      */
     public void setSelectedPaths(ArrayList<String> imagePathis){
         this.putStringArrayListExtra(PhotoPickerActivity.EXTRA_DEFAULT_SELECTED_LIST, imagePathis);
+    }
+
+    /**
+     * 显示相册图片的属性
+     * @param config
+     */
+    public void setImageConfig(ImageConfig config){
+        this.putExtra(PhotoPickerActivity.EXTRA_IMAGE_CONFIG, config);
     }
 }

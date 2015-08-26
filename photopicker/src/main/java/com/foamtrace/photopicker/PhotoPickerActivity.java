@@ -441,7 +441,6 @@ public class PhotoPickerActivity extends AppCompatActivity{
             Log.e("--selection--", selectionArgs.toString());
 
             if(id == LOADER_ALL) {
-
                 CursorLoader cursorLoader = new CursorLoader(mCxt,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
                         selectionArgs.toString(), null, IMAGE_PROJECTION[2] + " DESC");
