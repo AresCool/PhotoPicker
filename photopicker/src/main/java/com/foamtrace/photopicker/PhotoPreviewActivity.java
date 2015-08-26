@@ -22,6 +22,9 @@ public class PhotoPreviewActivity extends AppCompatActivity implements PhotoPage
     public static final String EXTRA_PHOTOS = "extra_photos";
     public static final String EXTRA_CURRENT_ITEM = "extra_current_item";
 
+    /** 选择结果，返回为 ArrayList&lt;String&gt; 图片路径集合  */
+    public static final String EXTRA_RESULT = "preview_result";
+
     /** 预览请求状态码 */
     public static final int REQUEST_PREVIEW = 99;
 
@@ -91,7 +94,7 @@ public class PhotoPreviewActivity extends AppCompatActivity implements PhotoPage
     @Override
     public void onBackPressed() {
         Intent intent = new Intent();
-        intent.putExtra(PhotoPickerActivity.EXTRA_RESULT, paths);
+        intent.putExtra(EXTRA_RESULT, paths);
         setResult(RESULT_OK, intent);
         finish();
         super.onBackPressed();

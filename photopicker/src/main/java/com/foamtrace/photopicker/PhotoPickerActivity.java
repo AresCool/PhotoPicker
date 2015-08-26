@@ -15,7 +15,6 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.Toolbar;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -31,7 +30,6 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 
 public class PhotoPickerActivity extends AppCompatActivity{
 
@@ -302,7 +300,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
                     break;
                 // 预览照片
                 case PhotoPreviewActivity.REQUEST_PREVIEW:
-                    ArrayList<String> pathArr = data.getStringArrayListExtra(EXTRA_RESULT);
+                    ArrayList<String> pathArr = data.getStringArrayListExtra(PhotoPreviewActivity.EXTRA_RESULT);
                     // 刷新页面
                     if(pathArr != null && pathArr.size() != resultList.size()){
                         resultList = pathArr;
@@ -399,10 +397,6 @@ public class PhotoPickerActivity extends AppCompatActivity{
                 MediaStore.Images.Media.DATA,
                 MediaStore.Images.Media.DISPLAY_NAME,
                 MediaStore.Images.Media.DATE_ADDED,
-                MediaStore.Images.Media.WIDTH,
-                MediaStore.Images.Media.HEIGHT,
-                MediaStore.Images.Media.MIME_TYPE,
-                MediaStore.Images.Media.SIZE,
                 MediaStore.Images.Media._ID };
 
         @Override
@@ -438,8 +432,6 @@ public class PhotoPickerActivity extends AppCompatActivity{
                 }
             }
 
-            Log.e("--selection--", selectionArgs.toString());
-
             if(id == LOADER_ALL) {
                 CursorLoader cursorLoader = new CursorLoader(mCxt,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
@@ -471,12 +463,6 @@ public class PhotoPickerActivity extends AppCompatActivity{
                         String path = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
                         String name = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
                         long dateTime = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
-                        int width = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3]));
-                        int height = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[4]));
-                        String mimetype = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[5]));
-                        long size = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[6]));
-
-                        Log.e("--", width + " -- " + height + " -- " + mimetype + " -- " + size);
 
                         Image image = new Image(path, name, dateTime);
                         images.add(image);
