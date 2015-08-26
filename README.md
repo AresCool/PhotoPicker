@@ -16,25 +16,28 @@
 ```java
 PhotoPickerIntent intent = new PhotoPickerIntent(MainActivity.this);
 intent.setSelectModel(SelectModel.SINGLE);
-intent.setShowCarema(true);
-//intent.setImageConfig(null);
+intent.setShowCarema(true); // 是否显示拍照， 默认false
+// intent.setImageConfig(null); // 设置显示照片的参数
 startActivityForResult(intent, REQUEST_CAMERA_CODE);
 ```
 
 ### 多选
 
 ```java
-    PhotoPickerIntent intent = new PhotoPickerIntent(MainActivity.this);
-    intent.setSelectModel(SelectModel.MULTI);
-    intent.setSelectModel(SelectModel.MULTI);
-    intent.setShowCarema(true); // 是否显示拍照
-    intent.setMaxTotal(9); // 最多选择照片数量，默认为9
-    intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
-    //ImageConfig config = new ImageConfig();
-    //config.minHeight = 400;
-    //config.minWidth = 400;
-    //config.mimeType = new String[]{"image/jpeg", "image/png"};
-    //config.minSize = 1 * 1024 * 1024;
-    //intent.setImageConfig(config);
-    startActivityForResult(intent, REQUEST_CAMERA_CODE);
+PhotoPickerIntent intent = new PhotoPickerIntent(MainActivity.this);
+intent.setSelectModel(SelectModel.MULTI);
+intent.setShowCarema(true); // 是否显示拍照， 默认false
+intent.setMaxTotal(9); // 最多选择照片数量，默认为9
+intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
+// intent.setImageConfig(config); // 设置显示照片的参数
+startActivityForResult(intent, REQUEST_CAMERA_CODE);
+```
+
+### 预览
+
+```java
+PhotoPreviewIntent intent = new PhotoPreviewIntent(MainActivity.this);
+intent.setCurrentItem(position); // 当前选中照片的下标
+intent.setPhotoPaths(imagePaths); // 已选中的照片地址
+startActivityForResult(intent, REQUEST_PREVIEW_CODE);
 ```
