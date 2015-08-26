@@ -15,6 +15,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.ListPopupWindow;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -52,6 +53,8 @@ public class PhotoPickerActivity extends AppCompatActivity{
     public static final String EXTRA_SHOW_CAMERA = "show_camera";
     /** 默认选择的数据集 */
     public static final String EXTRA_DEFAULT_SELECTED_LIST = "default_result";
+    /** 筛选照片配置信息 */
+    public static final String EXTRA_IMAGE_CONFIG = "image_config";
     /** 选择结果，返回为 ArrayList&lt;String&gt; 图片路径集合  */
     public static final String EXTRA_RESULT = "select_result";
 
@@ -73,6 +76,7 @@ public class PhotoPickerActivity extends AppCompatActivity{
     // 最大照片数量
     private ImageCaptureManager captureManager;
     private int mDesireImageCount;
+    private ImageConfig imageConfig; // 照片配置
 
     private ImageGridAdapter mImageAdapter;
     private FolderAdapter mFolderAdapter;
@@ -87,6 +91,9 @@ public class PhotoPickerActivity extends AppCompatActivity{
         setContentView(R.layout.activity_photopicker);
 
         initViews();
+
+        // 照片属性
+        imageConfig = getIntent().getParcelableExtra(EXTRA_IMAGE_CONFIG);
 
         // 首次加载所有图片
         getSupportLoaderManager().initLoader(LOADER_ALL, null, mLoaderCallback);
@@ -191,16 +198,30 @@ public class PhotoPickerActivity extends AppCompatActivity{
     }
 
     private void createPopupFolderList(){
-        // 设置屏幕宽高
-        int screenWidth = getResources().getDisplayMetrics().widthPixels;
-        int screenHeigh = getResources().getDisplayMetrics().heightPixels;
 
         mFolderPopupWindow = new ListPopupWindow(mCxt);
         mFolderPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         mFolderPopupWindow.setAdapter(mFolderAdapter);
-        mFolderPopupWindow.setContentWidth(screenWidth);
-        mFolderPopupWindow.setWidth(screenWidth);
-        mFolderPopupWindow.setHeight(screenHeigh * 5 / 8);
+        mFolderPopupWindow.setContentWidth(ListPopupWindow.MATCH_PARENT);
+        mFolderPopupWindow.setWidth(ListPopupWindow.MATCH_PARENT);
+
+        // 计算ListPopupWindow内容的高度(忽略mPopupAnchorView.height)，R.layout.item_foloer
+        int folderItemViewHeight =
+                // 图片高度
+                getResources().getDimensionPixelOffset(R.dimen.folder_cover_size) +
+                // Padding Top
+                getResources().getDimensionPixelOffset(R.dimen.folder_padding) +
+                // Padding Bottom
+                getResources().getDimensionPixelOffset(R.dimen.folder_padding);
+        int folderViewHeight = mFolderAdapter.getCount() * folderItemViewHeight;
+
+        int screenHeigh = getResources().getDisplayMetrics().heightPixels;
+        if(folderViewHeight >= screenHeigh){
+            mFolderPopupWindow.setHeight(Math.round(screenHeigh * 0.6f));
+        }else{
+            mFolderPopupWindow.setHeight(ListPopupWindow.WRAP_CONTENT);
+        }
+
         mFolderPopupWindow.setAnchorView(mPopupAnchorView);
         mFolderPopupWindow.setModal(true);
         mFolderPopupWindow.setAnimationStyle(R.style.Animation_AppCompat_DropDownUp);
@@ -307,12 +328,9 @@ public class PhotoPickerActivity extends AppCompatActivity{
                 mFolderPopupWindow.dismiss();
             }
 
-            // 重置PopupWindow宽高
-            int screenWidth = getResources().getDisplayMetrics().widthPixels;
+            // 重置PopupWindow高度
             int screenHeigh = getResources().getDisplayMetrics().heightPixels;
-
-            mFolderPopupWindow.setWidth(screenWidth);
-            mFolderPopupWindow.setHeight(screenHeigh * 5 / 8);
+            mFolderPopupWindow.setHeight(Math.round(screenHeigh * 0.6f));
         }
 
         super.onConfigurationChanged(newConfig);
@@ -383,22 +401,59 @@ public class PhotoPickerActivity extends AppCompatActivity{
                 MediaStore.Images.Media.DATE_ADDED,
                 MediaStore.Images.Media.WIDTH,
                 MediaStore.Images.Media.HEIGHT,
+                MediaStore.Images.Media.MIME_TYPE,
+                MediaStore.Images.Media.SIZE,
                 MediaStore.Images.Media._ID };
-
-        // 根据图片设置参数新增验证条件
-
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
+
+            // 根据图片设置参数新增验证条件
+            StringBuilder selectionArgs = new StringBuilder();
+
+            if(imageConfig != null){
+                if(imageConfig.minWidth != 0){
+                    selectionArgs.append(MediaStore.Images.Media.WIDTH + " >= " + imageConfig.minWidth);
+                }
+
+                if(imageConfig.minHeight != 0){
+                    selectionArgs.append("".equals(selectionArgs.toString()) ? "" : " and ");
+                    selectionArgs.append(MediaStore.Images.Media.HEIGHT + " >= " + imageConfig.minHeight);
+                }
+
+                if(imageConfig.minSize != 0f){
+                    selectionArgs.append("".equals(selectionArgs.toString()) ? "" : " and ");
+                    selectionArgs.append(MediaStore.Images.Media.SIZE + " >= " + imageConfig.minSize);
+                }
+
+                if(imageConfig.mimeType != null){
+                    selectionArgs.append(" and (");
+                    for(int i = 0, len = imageConfig.mimeType.length; i < len; i++){
+                        if(i != 0){
+                            selectionArgs.append(" or ");
+                        }
+                        selectionArgs.append(MediaStore.Images.Media.MIME_TYPE + " = '" + imageConfig.mimeType[i] + "'");
+                    }
+                    selectionArgs.append(")");
+                }
+            }
+
+            Log.e("--selection--", selectionArgs.toString());
+
             if(id == LOADER_ALL) {
+
                 CursorLoader cursorLoader = new CursorLoader(mCxt,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
-                        null, null, IMAGE_PROJECTION[2] + " DESC");
+                        selectionArgs.toString(), null, IMAGE_PROJECTION[2] + " DESC");
                 return cursorLoader;
             }else if(id == LOADER_CATEGORY){
+                String selectionStr = selectionArgs.toString();
+                if(!"".equals(selectionStr)){
+                    selectionStr += " and" + selectionStr;
+                }
                 CursorLoader cursorLoader = new CursorLoader(mCxt,
                         MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
-                        IMAGE_PROJECTION[0] + " like '%" + args.getString("path") + "%'", null,
+                        IMAGE_PROJECTION[0] + " like '%" + args.getString("path") + "%'" + selectionStr, null,
                         IMAGE_PROJECTION[2] + " DESC");
                 return cursorLoader;
             }
@@ -419,8 +474,10 @@ public class PhotoPickerActivity extends AppCompatActivity{
                         long dateTime = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
                         int width = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[3]));
                         int height = data.getInt(data.getColumnIndexOrThrow(IMAGE_PROJECTION[4]));
+                        String mimetype = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[5]));
+                        long size = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[6]));
 
-                        Log.e("--", width + " -- " + height);
+                        Log.e("--", width + " -- " + height + " -- " + mimetype + " -- " + size);
 
                         Image image = new Image(path, name, dateTime);
                         images.add(image);
