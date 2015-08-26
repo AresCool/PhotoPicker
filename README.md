@@ -11,13 +11,25 @@
 
 ## 使用方法
 
+### ImageConfig
+
+设置显示照片的参数，
+
+```java
+ImageConfig config = new ImageConfig();
+config.minHeight = 400;
+config.minWidth = 400;
+config.mimeType = new String[]{"image/jpeg", "image/png"}; // 图片类型 image/gif ...
+config.minSize = 1 * 1024 * 1024; // 1Mb 图片大小
+```
+
 ### 单选
 
 ```java
 PhotoPickerIntent intent = new PhotoPickerIntent(MainActivity.this);
 intent.setSelectModel(SelectModel.SINGLE);
 intent.setShowCarema(true); // 是否显示拍照， 默认false
-// intent.setImageConfig(null); // 设置显示照片的参数
+// intent.setImageConfig(config);
 startActivityForResult(intent, REQUEST_CAMERA_CODE);
 ```
 
@@ -29,7 +41,7 @@ intent.setSelectModel(SelectModel.MULTI);
 intent.setShowCarema(true); // 是否显示拍照， 默认false
 intent.setMaxTotal(9); // 最多选择照片数量，默认为9
 intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
-// intent.setImageConfig(config); // 设置显示照片的参数
+// intent.setImageConfig(config);
 startActivityForResult(intent, REQUEST_CAMERA_CODE);
 ```
 
@@ -52,13 +64,17 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             // 选择照片
             case REQUEST_CAMERA_CODE:
-                loadAdpater(data.getStringArrayListExtra(`PhotoPickerActivity.EXTRA_RESULT`));
+                loadAdpater(data.getStringArrayListExtra(PhotoPickerActivity.EXTRA_RESULT));
                 break;
             // 预览
             case REQUEST_PREVIEW_CODE:
-                loadAdpater(data.getStringArrayListExtra(`PhotoPreviewActivity.EXTRA_RESULT`));
+                loadAdpater(data.getStringArrayListExtra(PhotoPreviewActivity.EXTRA_RESULT));
                 break;
         }
     }
+}
+
+private void loadAdpater(ArrayList<String> paths){
+    // 处理返回结果 ...
 }
 ```
