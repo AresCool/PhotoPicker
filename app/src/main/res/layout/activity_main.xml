@@ -3,14 +3,25 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
+
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btnMuilt"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="选择照片"
-        android:layout_gravity="center_horizontal" />
-    <TextView
-        android:id="@+id/tvUrls"
+        android:layout_gravity="center_horizontal"
+        android:text="多选" />
+
+    <Button
+        android:id="@+id/btnSingle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="单选" />
+
+    <GridView
+        android:id="@+id/gridView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:horizontalSpacing="@dimen/space_size"
+        android:verticalSpacing="@dimen/space_size" />
 </LinearLayout>
