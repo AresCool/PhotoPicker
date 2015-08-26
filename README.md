@@ -74,7 +74,7 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 }
 
 private void loadAdpater(ArrayList<String> paths){
-    // 处理返回结果 ...
+    // 处理返回照片地址
 }
 ```
 
