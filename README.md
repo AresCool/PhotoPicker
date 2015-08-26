@@ -12,8 +12,7 @@
 ## 使用方法
 
 ### ImageConfig
-
-设置显示照片的参数，
+可选属性， 用于过滤照片列表信息。
 
 ```java
 ImageConfig config = new ImageConfig();
