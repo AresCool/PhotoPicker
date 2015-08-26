@@ -12,6 +12,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 
+import com.foamtrace.photopicker.widget.ViewPagerFixed;
+
 import java.util.ArrayList;
 
 /**
@@ -29,7 +31,7 @@ public class PhotoPreviewActivity extends AppCompatActivity implements PhotoPage
     public static final int REQUEST_PREVIEW = 99;
 
     private ArrayList<String> paths;
-    private ViewPager mViewPager;
+    private ViewPagerFixed mViewPager;
     private PhotoPagerAdapter mPagerAdapter;
     private int currentItem = 0;
 
@@ -75,7 +77,7 @@ public class PhotoPreviewActivity extends AppCompatActivity implements PhotoPage
     }
 
     private void initViews(){
-        mViewPager = (ViewPager) findViewById(R.id.vp_photos);
+        mViewPager = (ViewPagerFixed) findViewById(R.id.vp_photos);
         Toolbar mToolbar = (Toolbar) findViewById(R.id.pickerToolbar);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
