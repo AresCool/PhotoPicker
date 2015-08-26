@@ -53,7 +53,7 @@ intent.setPhotoPaths(imagePaths); // 已选中的照片地址
 startActivityForResult(intent, REQUEST_PREVIEW_CODE);
 ```
 
-### ActivityResult Setting
+### ActivityResult
 
 ```java
 @Override
@@ -76,4 +76,43 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 private void loadAdpater(ArrayList<String> paths){
     // 处理返回结果 ...
 }
+```
+
+## 配置信息
+
+### Style
+
+```xml
+<!-- 设置ActionBar菜单字体 -->
+<style name="ActionMenuTextStyle" parent="TextAppearance.AppCompat.Widget.ActionBar.Menu">
+    <item name="android:textSize">@dimen/action_text_size</item>
+    <item name="android:textStyle">normal</item>
+</style>
+
+<style name="actionBarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+</style>
+
+<style name="actionBarPopupTheme" parent="ThemeOverlay.AppCompat.Light">
+</style>
+
+<style name="PhotoPickerTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <item name="windowActionBar">false</item>
+    <item name="windowNoTitle">true</item>
+    <item name="android:windowBackground">@color/photopicker_background</item>
+    <item name="actionMenuTextAppearance">@style/ActionMenuTextStyle</item>
+    <!--<item name="actionBarTheme">@style/actionBarTheme</item>-->
+    <!--<item name="actionBarPopupTheme">@style/actionBarPopupTheme</item>-->
+</style>
+```
+
+### AndroidManifest.xml
+
+```xml
+<activity
+    android:name="com.foamtrace.photopicker.PhotoPickerActivity"
+    android:theme="@style/PhotoPickerTheme"
+    android:configChanges="orientation|screenSize"/>
+
+<activity android:name="com.foamtrace.photopicker.PhotoPreviewActivity"
+    android:theme="@style/PhotoPickerTheme"/>
 ```
