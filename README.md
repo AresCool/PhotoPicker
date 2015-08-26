@@ -41,3 +41,24 @@ intent.setCurrentItem(position); // 当前选中照片的下标
 intent.setPhotoPaths(imagePaths); // 已选中的照片地址
 startActivityForResult(intent, REQUEST_PREVIEW_CODE);
 ```
+
+### ActivityResult Setting
+
+```java
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if(resultCode == RESULT_OK) {
+        switch (requestCode) {
+            // 选择照片
+            case REQUEST_CAMERA_CODE:
+                loadAdpater(data.getStringArrayListExtra(`PhotoPickerActivity.EXTRA_RESULT`));
+                break;
+            // 预览
+            case REQUEST_PREVIEW_CODE:
+                loadAdpater(data.getStringArrayListExtra(`PhotoPreviewActivity.EXTRA_RESULT`));
+                break;
+        }
+    }
+}
+```
