@@ -24,16 +24,17 @@ startActivityForResult(intent, REQUEST_CAMERA_CODE);
 ### 多选
 
 ```java
-PhotoPickerIntent intent = new PhotoPickerIntent(MainActivity.this);
-intent.setSelectModel(SelectModel.MULTI);
-intent.setShowCarema(true);
-intent.setMaxTotal(9);
-intent.setSelectedPaths(imagePaths);
-//ImageConfig config = new ImageConfig();
-//config.minHeight = 400;
-//config.minWidth = 400;
-//config.mimeType = new String[]{"image/jpeg", "image/png"};
-//config.minSize = 1 * 1024 * 1024;
-//intent.setImageConfig(config);
-startActivityForResult(intent, REQUEST_CAMERA_CODE);
+    PhotoPickerIntent intent = new PhotoPickerIntent(MainActivity.this);
+    intent.setSelectModel(SelectModel.MULTI);
+    intent.setSelectModel(SelectModel.MULTI);
+    intent.setShowCarema(true); // 是否显示拍照
+    intent.setMaxTotal(9); // 最多选择照片数量，默认为9
+    intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显选中状态
+    //ImageConfig config = new ImageConfig();
+    //config.minHeight = 400;
+    //config.minWidth = 400;
+    //config.mimeType = new String[]{"image/jpeg", "image/png"};
+    //config.minSize = 1 * 1024 * 1024;
+    //intent.setImageConfig(config);
+    startActivityForResult(intent, REQUEST_CAMERA_CODE);
 ```
