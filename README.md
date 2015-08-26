@@ -80,7 +80,7 @@ private void loadAdpater(ArrayList<String> paths){
 
 ## 配置信息
 
-### Style
+### style.xml
 
 ```xml
 <!-- 设置ActionBar菜单字体 -->
