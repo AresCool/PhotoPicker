@@ -60,7 +60,7 @@ install {
             project {
                 packaging 'aar'
                 // Add your description here
-                name 'Android select picture library'
+                name 'Android photo picker library'
                 url siteUrl
                 licenses {
                     license {
