@@ -44,6 +44,29 @@ intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显
 startActivityForResult(intent, REQUEST_CAMERA_CODE);
 ```
 
+### 调用系统相机拍照
+
+```java
+
+private ImageCaptureManager captureManager;
+
+btnCarema.setOnClickListener(new View.OnClickListener() {
+    @Override
+    public void onClick(View v) {
+        try {
+            if(captureManager == null){
+                captureManager = new ImageCaptureManager(MainActivity.this);
+            }
+            Intent intent = captureManager.dispatchTakePictureIntent();
+            startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO);
+        } catch (IOException e) {
+            Toast.makeText(MainActivity.this, R.string.msg_no_camera, Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+    }
+});
+```
+
 ### 预览
 
 ```java
@@ -63,17 +86,26 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             // 选择照片
             case REQUEST_CAMERA_CODE:
-                loadAdpater(data.getStringArrayListExtra(PhotoPickerActivity.EXTRA_RESULT));
+                refreshAdpater(data.getStringArrayListExtra(PhotoPickerActivity.EXTRA_RESULT));
+                break;
+            // 直接调用拍照
+            case ImageCaptureManager.REQUEST_TAKE_PHOTO:
+                if(captureManager.getCurrentPhotoPath() != null) {
+                    captureManager.galleryAddPic();
+                    // 返回的照片地址
+                    String imagePaht = captureManager.getCurrentPhotoPath();
+                    // ...
+                }
                 break;
             // 预览
             case REQUEST_PREVIEW_CODE:
-                loadAdpater(data.getStringArrayListExtra(PhotoPreviewActivity.EXTRA_RESULT));
+                refreshAdpater(data.getStringArrayListExtra(PhotoPreviewActivity.EXTRA_RESULT));
                 break;
         }
     }
 }
 
-private void loadAdpater(ArrayList<String> paths){
+private void refreshAdpater(ArrayList<String> paths){
     // 处理返回照片地址
 }
 ```
