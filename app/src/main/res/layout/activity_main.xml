@@ -18,6 +18,13 @@
         android:layout_gravity="center_horizontal"
         android:text="单选" />
 
+    <Button
+        android:id="@+id/btnCarema"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_horizontal"
+        android:text="拍照" />
+
     <GridView
         android:id="@+id/gridView"
         android:layout_width="match_parent"
