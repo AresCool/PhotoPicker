@@ -14,6 +14,7 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.foamtrace.photopicker.ImageCaptureManager;
@@ -28,6 +29,7 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 
 /**
@@ -38,10 +40,12 @@ public class MainActivity extends AppCompatActivity {
 
     private Button btnMuilt; // 多选
     private Button btnSingle; // 单选
+    private Button btnCarema; // 拍照
 
-    private static final int REQUEST_CAMERA_CODE = 1;
-    private static final int REQUEST_PREVIEW_CODE = 2;
+    private static final int REQUEST_CAMERA_CODE = 11;
+    private static final int REQUEST_PREVIEW_CODE = 22;
     private ArrayList<String> imagePaths = null;
+    private ImageCaptureManager captureManager; // 相机拍照处理类
 
     private GridView gridView;
     private int columnWidth;
@@ -54,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
         btnMuilt = (Button) findViewById(R.id.btnMuilt);
         btnSingle = (Button) findViewById(R.id.btnSingle);
+        btnCarema = (Button) findViewById(R.id.btnCarema);
         gridView = (GridView) findViewById(R.id.gridView);
 
         int cols = getResources().getDisplayMetrics().widthPixels / getResources().getDisplayMetrics().densityDpi;
@@ -104,6 +109,22 @@ public class MainActivity extends AppCompatActivity {
                 startActivityForResult(intent, REQUEST_CAMERA_CODE);
             }
         });
+
+        btnCarema.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                try {
+                    if(captureManager == null){
+                        captureManager = new ImageCaptureManager(MainActivity.this);
+                    }
+                    Intent intent = captureManager.dispatchTakePictureIntent();
+                    startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO);
+                } catch (IOException e) {
+                    Toast.makeText(MainActivity.this, com.foamtrace.photopicker.R.string.msg_no_camera, Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+            }
+        });
     }
 
     @Override
@@ -119,6 +140,17 @@ public class MainActivity extends AppCompatActivity {
                 case REQUEST_PREVIEW_CODE:
                     loadAdpater(data.getStringArrayListExtra(PhotoPreviewActivity.EXTRA_RESULT));
                     break;
+                // 调用相机拍照
+                case ImageCaptureManager.REQUEST_TAKE_PHOTO:
+                    if(captureManager.getCurrentPhotoPath() != null) {
+                        captureManager.galleryAddPic();
+
+                        ArrayList<String> paths = new ArrayList<>();
+                        paths.add(captureManager.getCurrentPhotoPath());
+                        loadAdpater(paths);
+                    }
+                    break;
+
             }
         }
     }
