@@ -44,7 +44,7 @@ intent.setSelectedPaths(imagePaths); // 已选中的照片地址， 用于回显
 startActivityForResult(intent, REQUEST_CAMERA_CODE);
 ```
 
-### 调用系统相机拍照
+### 拍照
 
 ```java
 
@@ -88,11 +88,11 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
             case REQUEST_CAMERA_CODE:
                 refreshAdpater(data.getStringArrayListExtra(PhotoPickerActivity.EXTRA_RESULT));
                 break;
-            // 直接调用拍照
+            // 拍照
             case ImageCaptureManager.REQUEST_TAKE_PHOTO:
                 if(captureManager.getCurrentPhotoPath() != null) {
                     captureManager.galleryAddPic();
-                    // 返回的照片地址
+                    // 照片地址
                     String imagePaht = captureManager.getCurrentPhotoPath();
                     // ...
                 }
