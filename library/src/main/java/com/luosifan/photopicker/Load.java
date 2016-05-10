@@ -5,4 +5,11 @@ package com.luosifan.photopicker;
  */
 public class Load {
 
+    public SingleSelect singleSelect(){
+        return new SingleSelect();
+    }
+
+    public Multiselect multiselect(){
+        return new Multiselect();
+    }
 }
