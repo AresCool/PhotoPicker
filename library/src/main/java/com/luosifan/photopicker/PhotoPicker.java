@@ -1,5 +1,6 @@
 package com.luosifan.photopicker;
 
+import android.app.Activity;
 import android.content.Context;
 
 /**
@@ -8,13 +9,13 @@ import android.content.Context;
 public class PhotoPicker {
 
     public static PhotoPicker mSingleton = null;
-    public final Context mContext;
+    public final Activity mContext;
 
-    public PhotoPicker(Context context) {
+    public PhotoPicker(Activity context) {
         this.mContext = context;
     }
 
-    public static PhotoPicker with(Context context){
+    public static PhotoPicker with(Activity context){
         if(mSingleton == null){
             synchronized (PhotoPicker.class){
                 if(mSingleton == null){
@@ -30,13 +31,13 @@ public class PhotoPicker {
     }
 
     private static class Contractor {
-        private final Context mContext;
+        private final Activity mContext;
 
-        public Contractor(Context context) {
+        public Contractor(Activity context) {
             if (context == null) {
                 throw new IllegalArgumentException("Context must not be null.");
             }
-            this.mContext = context.getApplicationContext();
+            this.mContext = context;
         }
 
         public PhotoPicker build() {
