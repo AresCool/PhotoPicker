@@ -1,4 +1,4 @@
-package com.luosifan.photopicker;
+package com.luosifan.photopicker.picker;
 
 /**
  * Created by wzfu on 16/5/10.

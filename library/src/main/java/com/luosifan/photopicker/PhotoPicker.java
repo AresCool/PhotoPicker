@@ -1,7 +1,8 @@
 package com.luosifan.photopicker;
 
 import android.app.Activity;
-import android.content.Context;
+
+import com.luosifan.photopicker.picker.Load;
 
 /**
  * Created by wzfu on 2016/5/10.
