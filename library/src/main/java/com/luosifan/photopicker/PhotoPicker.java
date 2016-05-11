@@ -9,11 +9,13 @@ import com.luosifan.photopicker.picker.Load;
  */
 public class PhotoPicker {
 
+    public static final int REQUEST_PHOTO_CODE = 1;
+
     public static PhotoPicker mSingleton = null;
-    public final Activity mContext;
+    public final Activity aty;
 
     public PhotoPicker(Activity context) {
-        this.mContext = context;
+        this.aty = context;
     }
 
     public static PhotoPicker with(Activity context){
