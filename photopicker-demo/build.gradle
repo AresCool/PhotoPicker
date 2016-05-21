@@ -24,4 +24,6 @@ dependencies {
     testCompile 'junit:junit:4.12'
     compile "com.android.support:appcompat-v7:${versions.supportLib}"
     compile project(':photopicker-library')
+
+    compile 'com.squareup.picasso:picasso:2.4.0'
 }

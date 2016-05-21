@@ -18,14 +18,12 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.luosifan.photopicker.MultiImageSelectorActivity;
 import com.luosifan.photopicker.PhotoPicker;
+import com.luosifan.photopicker.demo.loader.PicassoImageLoader;
 import com.luosifan.photopicker.picker.Load;
 import com.luosifan.photopicker.picker.PhotoSelectBuilder;
-import com.luosifan.photopicker.utils.ImageLoader;
 
 import java.util.ArrayList;
-
 
 
 public class MainActivity extends AppCompatActivity {
@@ -52,9 +50,9 @@ public class MainActivity extends AppCompatActivity {
         mChoiceMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-                if(checkedId == R.id.multi){
+                if (checkedId == R.id.multi) {
                     mRequestNum.setEnabled(true);
-                }else{
+                } else {
                     mRequestNum.setEnabled(false);
                     mRequestNum.setText("");
                 }
@@ -79,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
             requestPermission(Manifest.permission.READ_EXTERNAL_STORAGE,
                     getString(R.string.permission_rationale),
                     REQUEST_STORAGE_READ_ACCESS_PERMISSION);
-        }else {
+        } else {
             boolean showCamera = mShowCamera.getCheckedRadioButtonId() == R.id.show;
             int maxNum = 9;
 
@@ -91,7 +89,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            Load load = PhotoPicker.with(ImageLoader.class)
+            Load load = PhotoPicker.with(PicassoImageLoader.class)
                     .load()
                     .showCamera(showCamera)
                     .gridColumns(2);
@@ -107,8 +105,8 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void requestPermission(final String permission, String rationale, final int requestCode){
-        if(ActivityCompat.shouldShowRequestPermissionRationale(this, permission)){
+    private void requestPermission(final String permission, String rationale, final int requestCode) {
+        if (ActivityCompat.shouldShowRequestPermissionRationale(this, permission)) {
             new AlertDialog.Builder(this)
                     .setTitle(R.string.permission_dialog_title)
                     .setMessage(rationale)
@@ -120,15 +118,15 @@ public class MainActivity extends AppCompatActivity {
                     })
                     .setNegativeButton(R.string.permission_dialog_cancel, null)
                     .create().show();
-        }else{
+        } else {
             ActivityCompat.requestPermissions(this, new String[]{permission}, requestCode);
         }
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-        if(requestCode == REQUEST_STORAGE_READ_ACCESS_PERMISSION){
-            if(grantResults[0] == PackageManager.PERMISSION_GRANTED){
+        if (requestCode == REQUEST_STORAGE_READ_ACCESS_PERMISSION) {
+            if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                 pickImage();
             }
         } else {
@@ -139,11 +137,11 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == PhotoPicker.REQUEST_SELECTED){
-            if(resultCode == RESULT_OK){
+        if (requestCode == PhotoPicker.REQUEST_SELECTED) {
+            if (resultCode == RESULT_OK) {
                 mSelectPath = data.getStringArrayListExtra(PhotoPicker.EXTRA_RESULT);
                 StringBuilder sb = new StringBuilder();
-                for(String p: mSelectPath){
+                for (String p : mSelectPath) {
                     sb.append(p);
                     sb.append("\n");
                 }

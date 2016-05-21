@@ -41,8 +41,8 @@ import com.luosifan.photopicker.bean.Image;
 import com.luosifan.photopicker.picker.PickerParams;
 import com.luosifan.photopicker.picker.SelectMode;
 import com.luosifan.photopicker.utils.FileUtils;
+import com.luosifan.photopicker.utils.ImageLoader;
 import com.luosifan.photopicker.utils.ScreenUtils;
-import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
@@ -89,6 +89,7 @@ public class MultiImageSelectorFragment extends Fragment {
     private File mTmpFile;
 
     private PickerParams params;
+    private ImageLoader imageLoader;
 
     public static MultiImageSelectorFragment newInstance(PickerParams params){
         MultiImageSelectorFragment fragment = new MultiImageSelectorFragment();
@@ -117,6 +118,13 @@ public class MultiImageSelectorFragment extends Fragment {
         }
 
         params = (PickerParams) getArguments().getSerializable(PhotoPicker.PARAMS);
+
+        // init ImageLoader
+        try {
+            imageLoader = params.imageLoaderClass.newInstance();
+        } catch (Exception e) {
+            throw new IllegalArgumentException(e);
+        }
     }
 
     @Override
@@ -134,7 +142,7 @@ public class MultiImageSelectorFragment extends Fragment {
                 resultList = tmp;
             }
         }
-        mImageAdapter = new ImageGridAdapter(getActivity(), params.showCamera, params.gridColumns);
+        mImageAdapter = new ImageGridAdapter(getActivity(), imageLoader, params.showCamera, params.gridColumns);
         mImageAdapter.showSelectIndicator(params.mode == SelectMode.MULTI);
 
         mPopupAnchorView = view.findViewById(R.id.footer);
@@ -182,10 +190,13 @@ public class MultiImageSelectorFragment extends Fragment {
         mGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if (scrollState == SCROLL_STATE_FLING) {
-                    Picasso.with(view.getContext()).pauseTag(TAG);
-                } else {
-                    Picasso.with(view.getContext()).resumeTag(TAG);
+//                if (scrollState == SCROLL_STATE_FLING) {
+//                    Picasso.with(view.getContext()).pauseTag(TAG);
+//                } else {
+//                    Picasso.with(view.getContext()).resumeTag(TAG);
+//                }
+                if(null != imageLoader) {
+                    imageLoader.onScrollStateChanged(view, scrollState, TAG);
                 }
             }
 
@@ -195,7 +206,7 @@ public class MultiImageSelectorFragment extends Fragment {
             }
         });
 
-        mFolderAdapter = new FolderAdapter(getActivity());
+        mFolderAdapter = new FolderAdapter(getActivity(), imageLoader);
     }
 
     /**

@@ -2,7 +2,7 @@
 <com.luosifan.photopicker.view.SquareFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent">
 
-    <com.luosifan.photopicker.view.SquaredImageView
+    <com.luosifan.photopicker.view.GFImageView
         android:id="@+id/image"
         android:scaleType="centerInside"
         android:src="@drawable/default_error"

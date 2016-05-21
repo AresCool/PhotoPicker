@@ -13,7 +13,8 @@ import android.widget.ImageView;
 import com.luosifan.photopicker.MultiImageSelectorFragment;
 import com.luosifan.photopicker.R;
 import com.luosifan.photopicker.bean.Image;
-import com.squareup.picasso.Picasso;
+import com.luosifan.photopicker.utils.ImageLoader;
+import com.luosifan.photopicker.view.GFImageView;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -30,6 +31,7 @@ public class ImageGridAdapter extends BaseAdapter {
     private static final int TYPE_NORMAL = 1;
 
     private Context mContext;
+    private ImageLoader imageLoader;
 
     private LayoutInflater mInflater;
     private boolean showCamera = true;
@@ -40,10 +42,11 @@ public class ImageGridAdapter extends BaseAdapter {
 
     final int mGridWidth;
 
-    public ImageGridAdapter(Context context, boolean showCamera, int column) {
-        mContext = context;
-        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+    public ImageGridAdapter(Context context, ImageLoader imageLoader, boolean showCamera, int column) {
+        this.mContext = context;
+        this.imageLoader = imageLoader;
         this.showCamera = showCamera;
+        mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         WindowManager wm = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
         int width = 0;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
@@ -195,12 +198,12 @@ public class ImageGridAdapter extends BaseAdapter {
     }
 
     class ViewHolder {
-        ImageView image;
+        GFImageView image;
         ImageView indicator;
         View mask;
 
         ViewHolder(View view) {
-            image = (ImageView) view.findViewById(R.id.image);
+            image = (GFImageView) view.findViewById(R.id.image);
             indicator = (ImageView) view.findViewById(R.id.checkmark);
             mask = view.findViewById(R.id.mask);
             view.setTag(this);
@@ -224,15 +227,15 @@ public class ImageGridAdapter extends BaseAdapter {
                 indicator.setVisibility(View.GONE);
             }
             File imageFile = new File(data.path);
-            if (imageFile.exists()) {
+            if (imageFile.exists() && imageLoader != null) {
                 // 显示图片
-                Picasso.with(mContext)
-                        .load(imageFile)
-                        .placeholder(R.drawable.default_error)
-                        .tag(MultiImageSelectorFragment.TAG)
-                        .resize(mGridWidth, mGridWidth)
-                        .centerCrop()
-                        .into(image);
+                imageLoader.displayImage(mContext,
+                        imageFile.getAbsolutePath(),
+                        image,
+                        MultiImageSelectorFragment.TAG,
+                        R.drawable.default_error,
+                        R.drawable.default_error,
+                        mGridWidth, mGridWidth);
             } else {
                 image.setImageResource(R.drawable.default_error);
             }

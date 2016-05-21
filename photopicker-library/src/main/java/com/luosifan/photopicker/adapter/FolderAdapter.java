@@ -9,11 +9,12 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.luosifan.photopicker.MultiImageSelectorFragment;
 import com.luosifan.photopicker.R;
 import com.luosifan.photopicker.bean.Folder;
-import com.squareup.picasso.Picasso;
+import com.luosifan.photopicker.utils.ImageLoader;
+import com.luosifan.photopicker.view.GFImageView;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -25,6 +26,7 @@ import java.util.List;
 public class FolderAdapter extends BaseAdapter {
 
     private Context mContext;
+    private ImageLoader imageLoader;
     private LayoutInflater mInflater;
 
     private List<Folder> mFolders = new ArrayList<>();
@@ -33,10 +35,13 @@ public class FolderAdapter extends BaseAdapter {
 
     int lastSelected = 0;
 
-    public FolderAdapter(Context context){
-        mContext = context;
+
+    public FolderAdapter(Context context, ImageLoader imageLoader){
+        this.mContext = context;
+        this.imageLoader = imageLoader;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mImageSize = mContext.getResources().getDimensionPixelOffset(R.dimen.folder_cover_size);
+//        getDimensionPixelSize
     }
 
     /**
@@ -83,15 +88,17 @@ public class FolderAdapter extends BaseAdapter {
                 holder.path.setText("/sdcard");
                 holder.size.setText(String.format("%d%s",
                         getTotalImageSize(), mContext.getResources().getString(R.string.photo_unit)));
-                if(mFolders.size()>0){
+                if(mFolders.size() > 0) {
                     Folder f = mFolders.get(0);
-                    if (f != null) {
-                        Picasso.with(mContext)
-                                .load(new File(f.cover.path))
-                                .error(R.drawable.default_error)
-                                .resizeDimen(R.dimen.folder_cover_size, R.dimen.folder_cover_size)
-                                .centerCrop()
-                                .into(holder.cover);
+                    if (f != null && imageLoader != null) {
+
+                        imageLoader.displayImage(mContext,
+                                f.cover.path,
+                                holder.cover,
+                                MultiImageSelectorFragment.TAG,
+                                R.drawable.default_error,
+                                R.drawable.default_error,
+                                mImageSize, mImageSize);
                     }else{
                         holder.cover.setImageResource(R.drawable.default_error);
                     }
@@ -99,6 +106,7 @@ public class FolderAdapter extends BaseAdapter {
             }else {
                 holder.bindData(getItem(i));
             }
+
             if(lastSelected == i){
                 holder.indicator.setVisibility(View.VISIBLE);
             }else{
@@ -130,13 +138,13 @@ public class FolderAdapter extends BaseAdapter {
     }
 
     class ViewHolder{
-        ImageView cover;
+        GFImageView cover;
         TextView name;
         TextView path;
         TextView size;
         ImageView indicator;
         ViewHolder(View view){
-            cover = (ImageView)view.findViewById(R.id.cover);
+            cover = (GFImageView)view.findViewById(R.id.cover);
             name = (TextView) view.findViewById(R.id.name);
             path = (TextView) view.findViewById(R.id.path);
             size = (TextView) view.findViewById(R.id.size);
@@ -155,14 +163,15 @@ public class FolderAdapter extends BaseAdapter {
             }else{
                 size.setText("*"+mContext.getResources().getString(R.string.photo_unit));
             }
-            if (data.cover != null) {
+            if (data.cover != null && imageLoader != null) {
                 // 显示图片
-                Picasso.with(mContext)
-                        .load(new File(data.cover.path))
-                        .placeholder(R.drawable.default_error)
-                        .resizeDimen(R.dimen.folder_cover_size, R.dimen.folder_cover_size)
-                        .centerCrop()
-                        .into(cover);
+                imageLoader.displayImage(mContext,
+                        data.cover.path,
+                        cover,
+                        MultiImageSelectorFragment.TAG,
+                        R.drawable.default_error,
+                        R.drawable.default_error,
+                        mImageSize, mImageSize);
             }else{
                 cover.setImageResource(R.drawable.default_error);
             }

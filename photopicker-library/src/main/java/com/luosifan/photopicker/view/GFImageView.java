@@ -11,7 +11,7 @@ import android.widget.ImageView;
  * Author:pengjianbo
  * Date:2015/12/24 0024 20:14
  */
-public class GFImageView extends ImageView {
+public class GFImageView extends SquaredImageView {
 
     private OnImageViewListener mOnImageViewListener;
 

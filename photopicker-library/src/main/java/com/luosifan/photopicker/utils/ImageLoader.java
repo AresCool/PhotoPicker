@@ -17,7 +17,9 @@
 package com.luosifan.photopicker.utils;
 
 import android.app.Activity;
+import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.widget.AbsListView;
 
 import com.luosifan.photopicker.view.GFImageView;
 
@@ -30,6 +32,21 @@ import java.io.Serializable;
  * Date:15/10/10 下午5:27
  */
 public interface ImageLoader extends Serializable{
-    void displayImage(Activity activity, String path, GFImageView imageView, Drawable defaultDrawable, int width, int height);
+
+    void displayImage(Context mCxt,
+                      String path,
+                      GFImageView imageView,
+                      String tag,
+                      int placeholderResId,
+                      int errorResId,
+                      int width, int height);
+
     void clearMemoryCache();
+
+    /**
+     * 图片列表滑动监听
+     * @param view
+     * @param scrollState
+     */
+    void onScrollStateChanged(AbsListView view, int scrollState, String tag);
 }
