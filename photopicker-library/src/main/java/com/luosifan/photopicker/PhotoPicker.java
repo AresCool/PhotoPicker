@@ -11,6 +11,14 @@ import com.luosifan.photopicker.utils.ImageLoader;
  */
 public class PhotoPicker {
 
+    public static final int REQUEST_SELECTED = 201;
+    public static final int REQUEST_PREVIEW = 216;
+
+    public static final String PARAMS = "photo_picker_params";
+
+    /** Result data set，ArrayList&lt;String&gt;*/
+    public static final String EXTRA_RESULT = "select_result";
+
     private PickerParams params;
 
     public PhotoPicker(Class<? extends ImageLoader> imageLoaderClass) {

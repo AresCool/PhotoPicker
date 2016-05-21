@@ -38,12 +38,15 @@ import com.luosifan.photopicker.adapter.FolderAdapter;
 import com.luosifan.photopicker.adapter.ImageGridAdapter;
 import com.luosifan.photopicker.bean.Folder;
 import com.luosifan.photopicker.bean.Image;
+import com.luosifan.photopicker.picker.PickerParams;
+import com.luosifan.photopicker.picker.SelectMode;
 import com.luosifan.photopicker.utils.FileUtils;
 import com.luosifan.photopicker.utils.ScreenUtils;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
 import java.io.IOException;
+import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -60,20 +63,6 @@ public class MultiImageSelectorFragment extends Fragment {
     private static final int REQUEST_CAMERA = 100;
 
     private static final String KEY_TEMP_FILE = "key_temp_file";
-
-    // Single choice
-    public static final int MODE_SINGLE = 0;
-    // Multi choice
-    public static final int MODE_MULTI = 1;
-
-    /** Max image size，int，*/
-    public static final String EXTRA_SELECT_COUNT = "max_select_count";
-    /** Select mode，{@link #MODE_MULTI} by default */
-    public static final String EXTRA_SELECT_MODE = "select_count_mode";
-    /** Whether show camera，true by default */
-    public static final String EXTRA_SHOW_CAMERA = "show_camera";
-    /** Original data set */
-    public static final String EXTRA_DEFAULT_SELECTED_LIST = "default_list";
 
     // loaders
     private static final int LOADER_ALL = 0;
@@ -99,6 +88,16 @@ public class MultiImageSelectorFragment extends Fragment {
 
     private File mTmpFile;
 
+    private PickerParams params;
+
+    public static MultiImageSelectorFragment newInstance(PickerParams params){
+        MultiImageSelectorFragment fragment = new MultiImageSelectorFragment();
+        Bundle bundle = new Bundle();
+        bundle.putSerializable(PhotoPicker.PARAMS, params);
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
@@ -110,6 +109,17 @@ public class MultiImageSelectorFragment extends Fragment {
     }
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        if(null == getArguments() || null == getArguments().getSerializable(PhotoPicker.PARAMS)) {
+            throw new IllegalArgumentException("The Fragment Arguments must contain the PhotoPicker.PARMAS attributes");
+        }
+
+        params = (PickerParams) getArguments().getSerializable(PhotoPicker.PARAMS);
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         return inflater.inflate(R.layout.fragment_multi_image, container, false);
     }
@@ -118,15 +128,14 @@ public class MultiImageSelectorFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        final int mode = selectMode();
-        if(mode == MODE_MULTI) {
-            ArrayList<String> tmp = getArguments().getStringArrayList(EXTRA_DEFAULT_SELECTED_LIST);
+        if(params.mode == SelectMode.MULTI) {
+            ArrayList<String> tmp = params.selectedPaths;
             if(tmp != null && tmp.size()>0) {
                 resultList = tmp;
             }
         }
-        mImageAdapter = new ImageGridAdapter(getActivity(), showCamera(), 3);
-        mImageAdapter.showSelectIndicator(mode == MODE_MULTI);
+        mImageAdapter = new ImageGridAdapter(getActivity(), params.showCamera, params.gridColumns);
+        mImageAdapter.showSelectIndicator(params.mode == SelectMode.MULTI);
 
         mPopupAnchorView = view.findViewById(R.id.footer);
 
@@ -152,6 +161,7 @@ public class MultiImageSelectorFragment extends Fragment {
         });
 
         mGridView = (GridView) view.findViewById(R.id.grid);
+        mGridView.setNumColumns(params.gridColumns);
         mGridView.setAdapter(mImageAdapter);
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -161,11 +171,11 @@ public class MultiImageSelectorFragment extends Fragment {
                         showCameraAction();
                     } else {
                         Image image = (Image) adapterView.getAdapter().getItem(i);
-                        selectImageFromGrid(image, mode);
+                        selectImageFromGrid(image, params.mode);
                     }
                 } else {
                     Image image = (Image) adapterView.getAdapter().getItem(i);
-                    selectImageFromGrid(image, mode);
+                    selectImageFromGrid(image, params.mode);
                 }
             }
         });
@@ -220,7 +230,7 @@ public class MultiImageSelectorFragment extends Fragment {
                         if (index == 0) {
                             getActivity().getSupportLoaderManager().restartLoader(LOADER_ALL, null, mLoaderCallback);
                             mCategoryText.setText(R.string.folder_all);
-                            if (showCamera()) {
+                            if (params.showCamera) {
                                 mImageAdapter.setShowCamera(true);
                             } else {
                                 mImageAdapter.setShowCamera(false);
@@ -360,16 +370,16 @@ public class MultiImageSelectorFragment extends Fragment {
      * notify callback
      * @param image image data
      */
-    private void selectImageFromGrid(Image image, int mode) {
+    private void selectImageFromGrid(Image image, SelectMode mode) {
         if(image != null) {
-            if(mode == MODE_MULTI) {
+            if(mode == SelectMode.MULTI) {
                 if (resultList.contains(image.path)) {
                     resultList.remove(image.path);
                     if (mCallback != null) {
                         mCallback.onImageUnselected(image.path);
                     }
                 } else {
-                    if(selectImageCount() == resultList.size()){
+                    if(params.maxPickSize == resultList.size()){
                         Toast.makeText(getActivity(), R.string.msg_amount_limit, Toast.LENGTH_SHORT).show();
                         return;
                     }
@@ -379,7 +389,7 @@ public class MultiImageSelectorFragment extends Fragment {
                     }
                 }
                 mImageAdapter.select(image);
-            }else if(mode == MODE_SINGLE){
+            }else if(mode == SelectMode.SINGLE){
                 if(mCallback != null){
                     mCallback.onSingleImageSelected(image.path);
                 }
@@ -486,18 +496,6 @@ public class MultiImageSelectorFragment extends Fragment {
             }
         }
         return null;
-    }
-
-    private boolean showCamera(){
-        return getArguments() == null || getArguments().getBoolean(EXTRA_SHOW_CAMERA, true);
-    }
-
-    private int selectMode(){
-        return getArguments() == null ? MODE_MULTI : getArguments().getInt(EXTRA_SELECT_MODE);
-    }
-
-    private int selectImageCount(){
-        return getArguments() == null ? 9 : getArguments().getInt(EXTRA_SELECT_COUNT);
     }
 
     /**

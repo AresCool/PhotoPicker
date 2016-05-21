@@ -7,5 +7,6 @@ public class SingleSelect extends PhotoSelectBuilder {
 
     public SingleSelect(PickerParams params) {
         super(params);
+        super.params.mode = SelectMode.SINGLE;
     }
 }

@@ -13,8 +13,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
+import com.luosifan.photopicker.picker.PickerParams;
+import com.luosifan.photopicker.picker.SelectMode;
+
 import java.io.File;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Multi image selector
@@ -25,21 +29,6 @@ import java.util.ArrayList;
 public class MultiImageSelectorActivity extends AppCompatActivity
         implements MultiImageSelectorFragment.Callback{
 
-    // Single choice
-    public static final int MODE_SINGLE = 0;
-    // Multi choice
-    public static final int MODE_MULTI = 1;
-
-    /** Max image size，int，{@link #DEFAULT_IMAGE_SIZE} by default */
-    public static final String EXTRA_SELECT_COUNT = "max_select_count";
-    /** Select mode，{@link #MODE_MULTI} by default */
-    public static final String EXTRA_SELECT_MODE = "select_count_mode";
-    /** Whether show camera，true by default */
-    public static final String EXTRA_SHOW_CAMERA = "show_camera";
-    /** Result data set，ArrayList&lt;String&gt;*/
-    public static final String EXTRA_RESULT = "select_result";
-    /** Original data set */
-    public static final String EXTRA_DEFAULT_SELECTED_LIST = "default_list";
     // Default image size
     private static final int DEFAULT_IMAGE_SIZE = 9;
 
@@ -67,25 +56,29 @@ public class MultiImageSelectorActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        final Intent intent = getIntent();
-        mDefaultCount = intent.getIntExtra(EXTRA_SELECT_COUNT, DEFAULT_IMAGE_SIZE);
-        final int mode = intent.getIntExtra(EXTRA_SELECT_MODE, MODE_MULTI);
-        final boolean isShow = intent.getBooleanExtra(EXTRA_SHOW_CAMERA, true);
-        if(mode == MODE_MULTI && intent.hasExtra(EXTRA_DEFAULT_SELECTED_LIST)) {
-            resultList = intent.getStringArrayListExtra(EXTRA_DEFAULT_SELECTED_LIST);
-        }
-
         mSubmitButton = (Button) findViewById(R.id.commit);
-        if(mode == MODE_MULTI){
+
+        Intent intent = getIntent();
+
+        PickerParams params = (PickerParams) intent.getSerializableExtra(PhotoPicker.PARAMS);
+
+        mDefaultCount = params.maxPickSize;
+
+        if(params.mode == SelectMode.MULTI) {
+
+            if(params.selectedPaths != null){
+                resultList = params.selectedPaths;
+            }
+
             updateDoneText(resultList);
-            mSubmitButton.setVisibility(View.VISIBLE);
+
             mSubmitButton.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    if(resultList != null && resultList.size() >0){
+                    if(resultList != null && resultList.size() > 0) {
                         // Notify success
                         Intent data = new Intent();
-                        data.putStringArrayListExtra(EXTRA_RESULT, resultList);
+                        data.putStringArrayListExtra(PhotoPicker.EXTRA_RESULT, resultList);
                         setResult(RESULT_OK, data);
                     }else{
                         setResult(RESULT_CANCELED);
@@ -93,22 +86,13 @@ public class MultiImageSelectorActivity extends AppCompatActivity
                     finish();
                 }
             });
-        }else{
-            mSubmitButton.setVisibility(View.GONE);
         }
 
-        if(savedInstanceState == null){
-            Bundle bundle = new Bundle();
-            bundle.putInt(MultiImageSelectorFragment.EXTRA_SELECT_COUNT, mDefaultCount);
-            bundle.putInt(MultiImageSelectorFragment.EXTRA_SELECT_MODE, mode);
-            bundle.putBoolean(MultiImageSelectorFragment.EXTRA_SHOW_CAMERA, isShow);
-            bundle.putStringArrayList(MultiImageSelectorFragment.EXTRA_DEFAULT_SELECTED_LIST, resultList);
+        mSubmitButton.setVisibility(params.mode == SelectMode.MULTI ? View.VISIBLE : View.GONE);
 
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.image_grid, Fragment.instantiate(this, MultiImageSelectorFragment.class.getName(), bundle))
-                    .commit();
-        }
-
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.image_grid, MultiImageSelectorFragment.newInstance(params))
+                .commit();
     }
 
     @Override
@@ -143,7 +127,7 @@ public class MultiImageSelectorActivity extends AppCompatActivity
     public void onSingleImageSelected(String path) {
         Intent data = new Intent();
         resultList.add(path);
-        data.putStringArrayListExtra(EXTRA_RESULT, resultList);
+        data.putStringArrayListExtra(PhotoPicker.EXTRA_RESULT, resultList);
         setResult(RESULT_OK, data);
         finish();
     }
@@ -172,7 +156,7 @@ public class MultiImageSelectorActivity extends AppCompatActivity
 
             Intent data = new Intent();
             resultList.add(imageFile.getAbsolutePath());
-            data.putStringArrayListExtra(EXTRA_RESULT, resultList);
+            data.putStringArrayListExtra(PhotoPicker.EXTRA_RESULT, resultList);
             setResult(RESULT_OK, data);
             finish();
         }

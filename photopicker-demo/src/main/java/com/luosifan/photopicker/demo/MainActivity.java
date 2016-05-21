@@ -18,8 +18,11 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
-import com.luosifan.photopicker.MultiImageSelector;
+import com.luosifan.photopicker.MultiImageSelectorActivity;
 import com.luosifan.photopicker.PhotoPicker;
+import com.luosifan.photopicker.picker.Load;
+import com.luosifan.photopicker.picker.PhotoSelectBuilder;
+import com.luosifan.photopicker.utils.ImageLoader;
 
 import java.util.ArrayList;
 
@@ -27,7 +30,6 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
 
-    private static final int REQUEST_IMAGE = 2;
     protected static final int REQUEST_STORAGE_READ_ACCESS_PERMISSION = 101;
     protected static final int REQUEST_STORAGE_WRITE_ACCESS_PERMISSION = 102;
 
@@ -88,16 +90,20 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-            MultiImageSelector selector = MultiImageSelector.create(MainActivity.this);
-            selector.showCamera(showCamera);
-            selector.count(maxNum);
+
+            Load load = PhotoPicker.with(ImageLoader.class)
+                    .load()
+                    .showCamera(showCamera)
+                    .gridColumns(2);
+
+            PhotoSelectBuilder builder;
+
             if (mChoiceMode.getCheckedRadioButtonId() == R.id.single) {
-                selector.single();
+                builder = load.single();
             } else {
-                selector.multi();
+                builder = load.multi().maxPickSize(maxNum).selectedPaths(mSelectPath);
             }
-            selector.origin(mSelectPath);
-            selector.start(MainActivity.this, REQUEST_IMAGE);
+            builder.start(MainActivity.this);
         }
     }
 
@@ -133,9 +139,9 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_IMAGE){
+        if(requestCode == PhotoPicker.REQUEST_SELECTED){
             if(resultCode == RESULT_OK){
-                mSelectPath = data.getStringArrayListExtra(MultiImageSelector.EXTRA_RESULT);
+                mSelectPath = data.getStringArrayListExtra(PhotoPicker.EXTRA_RESULT);
                 StringBuilder sb = new StringBuilder();
                 for(String p: mSelectPath){
                     sb.append(p);

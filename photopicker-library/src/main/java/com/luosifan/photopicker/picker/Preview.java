@@ -1,6 +1,6 @@
 package com.luosifan.photopicker.picker;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by wzfu on 16/5/21.
@@ -11,7 +11,7 @@ public class Preview extends PhotoPreviewBuilder{
         super(params);
     }
 
-    public Preview paths(List<String> selectedPaths){
+    public Preview paths(ArrayList<String> selectedPaths){
         super.params.selectedPaths = selectedPaths;
         return this;
     }

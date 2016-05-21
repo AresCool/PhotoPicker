@@ -1,6 +1,6 @@
 package com.luosifan.photopicker.picker;
 
-import java.util.List;
+import java.util.ArrayList;
 
 /**
  * Created by wzfu on 16/5/21.
@@ -9,9 +9,10 @@ public class MultiSelect extends PhotoSelectBuilder {
 
     public MultiSelect(PickerParams params) {
         super(params);
+        super.params.mode = SelectMode.MULTI;
     }
 
-    public MultiSelect selectedPaths(List<String> paths){
+    public MultiSelect selectedPaths(ArrayList<String> paths){
         super.params.selectedPaths = paths;
         return this;
     }
