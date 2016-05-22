@@ -9,6 +9,7 @@ import android.support.v4.app.Fragment;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -34,8 +35,9 @@ public class MultiImageSelectorActivity extends AppCompatActivity
     private static final int DEFAULT_IMAGE_SIZE = 9;
 
     private ArrayList<String> resultList = new ArrayList<>();
-    private Button mSubmitButton;
     private int mDefaultCount = DEFAULT_IMAGE_SIZE;
+    private MenuItem menuItemDone;
+    private static final int menuItemDoneId = Menu.FIRST + 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,8 +59,6 @@ public class MultiImageSelectorActivity extends AppCompatActivity
             actionBar.setDisplayHomeAsUpEnabled(true);
         }
 
-        mSubmitButton = (Button) findViewById(R.id.commit);
-
         Intent intent = getIntent();
 
         PickerParams pickerParams = (PickerParams) intent.getSerializableExtra(PhotoPicker.PARAMS);
@@ -70,27 +70,7 @@ public class MultiImageSelectorActivity extends AppCompatActivity
             if(pickerParams.selectedPaths != null){
                 resultList = pickerParams.selectedPaths;
             }
-
-            updateDoneText(resultList);
-
-            mSubmitButton.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    if(resultList != null && resultList.size() > 0) {
-                        // Notify success
-                        Intent data = new Intent();
-                        data.putStringArrayListExtra(PhotoPicker.EXTRA_RESULT, resultList);
-                        setResult(RESULT_OK, data);
-                    }else{
-                        setResult(RESULT_CANCELED);
-                    }
-                    finish();
-                }
-            });
         }
-
-        mSubmitButton.setVisibility(pickerParams.mode == SelectMode.MULTI ? View.VISIBLE : View.GONE);
-
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.image_grid, MultiImageSelectorFragment.newInstance(pickerParams))
                 .commit();
@@ -99,10 +79,23 @@ public class MultiImageSelectorActivity extends AppCompatActivity
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
+
             case android.R.id.home:
                 setResult(RESULT_CANCELED);
                 finish();
                 return true;
+
+            case menuItemDoneId:
+                if(resultList != null && resultList.size() > 0) {
+                    // Notify success
+                    Intent data = new Intent();
+                    data.putStringArrayListExtra(PhotoPicker.EXTRA_RESULT, resultList);
+                    setResult(RESULT_OK, data);
+                }else{
+                    setResult(RESULT_CANCELED);
+                }
+                finish();
+                break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -112,16 +105,14 @@ public class MultiImageSelectorActivity extends AppCompatActivity
      * @param resultList selected image data
      */
     private void updateDoneText(ArrayList<String> resultList){
-        int size = 0;
-        if(resultList == null || resultList.size()<=0){
-            mSubmitButton.setText(R.string.action_done);
-            mSubmitButton.setEnabled(false);
-        }else{
-            size = resultList.size();
-            mSubmitButton.setEnabled(true);
+
+        if(menuItemDone == null || resultList == null){
+            return;
         }
-        mSubmitButton.setText(getString(R.string.action_button_string,
-                getString(R.string.action_done), size, mDefaultCount));
+
+        menuItemDone.setVisible(resultList.size() > 0);
+        menuItemDone.setTitle(getString(R.string.action_button_string,
+                getString(R.string.action_done), resultList.size(), mDefaultCount));
     }
 
     @Override
@@ -161,5 +152,14 @@ public class MultiImageSelectorActivity extends AppCompatActivity
             setResult(RESULT_OK, data);
             finish();
         }
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        menuItemDone = menu.add(Menu.NONE, menuItemDoneId, 0, "Finish");
+        menuItemDone.setShowAsAction(MenuItem.SHOW_AS_ACTION_IF_ROOM);
+        menuItemDone.setVisible(false);
+        updateDoneText(resultList);;
+        return true;
     }
 }
