@@ -25,6 +25,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ListPopupWindow;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -42,6 +43,7 @@ import com.luosifan.photopicker.bean.Image;
 import com.luosifan.photopicker.picker.PickerParams;
 import com.luosifan.photopicker.picker.SelectMode;
 import com.luosifan.photopicker.utils.FileUtils;
+import com.luosifan.photopicker.utils.PhotoDirectoryLoader;
 import com.luosifan.photopicker.utils.ScreenUtils;
 
 import java.io.File;
@@ -53,19 +55,14 @@ import java.util.List;
  * Multi image selector Fragment
  * Created by Nereo on 2015/4/7.
  * Updated by nereo on 2016/5/18.
+ * Updated by wzfu on 2016/5/22.
  */
 public class MultiImageSelectorFragment extends Fragment {
-
-    public static final String TAG = "MultiImageSelectorFragment";
 
     private static final int REQUEST_STORAGE_WRITE_ACCESS_PERMISSION = 110;
     private static final int REQUEST_CAMERA = 100;
 
     private static final String KEY_TEMP_FILE = "key_temp_file";
-
-    // loaders
-    private static final int LOADER_ALL = 0;
-    private static final int LOADER_CATEGORY = 1;
 
     // image result data set
     private ArrayList<String> resultList = new ArrayList<>();
@@ -146,6 +143,7 @@ public class MultiImageSelectorFragment extends Fragment {
             if(tmp != null && tmp.size()>0) {
                 resultList = tmp;
             }
+            refreshPreviewButtonState(resultList);
         }
         mImageAdapter = new ImageGridAdapter(getActivity(), imageLoader, pickerParams.showCamera,
                 pickerParams.gridColumns);
@@ -237,7 +235,7 @@ public class MultiImageSelectorFragment extends Fragment {
                         mFolderPopupWindow.dismiss();
 
                         if (index == 0) {
-                            getActivity().getSupportLoaderManager().restartLoader(LOADER_ALL, null, mLoaderCallback);
+                            getActivity().getSupportLoaderManager().restartLoader(0, null, mLoaderCallback);
                             mCategoryText.setText(R.string.folder_all);
                             if (pickerParams.showCamera) {
                                 mImageAdapter.setShowCamera(true);
@@ -282,7 +280,7 @@ public class MultiImageSelectorFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
         // load image data
-        getActivity().getSupportLoaderManager().initLoader(LOADER_ALL, null, mLoaderCallback);
+        getActivity().getSupportLoaderManager().initLoader(0, null, mLoaderCallback);
     }
 
     @Override
@@ -398,13 +396,7 @@ public class MultiImageSelectorFragment extends Fragment {
                     }
                 }
                 mImageAdapter.select(image);
-
-                String text = getString(R.string.preview);
-                if(resultList.size() > 0) {
-                    text += "(" + resultList.size() + ")";
-                }
-                btnPreview.setText(text);
-                btnPreview.setEnabled(resultList.size() > 0);
+                refreshPreviewButtonState(resultList);
             }else if(mode == SelectMode.SINGLE) {
                 if(mCallback != null){
                     mCallback.onSingleImageSelected(image.path);
@@ -413,31 +405,28 @@ public class MultiImageSelectorFragment extends Fragment {
         }
     }
 
-    private LoaderManager.LoaderCallbacks<Cursor> mLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
+    private void refreshPreviewButtonState(ArrayList<String> resultList){
+        String text = getString(R.string.preview);
+        if(resultList.size() > 0) {
+            text += "(" + resultList.size() + ")";
+        }
+        btnPreview.setText(text);
+        btnPreview.setEnabled(resultList.size() > 0);
+    }
 
-        private final String[] IMAGE_PROJECTION = {
-                MediaStore.Images.Media.DATA,
-                MediaStore.Images.Media.DISPLAY_NAME,
-                MediaStore.Images.Media.DATE_ADDED,
-                MediaStore.Images.Media.MIME_TYPE,
-                MediaStore.Images.Media.SIZE,
-                MediaStore.Images.Media._ID };
+    private LoaderManager.LoaderCallbacks<Cursor> mLoaderCallback = new LoaderManager.LoaderCallbacks<Cursor>() {
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-            CursorLoader cursorLoader = null;
-            if(id == LOADER_ALL) {
-                cursorLoader = new CursorLoader(getActivity(),
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
-                        IMAGE_PROJECTION[4]+">0 AND "+IMAGE_PROJECTION[3]+"=? OR "+IMAGE_PROJECTION[3]+"=? ",
-                        new String[]{"image/jpeg", "image/png"}, IMAGE_PROJECTION[2] + " DESC");
-            }else if(id == LOADER_CATEGORY){
-                cursorLoader = new CursorLoader(getActivity(),
-                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
-                        IMAGE_PROJECTION[4]+">0 AND "+IMAGE_PROJECTION[0]+" like '%"+args.getString("path")+"%'",
-                        null, IMAGE_PROJECTION[2] + " DESC");
-            }
-            return cursorLoader;
+//            CursorLoader cursorLoader = null;
+//                cursorLoaderursorLoader = new PhotoDirectoryLoader(getActivity(), pickerParams.filter);
+//            else if(id == LOADER_CATEGORY){
+//                cursorLoader = new CursorLoader(getActivity(),
+//                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
+//                        IMAGE_PROJECTION[4]+">0 AND "+IMAGE_PROJECTION[0]+" like '%"+args.getString("path")+"%'",
+//                        null, IMAGE_PROJECTION[2] + " DESC");
+//            }
+            return new PhotoDirectoryLoader(getActivity(), pickerParams.filter);
         }
 
         private boolean fileExist(String path){
@@ -454,9 +443,12 @@ public class MultiImageSelectorFragment extends Fragment {
                     List<Image> images = new ArrayList<>();
                     data.moveToFirst();
                     do{
-                        String path = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[0]));
-                        String name = data.getString(data.getColumnIndexOrThrow(IMAGE_PROJECTION[1]));
-                        long dateTime = data.getLong(data.getColumnIndexOrThrow(IMAGE_PROJECTION[2]));
+                        String path = data.getString(data.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
+                        String name = data.getString(data.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME));
+                        long dateTime = data.getLong(data.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED));
+
+                        Log.e("-->size = ", data.getString(data.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)));
+
                         Image image = null;
                         if (fileExist(path) && !TextUtils.isEmpty(name)) {
                             image = new Image(path, name, dateTime);

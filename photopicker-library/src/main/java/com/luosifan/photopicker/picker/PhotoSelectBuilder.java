@@ -11,6 +11,10 @@ public class PhotoSelectBuilder extends Builder{
 
     public PhotoSelectBuilder(PickerParams params) {
         super(params);
+
+        if(params.filter == null){
+            params.filter = new PhotoFilter();
+        }
     }
 
     @Override

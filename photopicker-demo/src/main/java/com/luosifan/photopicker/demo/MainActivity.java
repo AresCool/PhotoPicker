@@ -30,6 +30,7 @@ import com.luosifan.photopicker.demo.loader.PicassoImageLoader;
 import com.luosifan.photopicker.demo.loader.UILImageLoader;
 import com.luosifan.photopicker.demo.loader.XUtilsImageLoader;
 import com.luosifan.photopicker.picker.Load;
+import com.luosifan.photopicker.picker.PhotoFilter;
 import com.luosifan.photopicker.picker.PhotoSelectBuilder;
 
 import java.util.ArrayList;
@@ -124,6 +125,7 @@ public class MainActivity extends AppCompatActivity {
             Load load = PhotoPicker.with(getImageLoader(spinner_imageloader.getSelectedItem().toString()))
                     .load()
                     .showCamera(showCamera)
+//                    .filter(PhotoFilter.build().showGif(false).minWidth(400))
                     .gridColumns(columns);
 
             PhotoSelectBuilder builder;
