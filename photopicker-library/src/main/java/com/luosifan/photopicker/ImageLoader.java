@@ -42,7 +42,6 @@ public interface ImageLoader extends Serializable{
                       int errorResId,
                       int width, int height);
 
-
     void clearMemoryCache();
 
     /**

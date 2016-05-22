@@ -15,6 +15,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
@@ -39,9 +40,10 @@ public class MainActivity extends AppCompatActivity {
     private TextView mResultText;
     private RadioGroup mChoiceMode, mShowCamera;
     private EditText mRequestNum;
+    private EditText mRequestColumns;
+    private LinearLayout pick_size_layout;
 
     private ArrayList<String> mSelectPath;
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -51,16 +53,16 @@ public class MainActivity extends AppCompatActivity {
         mChoiceMode = (RadioGroup) findViewById(R.id.choice_mode);
         mShowCamera = (RadioGroup) findViewById(R.id.show_camera);
         mRequestNum = (EditText) findViewById(R.id.request_num);
+        mRequestColumns = (EditText) findViewById(R.id.edit_colums);
+        pick_size_layout = (LinearLayout) findViewById(R.id.pick_size_layout);
 
         mChoiceMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(RadioGroup radioGroup, int checkedId) {
-                if (checkedId == R.id.multi) {
-                    mRequestNum.setEnabled(true);
-                } else {
-                    mRequestNum.setEnabled(false);
+                if (checkedId != R.id.multi) {
                     mRequestNum.setText("");
                 }
+                pick_size_layout.setVisibility(checkedId == R.id.multi ? View.VISIBLE : View.GONE);
             }
         });
 
@@ -94,10 +96,15 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
+            int columns = 3;
+            if (!TextUtils.isEmpty(mRequestColumns.getText().toString())){
+                columns = Integer.parseInt(mRequestColumns.getText().toString());
+            }
+
             Load load = PhotoPicker.with(XUtilsImageLoader.class)
                     .load()
                     .showCamera(showCamera)
-                    .gridColumns(2);
+                    .gridColumns(columns);
 
             PhotoSelectBuilder builder;
 

@@ -22,7 +22,9 @@ public class Load {
     }
 
     public Load gridColumns(int columns){
-        this.params.gridColumns = columns;
+        if(columns > 0) {
+            this.params.gridColumns = columns;
+        }
         return this;
     }
 

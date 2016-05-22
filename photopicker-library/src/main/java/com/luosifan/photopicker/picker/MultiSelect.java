@@ -12,16 +12,15 @@ public class MultiSelect extends PhotoSelectBuilder {
         super.params.mode = SelectMode.MULTI;
     }
 
-    public MultiSelect selectedPaths(ArrayList<String> paths){
+    public MultiSelect selectedPaths(ArrayList<String> paths) {
         super.params.selectedPaths = paths;
         return this;
     }
 
-    public MultiSelect maxPickSize(int maxPickSize){
-        if(maxPickSize < 1){
-            throw new IllegalArgumentException("maxPickSize must not be > 0.");
+    public MultiSelect maxPickSize(int maxPickSize) {
+        if(maxPickSize > 0) {
+            super.params.maxPickSize = maxPickSize;
         }
-        super.params.maxPickSize = maxPickSize;
         return this;
     }
 }
