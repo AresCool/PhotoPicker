@@ -30,6 +30,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -81,6 +82,7 @@ public class MultiImageSelectorFragment extends Fragment {
 
     private TextView mCategoryText;
     private View mPopupAnchorView;
+    private Button btnPreview;
 
     private boolean hasFolderGened = false;
 
@@ -134,7 +136,12 @@ public class MultiImageSelectorFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        mPopupAnchorView = view.findViewById(R.id.footer);
+        mCategoryText = (TextView) view.findViewById(R.id.category_btn);
+        btnPreview = (Button) view.findViewById(R.id.btnPreview);
+
         if(pickerParams.mode == SelectMode.MULTI) {
+            btnPreview.setVisibility(View.VISIBLE);
             ArrayList<String> tmp = pickerParams.selectedPaths;
             if(tmp != null && tmp.size()>0) {
                 resultList = tmp;
@@ -144,9 +151,6 @@ public class MultiImageSelectorFragment extends Fragment {
                 pickerParams.gridColumns);
         mImageAdapter.showSelectIndicator(pickerParams.mode == SelectMode.MULTI);
 
-        mPopupAnchorView = view.findViewById(R.id.footer);
-
-        mCategoryText = (TextView) view.findViewById(R.id.category_btn);
         mCategoryText.setText(R.string.folder_all);
         mCategoryText.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -394,7 +398,14 @@ public class MultiImageSelectorFragment extends Fragment {
                     }
                 }
                 mImageAdapter.select(image);
-            }else if(mode == SelectMode.SINGLE){
+
+                String text = getString(R.string.preview);
+                if(resultList.size() > 0) {
+                    text += "(" + resultList.size() + ")";
+                }
+                btnPreview.setText(text);
+                btnPreview.setEnabled(resultList.size() > 0);
+            }else if(mode == SelectMode.SINGLE) {
                 if(mCallback != null){
                     mCallback.onSingleImageSelected(image.path);
                 }
