@@ -14,12 +14,15 @@ import android.text.TextUtils;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.LinearLayout;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.luosifan.photopicker.ImageLoader;
 import com.luosifan.photopicker.PhotoPicker;
 import com.luosifan.photopicker.demo.loader.FrescoImageLoader;
 import com.luosifan.photopicker.demo.loader.GlideImageLoader;
@@ -30,6 +33,7 @@ import com.luosifan.photopicker.picker.Load;
 import com.luosifan.photopicker.picker.PhotoSelectBuilder;
 
 import java.util.ArrayList;
+import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -42,8 +46,18 @@ public class MainActivity extends AppCompatActivity {
     private EditText mRequestNum;
     private EditText mRequestColumns;
     private LinearLayout pick_size_layout;
+    private Spinner spinner_imageloader;
+
+    public static final String[] IMAGELODERS = {
+            "Picasso",
+            "Glide",
+            "Fresco",
+            "Universal-Image-Loader",
+            "Xutils3"
+    };
 
     private ArrayList<String> mSelectPath;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,6 +69,7 @@ public class MainActivity extends AppCompatActivity {
         mRequestNum = (EditText) findViewById(R.id.request_num);
         mRequestColumns = (EditText) findViewById(R.id.edit_colums);
         pick_size_layout = (LinearLayout) findViewById(R.id.pick_size_layout);
+        spinner_imageloader = (Spinner) findViewById(R.id.spinner_imageloader);
 
         mChoiceMode.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             @Override
@@ -65,6 +80,11 @@ public class MainActivity extends AppCompatActivity {
                 pick_size_layout.setVisibility(checkedId == R.id.multi ? View.VISIBLE : View.GONE);
             }
         });
+
+        ArrayAdapter<String> loadersAdapter = new ArrayAdapter<String>(this,
+                android.R.layout.simple_spinner_item, IMAGELODERS);
+        loadersAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_imageloader.setAdapter(loadersAdapter);
 
         View button = findViewById(R.id.button);
         if (button != null) {
@@ -101,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                 columns = Integer.parseInt(mRequestColumns.getText().toString());
             }
 
-            Load load = PhotoPicker.with(XUtilsImageLoader.class)
+            Load load = PhotoPicker.with(getImageLoader(spinner_imageloader.getSelectedItem().toString()))
                     .load()
                     .showCamera(showCamera)
                     .gridColumns(columns);
@@ -160,6 +180,28 @@ public class MainActivity extends AppCompatActivity {
                 mResultText.setText(sb.toString());
             }
         }
+    }
+
+    private Class<? extends ImageLoader> getImageLoader(String selectedItem){
+        Class<? extends ImageLoader> imageloader = null;
+        switch (selectedItem){
+            case "Picasso":
+                imageloader = PicassoImageLoader.class;
+                break;
+            case "Glide":
+                imageloader = GlideImageLoader.class;
+                break;
+            case "Fresco":
+                imageloader = FrescoImageLoader.class;
+                break;
+            case "Universal-Image-Loader":
+                imageloader = UILImageLoader.class;
+                break;
+            case "Xutils3":
+                imageloader = XUtilsImageLoader.class;
+                break;
+        }
+        return imageloader;
     }
 
     @Override

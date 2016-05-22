@@ -523,4 +523,14 @@ public class MultiImageSelectorFragment extends Fragment {
         void onImageUnselected(String path);
         void onCameraShot(File imageFile);
     }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        // 释放缓存
+        if(imageLoader != null){
+            imageLoader.clearMemoryCache();
+            imageLoader = null;
+        }
+    }
 }
