@@ -33,6 +33,7 @@ import com.luosifan.photopicker.view.GFImageView;
  * Desction:
  * Author:pengjianbo
  * Date:15/12/1 下午10:28
+ * Updated by wzfu on 2016/5/22.
  */
 public class GlideImageLoader implements ImageLoader {
 

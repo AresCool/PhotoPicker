@@ -22,53 +22,47 @@ import android.widget.AbsListView;
 
 import com.luosifan.photopicker.utils.ImageLoader;
 import com.luosifan.photopicker.view.GFImageView;
-import com.squareup.picasso.Picasso;
 
-import java.io.File;
-
+import org.xutils.image.ImageOptions;
+import org.xutils.x;
 
 /**
  * Desction:
  * Author:pengjianbo
- * Date:15/12/1 下午10:26
+ * Date:15/12/2 下午6:54
  * Updated by wzfu on 2016/5/22.
  */
-public class PicassoImageLoader implements ImageLoader {
+public class XUtilsImageLoader implements ImageLoader {
 
-    private Bitmap.Config mConfig;
+    private Bitmap.Config mImageConfig;
 
-    public PicassoImageLoader() {
+    public XUtilsImageLoader() {
         this(Bitmap.Config.RGB_565);
     }
 
-    public PicassoImageLoader(Bitmap.Config config) {
-        this.mConfig = config;
+    public XUtilsImageLoader(Bitmap.Config config) {
+        this.mImageConfig = config;
     }
 
     @Override
     public void displayImage(Context mCxt, String path, GFImageView imageView, int tagId, int placeholderResId, int errorResId, int width, int height) {
+        ImageOptions options = new ImageOptions.Builder()
+                .setLoadingDrawableId(placeholderResId)
+                .setFailureDrawableId(errorResId)
+                .setConfig(mImageConfig)
+                .setSize(width, height)
+                .setCrop(true)
+                .setUseMemCache(false)
+                .build();
+        x.image().bind(imageView, "file://" + path, options);
+    }
 
-        Picasso.with(mCxt)
-                .load(new File(path))
-                .placeholder(placeholderResId)
-                .error(errorResId)
-                .config(mConfig)
-                .resize(width, height)
-                .centerCrop()
-                .tag(tagId)
-                .into(imageView);
+    @Override
+    public void onScrollStateChanged(AbsListView view, int scrollState, int tag) {
+
     }
 
     @Override
     public void clearMemoryCache() {
-    }
-
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState, int tagId) {
-        if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
-            Picasso.with(view.getContext()).pauseTag(tagId);
-        } else {
-            Picasso.with(view.getContext()).resumeTag(tagId);
-        }
     }
 }

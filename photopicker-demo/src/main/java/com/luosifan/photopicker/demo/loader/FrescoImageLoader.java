@@ -41,6 +41,7 @@ import com.luosifan.photopicker.view.GFImageView;
  * Desction:fresco image loader
  * Author:pengjianbo
  * Date:15/12/24 下午9:34
+ * Updated by wzfu on 2016/5/22.
  */
 public class FrescoImageLoader implements ImageLoader {
 

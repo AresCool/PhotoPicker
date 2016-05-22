@@ -11,6 +11,8 @@ import com.nostra13.universalimageloader.core.ImageLoader;
 import com.nostra13.universalimageloader.core.ImageLoaderConfiguration;
 import com.nostra13.universalimageloader.core.assist.QueueProcessingType;
 
+import org.xutils.x;
+
 /**
  * Created by wzfu on 16/5/22.
  */
@@ -20,14 +22,17 @@ public class DemoApplication extends Application {
     public void onCreate() {
         super.onCreate();
 
-        // fresco int
+        // Fresco int
         ImagePipelineConfig imagePipelineConfig = ImagePipelineConfig.newBuilder(this)
                 .setBitmapsConfig(Bitmap.Config.RGB_565)
                 .build();
         Fresco.initialize(this, imagePipelineConfig);
 
-        // UILImageLoader INIT
+        // UILImageLoader init
         initImageLoader(this);
+
+        // XUtils init
+        x.Ext.init(this);
     }
 
 

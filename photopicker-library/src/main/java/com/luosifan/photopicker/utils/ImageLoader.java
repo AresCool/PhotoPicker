@@ -48,5 +48,10 @@ public interface ImageLoader extends Serializable{
      * @param view
      * @param scrollState
      */
+
+    // scrollState = SCROLL_STATE_TOUCH_SCROLL(1) 正在滚动
+    // scrollState = SCROLL_STATE_FLING(2) 手指做了抛的动作（手指离开屏幕前，用力滑了一下）
+    // scrollState = SCROLL_STATE_IDLE(0) 停止滚动
+
     void onScrollStateChanged(AbsListView view, int scrollState, int tag);
 }

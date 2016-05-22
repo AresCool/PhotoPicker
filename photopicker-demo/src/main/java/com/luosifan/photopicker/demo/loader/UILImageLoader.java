@@ -34,6 +34,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
  * Desction:
  * Author:pengjianbo
  * Date:15/10/10 下午5:52
+ * Updated by wzfu on 2016/5/22.
  */
 public class UILImageLoader implements com.luosifan.photopicker.utils.ImageLoader {
 

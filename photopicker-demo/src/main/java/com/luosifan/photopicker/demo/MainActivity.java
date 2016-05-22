@@ -24,6 +24,7 @@ import com.luosifan.photopicker.demo.loader.FrescoImageLoader;
 import com.luosifan.photopicker.demo.loader.GlideImageLoader;
 import com.luosifan.photopicker.demo.loader.PicassoImageLoader;
 import com.luosifan.photopicker.demo.loader.UILImageLoader;
+import com.luosifan.photopicker.demo.loader.XUtilsImageLoader;
 import com.luosifan.photopicker.picker.Load;
 import com.luosifan.photopicker.picker.PhotoSelectBuilder;
 
@@ -93,7 +94,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            Load load = PhotoPicker.with(UILImageLoader.class)
+            Load load = PhotoPicker.with(XUtilsImageLoader.class)
                     .load()
                     .showCamera(showCamera)
                     .gridColumns(2);
