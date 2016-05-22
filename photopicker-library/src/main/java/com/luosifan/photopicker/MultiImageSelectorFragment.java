@@ -41,12 +41,10 @@ import com.luosifan.photopicker.bean.Image;
 import com.luosifan.photopicker.picker.PickerParams;
 import com.luosifan.photopicker.picker.SelectMode;
 import com.luosifan.photopicker.utils.FileUtils;
-import com.luosifan.photopicker.utils.ImageLoader;
 import com.luosifan.photopicker.utils.ScreenUtils;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.PrivilegedAction;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,7 +86,7 @@ public class MultiImageSelectorFragment extends Fragment {
 
     private File mTmpFile;
 
-    private PickerParams params;
+    private PickerParams pickerParams;
     private ImageLoader imageLoader;
 
     public static MultiImageSelectorFragment newInstance(PickerParams params){
@@ -117,11 +115,11 @@ public class MultiImageSelectorFragment extends Fragment {
             throw new IllegalArgumentException("The Fragment Arguments must contain the PhotoPicker.PARMAS attributes");
         }
 
-        params = (PickerParams) getArguments().getSerializable(PhotoPicker.PARAMS);
+        pickerParams = (PickerParams) getArguments().getSerializable(PhotoPicker.PARAMS);
 
         // init ImageLoader
         try {
-            imageLoader = params.imageLoaderClass.newInstance();
+            imageLoader = pickerParams.imageLoaderClass.newInstance();
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
@@ -136,14 +134,15 @@ public class MultiImageSelectorFragment extends Fragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        if(params.mode == SelectMode.MULTI) {
-            ArrayList<String> tmp = params.selectedPaths;
+        if(pickerParams.mode == SelectMode.MULTI) {
+            ArrayList<String> tmp = pickerParams.selectedPaths;
             if(tmp != null && tmp.size()>0) {
                 resultList = tmp;
             }
         }
-        mImageAdapter = new ImageGridAdapter(getActivity(), imageLoader, params.showCamera, params.gridColumns);
-        mImageAdapter.showSelectIndicator(params.mode == SelectMode.MULTI);
+        mImageAdapter = new ImageGridAdapter(getActivity(), imageLoader, pickerParams.showCamera,
+                pickerParams.gridColumns);
+        mImageAdapter.showSelectIndicator(pickerParams.mode == SelectMode.MULTI);
 
         mPopupAnchorView = view.findViewById(R.id.footer);
 
@@ -169,7 +168,7 @@ public class MultiImageSelectorFragment extends Fragment {
         });
 
         mGridView = (GridView) view.findViewById(R.id.grid);
-        mGridView.setNumColumns(params.gridColumns);
+        mGridView.setNumColumns(pickerParams.gridColumns);
         mGridView.setAdapter(mImageAdapter);
         mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -179,23 +178,18 @@ public class MultiImageSelectorFragment extends Fragment {
                         showCameraAction();
                     } else {
                         Image image = (Image) adapterView.getAdapter().getItem(i);
-                        selectImageFromGrid(image, params.mode);
+                        selectImageFromGrid(image, pickerParams.mode);
                     }
                 } else {
                     Image image = (Image) adapterView.getAdapter().getItem(i);
-                    selectImageFromGrid(image, params.mode);
+                    selectImageFromGrid(image, pickerParams.mode);
                 }
             }
         });
         mGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override
             public void onScrollStateChanged(AbsListView view, int scrollState) {
-//                if (scrollState == SCROLL_STATE_FLING) {
-//                    Picasso.with(view.getContext()).pauseTag(TAG);
-//                } else {
-//                    Picasso.with(view.getContext()).resumeTag(TAG);
-//                }
-                if(null != imageLoader) {
+                if(imageLoader != null) {
                     imageLoader.onScrollStateChanged(view, scrollState, R.id.photopicker_item_tag_id);
                 }
             }
@@ -241,7 +235,7 @@ public class MultiImageSelectorFragment extends Fragment {
                         if (index == 0) {
                             getActivity().getSupportLoaderManager().restartLoader(LOADER_ALL, null, mLoaderCallback);
                             mCategoryText.setText(R.string.folder_all);
-                            if (params.showCamera) {
+                            if (pickerParams.showCamera) {
                                 mImageAdapter.setShowCamera(true);
                             } else {
                                 mImageAdapter.setShowCamera(false);
@@ -390,7 +384,7 @@ public class MultiImageSelectorFragment extends Fragment {
                         mCallback.onImageUnselected(image.path);
                     }
                 } else {
-                    if(params.maxPickSize == resultList.size()){
+                    if(pickerParams.maxPickSize == resultList.size()){
                         Toast.makeText(getActivity(), R.string.msg_amount_limit, Toast.LENGTH_SHORT).show();
                         return;
                     }

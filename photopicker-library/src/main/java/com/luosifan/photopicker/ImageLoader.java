@@ -14,7 +14,7 @@
  *  limitations under the License.
  */
 
-package com.luosifan.photopicker.utils;
+package com.luosifan.photopicker;
 
 import android.app.Activity;
 import android.content.Context;
@@ -30,28 +30,26 @@ import java.io.Serializable;
  * Desction:imageloader抽象类，外部需要实现这个类去加载图片， GalleryFinal尽力减少对第三方库的依赖，所以这么干了
  * Author:pengjianbo
  * Date:15/10/10 下午5:27
+ * Updated by wzfu on 2016/5/22.
  */
 public interface ImageLoader extends Serializable{
 
     void displayImage(Context mCxt,
                       String path,
                       GFImageView imageView,
-                      int tagId,
+                      int tagId, // 用于图片列表在滑动的时候，调用pause()取消请求，滑动停止时，调用resume()恢复请求
                       int placeholderResId,
                       int errorResId,
                       int width, int height);
+
 
     void clearMemoryCache();
 
     /**
      * 图片列表滑动监听
      * @param view
-     * @param scrollState
+     * @param scrollState <a href="http://dwz.cn/3pQB58" >OnScrollListener回调分析</>
      */
-
-    // scrollState = SCROLL_STATE_TOUCH_SCROLL(1) 正在滚动
-    // scrollState = SCROLL_STATE_FLING(2) 手指做了抛的动作（手指离开屏幕前，用力滑了一下）
-    // scrollState = SCROLL_STATE_IDLE(0) 停止滚动
 
     void onScrollStateChanged(AbsListView view, int scrollState, int tag);
 }

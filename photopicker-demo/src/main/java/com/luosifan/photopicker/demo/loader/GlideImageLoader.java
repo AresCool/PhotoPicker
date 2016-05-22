@@ -26,7 +26,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.target.ImageViewTarget;
-import com.luosifan.photopicker.utils.ImageLoader;
+import com.luosifan.photopicker.ImageLoader;
 import com.luosifan.photopicker.view.GFImageView;
 
 /**

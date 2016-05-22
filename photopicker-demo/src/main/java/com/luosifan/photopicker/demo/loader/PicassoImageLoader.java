@@ -20,7 +20,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.AbsListView;
 
-import com.luosifan.photopicker.utils.ImageLoader;
+import com.luosifan.photopicker.ImageLoader;
 import com.luosifan.photopicker.view.GFImageView;
 import com.squareup.picasso.Picasso;
 

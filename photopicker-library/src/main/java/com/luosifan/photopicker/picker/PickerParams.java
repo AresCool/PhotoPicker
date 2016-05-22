@@ -1,6 +1,6 @@
 package com.luosifan.photopicker.picker;
 
-import com.luosifan.photopicker.utils.ImageLoader;
+import com.luosifan.photopicker.ImageLoader;
 
 import java.util.ArrayList;
 

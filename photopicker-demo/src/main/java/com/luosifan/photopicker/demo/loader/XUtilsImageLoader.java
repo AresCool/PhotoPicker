@@ -20,7 +20,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.widget.AbsListView;
 
-import com.luosifan.photopicker.utils.ImageLoader;
+import com.luosifan.photopicker.ImageLoader;
 import com.luosifan.photopicker.view.GFImageView;
 
 import org.xutils.image.ImageOptions;
@@ -52,7 +52,7 @@ public class XUtilsImageLoader implements ImageLoader {
                 .setConfig(mImageConfig)
                 .setSize(width, height)
                 .setCrop(true)
-                .setUseMemCache(false)
+                .setUseMemCache(true)
                 .build();
         x.image().bind(imageView, "file://" + path, options);
     }

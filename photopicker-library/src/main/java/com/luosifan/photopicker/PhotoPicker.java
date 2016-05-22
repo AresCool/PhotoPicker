@@ -1,10 +1,8 @@
 package com.luosifan.photopicker;
 
 import com.luosifan.photopicker.picker.Load;
-import com.luosifan.photopicker.picker.PhotoFilter;
 import com.luosifan.photopicker.picker.PickerParams;
 import com.luosifan.photopicker.picker.PickerTheme;
-import com.luosifan.photopicker.utils.ImageLoader;
 
 /**
  * Created by wzfu on 16/5/21.

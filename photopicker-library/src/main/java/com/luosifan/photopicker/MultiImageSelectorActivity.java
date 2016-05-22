@@ -25,6 +25,7 @@ import java.util.List;
  * Created by Nereo on 2015/4/7.
  * Updated by nereo on 2016/1/19.
  * Updated by nereo on 2016/5/18.
+ * Updated by wzfu on 2016/5/22
  */
 public class MultiImageSelectorActivity extends AppCompatActivity
         implements MultiImageSelectorFragment.Callback{
@@ -60,14 +61,14 @@ public class MultiImageSelectorActivity extends AppCompatActivity
 
         Intent intent = getIntent();
 
-        PickerParams params = (PickerParams) intent.getSerializableExtra(PhotoPicker.PARAMS);
+        PickerParams pickerParams = (PickerParams) intent.getSerializableExtra(PhotoPicker.PARAMS);
 
-        mDefaultCount = params.maxPickSize;
+        mDefaultCount = pickerParams.maxPickSize;
 
-        if(params.mode == SelectMode.MULTI) {
+        if(pickerParams.mode == SelectMode.MULTI) {
 
-            if(params.selectedPaths != null){
-                resultList = params.selectedPaths;
+            if(pickerParams.selectedPaths != null){
+                resultList = pickerParams.selectedPaths;
             }
 
             updateDoneText(resultList);
@@ -88,10 +89,10 @@ public class MultiImageSelectorActivity extends AppCompatActivity
             });
         }
 
-        mSubmitButton.setVisibility(params.mode == SelectMode.MULTI ? View.VISIBLE : View.GONE);
+        mSubmitButton.setVisibility(pickerParams.mode == SelectMode.MULTI ? View.VISIBLE : View.GONE);
 
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.image_grid, MultiImageSelectorFragment.newInstance(params))
+                .add(R.id.image_grid, MultiImageSelectorFragment.newInstance(pickerParams))
                 .commit();
     }
 

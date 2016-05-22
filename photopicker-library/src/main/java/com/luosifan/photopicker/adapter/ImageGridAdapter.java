@@ -10,10 +10,9 @@ import android.view.WindowManager;
 import android.widget.BaseAdapter;
 import android.widget.ImageView;
 
-import com.luosifan.photopicker.MultiImageSelectorFragment;
 import com.luosifan.photopicker.R;
 import com.luosifan.photopicker.bean.Image;
-import com.luosifan.photopicker.utils.ImageLoader;
+import com.luosifan.photopicker.ImageLoader;
 import com.luosifan.photopicker.view.GFImageView;
 
 import java.io.File;
