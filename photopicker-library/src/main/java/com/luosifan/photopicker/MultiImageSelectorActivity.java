@@ -141,13 +141,10 @@ public class MultiImageSelectorActivity extends AppCompatActivity
     }
 
     @Override
-    public void onCameraShot(File imageFile) {
-        if(imageFile != null) {
-            // notify system the image has change
-            sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, Uri.fromFile(imageFile)));
-
+    public void onCameraShot(String filePath) {
+        if(filePath != null) {
             Intent data = new Intent();
-            resultList.add(imageFile.getAbsolutePath());
+            resultList.add(filePath);
             data.putStringArrayListExtra(PhotoPicker.EXTRA_RESULT, resultList);
             setResult(RESULT_OK, data);
             finish();

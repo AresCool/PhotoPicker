@@ -1,7 +1,6 @@
 package com.luosifan.photopicker;
 
 import android.Manifest;
-import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -11,7 +10,6 @@ import android.database.Cursor;
 import android.graphics.Color;
 import android.graphics.Point;
 import android.graphics.drawable.ColorDrawable;
-import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
@@ -20,7 +18,6 @@ import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
-import android.support.v4.content.CursorLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.ListPopupWindow;
@@ -42,7 +39,7 @@ import com.luosifan.photopicker.bean.Folder;
 import com.luosifan.photopicker.bean.Image;
 import com.luosifan.photopicker.picker.PickerParams;
 import com.luosifan.photopicker.picker.SelectMode;
-import com.luosifan.photopicker.utils.FileUtils;
+import com.luosifan.photopicker.utils.ImageCaptureManager;
 import com.luosifan.photopicker.utils.PhotoDirectoryLoader;
 import com.luosifan.photopicker.utils.ScreenUtils;
 
@@ -50,6 +47,8 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * Multi image selector Fragment
@@ -60,9 +59,6 @@ import java.util.List;
 public class MultiImageSelectorFragment extends Fragment {
 
     private static final int REQUEST_STORAGE_WRITE_ACCESS_PERMISSION = 110;
-    private static final int REQUEST_CAMERA = 100;
-
-    private static final String KEY_TEMP_FILE = "key_temp_file";
 
     // image result data set
     private ArrayList<String> resultList = new ArrayList<>();
@@ -83,10 +79,9 @@ public class MultiImageSelectorFragment extends Fragment {
 
     private boolean hasFolderGened = false;
 
-    private File mTmpFile;
-
     private PickerParams pickerParams;
     private ImageLoader imageLoader;
+    private ImageCaptureManager captureManager;
 
     public static MultiImageSelectorFragment newInstance(PickerParams params){
         MultiImageSelectorFragment fragment = new MultiImageSelectorFragment();
@@ -122,6 +117,8 @@ public class MultiImageSelectorFragment extends Fragment {
         } catch (Exception e) {
             throw new IllegalArgumentException(e);
         }
+
+        captureManager = new ImageCaptureManager(getActivity());
     }
 
     @Override
@@ -264,16 +261,14 @@ public class MultiImageSelectorFragment extends Fragment {
 
     @Override
     public void onSaveInstanceState(Bundle outState) {
+        captureManager.onSaveInstanceState(outState);
         super.onSaveInstanceState(outState);
-        outState.putSerializable(KEY_TEMP_FILE, mTmpFile);
     }
 
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        captureManager.onRestoreInstanceState(savedInstanceState);
         super.onViewStateRestored(savedInstanceState);
-        if (savedInstanceState != null) {
-            mTmpFile = (File) savedInstanceState.getSerializable(KEY_TEMP_FILE);
-        }
     }
 
     @Override
@@ -286,21 +281,13 @@ public class MultiImageSelectorFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode == REQUEST_CAMERA){
-            if(resultCode == Activity.RESULT_OK) {
-                if (mTmpFile != null) {
-                    if (mCallback != null) {
-                        mCallback.onCameraShot(mTmpFile);
-                    }
-                }
-            }else{
-                // delete tmp file
-                while (mTmpFile != null && mTmpFile.exists()){
-                    boolean success = mTmpFile.delete();
-                    if(success){
-                        mTmpFile = null;
-                    }
-                }
+
+        if (requestCode == ImageCaptureManager.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+
+            captureManager.galleryAddPic();
+
+            if (mCallback != null) {
+                mCallback.onCameraShot(captureManager.getCurrentPhotoPath());
             }
         }
     }
@@ -325,21 +312,12 @@ public class MultiImageSelectorFragment extends Fragment {
                     getString(R.string.permission_rationale_write_storage),
                     REQUEST_STORAGE_WRITE_ACCESS_PERMISSION);
         }else {
-            Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-            if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
-                try {
-                    mTmpFile = FileUtils.createTmpFile(getActivity());
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-                if (mTmpFile != null && mTmpFile.exists()) {
-                    intent.putExtra(MediaStore.EXTRA_OUTPUT, Uri.fromFile(mTmpFile));
-                    startActivityForResult(intent, REQUEST_CAMERA);
-                } else {
-                    Toast.makeText(getActivity(), R.string.error_image_not_exist, Toast.LENGTH_SHORT).show();
-                }
-            } else {
-                Toast.makeText(getActivity(), R.string.msg_no_camera, Toast.LENGTH_SHORT).show();
+            try {
+                Intent intent = captureManager.dispatchTakePictureIntent();
+                startActivityForResult(intent, ImageCaptureManager.REQUEST_TAKE_PHOTO);
+            } catch (IOException e) {
+                e.printStackTrace();
+                Toast.makeText(getActivity(), R.string.start_camera_error, Toast.LENGTH_SHORT).show();
             }
         }
     }
@@ -503,7 +481,7 @@ public class MultiImageSelectorFragment extends Fragment {
         void onSingleImageSelected(String path);
         void onImageSelected(String path);
         void onImageUnselected(String path);
-        void onCameraShot(File imageFile);
+        void onCameraShot(String filePath);
     }
 
     @Override
