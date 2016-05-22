@@ -418,14 +418,6 @@ public class MultiImageSelectorFragment extends Fragment {
 
         @Override
         public Loader<Cursor> onCreateLoader(int id, Bundle args) {
-//            CursorLoader cursorLoader = null;
-//                cursorLoaderursorLoader = new PhotoDirectoryLoader(getActivity(), pickerParams.filter);
-//            else if(id == LOADER_CATEGORY){
-//                cursorLoader = new CursorLoader(getActivity(),
-//                        MediaStore.Images.Media.EXTERNAL_CONTENT_URI, IMAGE_PROJECTION,
-//                        IMAGE_PROJECTION[4]+">0 AND "+IMAGE_PROJECTION[0]+" like '%"+args.getString("path")+"%'",
-//                        null, IMAGE_PROJECTION[2] + " DESC");
-//            }
             return new PhotoDirectoryLoader(getActivity(), pickerParams.filter);
         }
 
@@ -446,8 +438,6 @@ public class MultiImageSelectorFragment extends Fragment {
                         String path = data.getString(data.getColumnIndexOrThrow(MediaStore.Images.Media.DATA));
                         String name = data.getString(data.getColumnIndexOrThrow(MediaStore.Images.Media.DISPLAY_NAME));
                         long dateTime = data.getLong(data.getColumnIndexOrThrow(MediaStore.Images.Media.DATE_ADDED));
-
-                        Log.e("-->size = ", data.getString(data.getColumnIndexOrThrow(MediaStore.Images.Media.SIZE)));
 
                         Image image = null;
                         if (fileExist(path) && !TextUtils.isEmpty(name)) {

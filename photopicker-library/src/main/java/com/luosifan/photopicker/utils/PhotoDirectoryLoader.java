@@ -12,6 +12,7 @@ import static android.provider.MediaStore.MediaColumns.MIME_TYPE;
 
 /**
  * Created by 黄东鲁 on 15/6/28.
+ * Updated by wzfu on 16/5/22.
  */
 public class PhotoDirectoryLoader extends CursorLoader {
 

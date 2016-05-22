@@ -125,7 +125,7 @@ public class MainActivity extends AppCompatActivity {
             Load load = PhotoPicker.with(getImageLoader(spinner_imageloader.getSelectedItem().toString()))
                     .load()
                     .showCamera(showCamera)
-//                    .filter(PhotoFilter.build().showGif(false).minWidth(400))
+                    .filter(PhotoFilter.build().showGif(false))
                     .gridColumns(columns);
 
             PhotoSelectBuilder builder;
