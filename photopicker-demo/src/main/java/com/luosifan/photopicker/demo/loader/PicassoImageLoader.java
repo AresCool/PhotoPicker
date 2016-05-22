@@ -44,9 +44,8 @@ public class PicassoImageLoader implements ImageLoader {
         this.mConfig = config;
     }
 
-
     @Override
-    public void displayImage(Context mCxt, String path, GFImageView imageView, String tag, int placeholderResId, int errorResId, int width, int height) {
+    public void displayImage(Context mCxt, String path, GFImageView imageView, int tagId, int placeholderResId, int errorResId, int width, int height) {
 
         Picasso.with(mCxt)
                 .load(new File(path))
@@ -55,7 +54,7 @@ public class PicassoImageLoader implements ImageLoader {
                 .config(mConfig)
                 .resize(width, height)
                 .centerCrop()
-                .tag(tag)
+                .tag(tagId)
                 .into(imageView);
     }
 
@@ -64,11 +63,11 @@ public class PicassoImageLoader implements ImageLoader {
     }
 
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState, String tag) {
+    public void onScrollStateChanged(AbsListView view, int scrollState, int tagId) {
         if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
-            Picasso.with(view.getContext()).pauseTag(tag);
+            Picasso.with(view.getContext()).pauseTag(tagId);
         } else {
-            Picasso.with(view.getContext()).resumeTag(tag);
+            Picasso.with(view.getContext()).resumeTag(tagId);
         }
     }
 }

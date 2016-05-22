@@ -232,7 +232,7 @@ public class ImageGridAdapter extends BaseAdapter {
                 imageLoader.displayImage(mContext,
                         imageFile.getAbsolutePath(),
                         image,
-                        MultiImageSelectorFragment.TAG,
+                        R.id.photopicker_item_tag_id,
                         R.drawable.default_error,
                         R.drawable.default_error,
                         mGridWidth, mGridWidth);

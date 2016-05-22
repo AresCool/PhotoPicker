@@ -36,7 +36,7 @@ public interface ImageLoader extends Serializable{
     void displayImage(Context mCxt,
                       String path,
                       GFImageView imageView,
-                      String tag,
+                      int tagId,
                       int placeholderResId,
                       int errorResId,
                       int width, int height);
@@ -48,5 +48,5 @@ public interface ImageLoader extends Serializable{
      * @param view
      * @param scrollState
      */
-    void onScrollStateChanged(AbsListView view, int scrollState, String tag);
+    void onScrollStateChanged(AbsListView view, int scrollState, int tag);
 }

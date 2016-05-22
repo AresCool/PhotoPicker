@@ -95,7 +95,7 @@ public class FolderAdapter extends BaseAdapter {
                         imageLoader.displayImage(mContext,
                                 f.cover.path,
                                 holder.cover,
-                                MultiImageSelectorFragment.TAG,
+                                R.id.photopicker_item_tag_id,
                                 R.drawable.default_error,
                                 R.drawable.default_error,
                                 mImageSize, mImageSize);
@@ -168,7 +168,7 @@ public class FolderAdapter extends BaseAdapter {
                 imageLoader.displayImage(mContext,
                         data.cover.path,
                         cover,
-                        MultiImageSelectorFragment.TAG,
+                        R.id.photopicker_item_tag_id,
                         R.drawable.default_error,
                         R.drawable.default_error,
                         mImageSize, mImageSize);

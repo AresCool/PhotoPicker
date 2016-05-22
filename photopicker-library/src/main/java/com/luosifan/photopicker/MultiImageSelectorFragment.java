@@ -196,7 +196,7 @@ public class MultiImageSelectorFragment extends Fragment {
 //                    Picasso.with(view.getContext()).resumeTag(TAG);
 //                }
                 if(null != imageLoader) {
-                    imageLoader.onScrollStateChanged(view, scrollState, TAG);
+                    imageLoader.onScrollStateChanged(view, scrollState, R.id.photopicker_item_tag_id);
                 }
             }
 

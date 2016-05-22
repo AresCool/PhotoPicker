@@ -18,8 +18,12 @@ import android.widget.EditText;
 import android.widget.RadioGroup;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.luosifan.photopicker.PhotoPicker;
+import com.luosifan.photopicker.demo.loader.FrescoImageLoader;
+import com.luosifan.photopicker.demo.loader.GlideImageLoader;
 import com.luosifan.photopicker.demo.loader.PicassoImageLoader;
+import com.luosifan.photopicker.demo.loader.UILImageLoader;
 import com.luosifan.photopicker.picker.Load;
 import com.luosifan.photopicker.picker.PhotoSelectBuilder;
 
@@ -89,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
                 }
             }
 
-            Load load = PhotoPicker.with(PicassoImageLoader.class)
+            Load load = PhotoPicker.with(UILImageLoader.class)
                     .load()
                     .showCamera(showCamera)
                     .gridColumns(2);
