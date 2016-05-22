@@ -306,6 +306,12 @@ public class MultiImageSelectorFragment extends Fragment {
      * Open camera
      */
     private void showCameraAction() {
+
+        if(pickerParams.maxPickSize >= resultList.size()){
+            Toast.makeText(getActivity(), R.string.msg_amount_limit, Toast.LENGTH_SHORT).show();
+            return;
+        }
+
         if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED){
             requestPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE,
