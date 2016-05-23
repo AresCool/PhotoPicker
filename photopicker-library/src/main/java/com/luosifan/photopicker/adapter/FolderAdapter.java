@@ -45,7 +45,7 @@ public class FolderAdapter extends BaseAdapter {
     }
 
     public int getItemHeight(){
-        // Image + PaddingTop + PaddingBottom
+        // ImageHeight + PaddingTop + PaddingBottom
         return mImageSize + ScreenUtils.dip2px(mContext, 10) * 2;
     }
 
