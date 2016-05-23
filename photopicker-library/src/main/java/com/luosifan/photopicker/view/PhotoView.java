@@ -13,7 +13,7 @@
  *  See the License for the specific language governing permissions and
  *  limitations under the License.
  */
-package com.luosifan.photopicker.view.phtotoview;
+package com.luosifan.photopicker.view;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -27,6 +27,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.luosifan.photopicker.view.GFImageView;
+import com.luosifan.photopicker.view.phtotoview.IPhotoView;
+import com.luosifan.photopicker.view.phtotoview.PhotoViewAttacher;
 
 public class PhotoView extends GFImageView implements IPhotoView {
 

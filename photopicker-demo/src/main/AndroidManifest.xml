@@ -26,5 +26,8 @@
             android:configChanges="orientation|screenSize"
             android:name="com.luosifan.photopicker.MultiImageSelectorActivity" />
 
+        <activity
+            android:configChanges="orientation|screenSize"
+            android:name="com.luosifan.photopicker.PhotoPreviewActivity" />
     </application>
 </manifest>

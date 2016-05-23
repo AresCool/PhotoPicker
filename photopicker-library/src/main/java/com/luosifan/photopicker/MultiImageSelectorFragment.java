@@ -134,6 +134,13 @@ public class MultiImageSelectorFragment extends Fragment {
         mCategoryText = (TextView) view.findViewById(R.id.category_btn);
         btnPreview = (Button) view.findViewById(R.id.btnPreview);
 
+        btnPreview.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                previewPhotos();
+            }
+        });
+
         if(pickerParams.mode == SelectMode.MULTI) {
             btnPreview.setVisibility(View.VISIBLE);
             ArrayList<String> tmp = pickerParams.selectedPaths;
@@ -487,6 +494,13 @@ public class MultiImageSelectorFragment extends Fragment {
             }
         }
         return null;
+    }
+
+    private void previewPhotos(){
+        PhotoPicker.with(pickerParams.imageLoaderClass)
+                .preview()
+                .paths(resultList)
+                .start(this);
     }
 
     /**

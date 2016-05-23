@@ -3,6 +3,7 @@ package com.luosifan.photopicker;
 import com.luosifan.photopicker.picker.Load;
 import com.luosifan.photopicker.picker.PickerParams;
 import com.luosifan.photopicker.picker.PickerTheme;
+import com.luosifan.photopicker.picker.Preview;
 
 /**
  * Created by wzfu on 16/5/21.
@@ -40,5 +41,9 @@ public class PhotoPicker {
 
     public Load load(){
         return new Load(params);
+    }
+
+    public Preview preview(){
+        return new Preview(params);
     }
 }
