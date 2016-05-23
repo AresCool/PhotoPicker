@@ -35,7 +35,7 @@ public class PhotoFilter implements java.io.Serializable{
     }
 
     public PhotoFilter minSize(int imageMinSize){
-        this.minSize = imageMinSize;
+        this.minSize = imageMinSize * 1024;
         return this;
     }
 }

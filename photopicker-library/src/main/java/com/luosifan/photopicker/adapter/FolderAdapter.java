@@ -12,6 +12,7 @@ import android.widget.TextView;
 import com.luosifan.photopicker.R;
 import com.luosifan.photopicker.bean.Folder;
 import com.luosifan.photopicker.ImageLoader;
+import com.luosifan.photopicker.utils.ScreenUtils;
 import com.luosifan.photopicker.view.GFImageView;
 
 import java.util.ArrayList;
@@ -41,6 +42,11 @@ public class FolderAdapter extends BaseAdapter {
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mImageSize = mContext.getResources().getDimensionPixelOffset(R.dimen.folder_cover_size);
 //        getDimensionPixelSize
+    }
+
+    public int getItemHeight(){
+        // Image + PaddingTop + PaddingBottom
+        return mImageSize + ScreenUtils.dip2px(mContext, 10) * 2;
     }
 
     /**

@@ -208,7 +208,16 @@ public class MultiImageSelectorFragment extends Fragment {
     private void createPopupFolderList() {
         Point point = ScreenUtils.getScreenSize(getActivity());
         int width = point.x;
-        int height = (int) (point.y * (4.5f/8.0f));
+
+        // default
+        int height = ListPopupWindow.WRAP_CONTENT;
+        if(mFolderAdapter != null) {
+            int folderHeight = mFolderAdapter.getCount() * mFolderAdapter.getItemHeight();
+            if(folderHeight >= point.y){
+                height = (int) (point.y * 0.72f);
+            }
+        }
+
         mFolderPopupWindow = new ListPopupWindow(getActivity());
         mFolderPopupWindow.setBackgroundDrawable(new ColorDrawable(Color.WHITE));
         mFolderPopupWindow.setAdapter(mFolderAdapter);
