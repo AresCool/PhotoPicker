@@ -43,7 +43,7 @@ import com.luosifan.photopicker.view.GFImageView;
  * Date:15/12/24 下午9:34
  * Updated by wzfu on 2016/5/22.
  */
-public class FrescoImageLoader implements ImageLoader {
+public class FrescoImageLoader extends ImageLoader {
 
     @Override
     public void displayImage(final Context mCxt, String path, final GFImageView imageView, int tagId, final int placeholderResId, final int errorResId, int width, int height) {

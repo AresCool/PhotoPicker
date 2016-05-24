@@ -19,6 +19,8 @@ package com.luosifan.photopicker;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 
 import com.luosifan.photopicker.view.GFImageView;
@@ -32,9 +34,9 @@ import java.io.Serializable;
  * Date:15/10/10 下午5:27
  * Updated by wzfu on 2016/5/22.
  */
-public interface ImageLoader extends Serializable{
+public abstract class ImageLoader {
 
-    void displayImage(Context mCxt,
+    public abstract void displayImage(Context mCxt,
                       String path,
                       GFImageView imageView,
                       int tagId, // 用于图片列表在滑动的时候，调用pause()取消请求，滑动停止时，调用resume()恢复请求
@@ -42,7 +44,15 @@ public interface ImageLoader extends Serializable{
                       int errorResId,
                       int width, int height);
 
-    void clearMemoryCache();
+    public View displayPreview(Context mCxt, String path,
+                               int placeholderResId, int errorResId,
+                               OnPhotoClickListener listener) {
+        return null;
+    }
+
+    public void clearMemoryCache() {
+
+    }
 
     /**
      * 图片列表滑动监听
@@ -50,5 +60,7 @@ public interface ImageLoader extends Serializable{
      * @param scrollState <a href="http://dwz.cn/3pQB58" >OnScrollListener回调分析</>
      */
 
-    void onScrollStateChanged(AbsListView view, int scrollState, int tag);
+    public void onScrollStateChanged(AbsListView view, int scrollState, int tag) {
+
+    }
 }

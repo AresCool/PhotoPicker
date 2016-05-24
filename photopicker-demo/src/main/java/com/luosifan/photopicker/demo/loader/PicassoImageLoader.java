@@ -33,7 +33,7 @@ import java.io.File;
  * Date:15/12/1 下午10:26
  * Updated by wzfu on 2016/5/22.
  */
-public class PicassoImageLoader implements ImageLoader {
+public class PicassoImageLoader extends ImageLoader {
 
     private Bitmap.Config mConfig;
 

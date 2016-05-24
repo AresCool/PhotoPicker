@@ -36,7 +36,7 @@ import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
  * Date:15/10/10 下午5:52
  * Updated by wzfu on 2016/5/22.
  */
-public class UILImageLoader implements com.luosifan.photopicker.ImageLoader {
+public class UILImageLoader extends com.luosifan.photopicker.ImageLoader {
 
     private Bitmap.Config mImageConfig;
 
@@ -87,11 +87,6 @@ public class UILImageLoader implements com.luosifan.photopicker.ImageLoader {
 
             }
         }, null);
-    }
-
-    @Override
-    public void clearMemoryCache() {
-
     }
 
     @Override

@@ -32,7 +32,7 @@ import org.xutils.x;
  * Date:15/12/2 下午6:54
  * Updated by wzfu on 2016/5/22.
  */
-public class XUtilsImageLoader implements ImageLoader {
+public class XUtilsImageLoader extends ImageLoader {
 
     private Bitmap.Config mImageConfig;
 
@@ -55,11 +55,6 @@ public class XUtilsImageLoader implements ImageLoader {
                 .setUseMemCache(true)
                 .build();
         x.image().bind(imageView, "file://" + path, options);
-    }
-
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState, int tag) {
-
     }
 
     @Override
