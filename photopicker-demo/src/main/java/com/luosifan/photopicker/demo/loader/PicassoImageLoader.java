@@ -23,8 +23,8 @@ import android.widget.AbsListView;
 
 import com.luosifan.photopicker.ImageLoader;
 import com.luosifan.photopicker.OnPhotoClickListener;
-import com.luosifan.photopicker.demo.weiget.PinchImageView;
 import com.luosifan.photopicker.view.GFImageView;
+import com.luosifan.photopicker.view.PinchImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;

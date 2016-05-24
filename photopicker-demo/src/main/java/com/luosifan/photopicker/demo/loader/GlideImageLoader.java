@@ -29,8 +29,8 @@ import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.target.ImageViewTarget;
 import com.luosifan.photopicker.ImageLoader;
 import com.luosifan.photopicker.OnPhotoClickListener;
-import com.luosifan.photopicker.demo.weiget.PinchImageView;
 import com.luosifan.photopicker.view.GFImageView;
+import com.luosifan.photopicker.view.PinchImageView;
 
 import java.io.File;
 
