@@ -78,8 +78,7 @@ public class PhotoPreviewActivity extends AppCompatActivity implements
 
     public void updateActionBarTitle() {
         getSupportActionBar().setTitle(
-                getString(R.string.action_button_string,
-                        getString(R.string.action_done),
+                getString(R.string.action_string_preview,
                         viewPager.getCurrentItem() + 1, paths.size()));
     }
 
