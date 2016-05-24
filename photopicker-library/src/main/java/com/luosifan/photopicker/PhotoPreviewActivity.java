@@ -21,7 +21,7 @@ import java.util.ArrayList;
  * Created by wzfu on 16/5/23.
  */
 public class PhotoPreviewActivity extends AppCompatActivity implements
-        PhotoPreviewAdapter.PhotoViewClickListener, ViewPager.OnPageChangeListener {
+        OnPhotoClickListener, ViewPager.OnPageChangeListener {
 
     private FixedViewPager viewPager;
     private PickerParams pickerParams;
@@ -84,7 +84,7 @@ public class PhotoPreviewActivity extends AppCompatActivity implements
     }
 
     @Override
-    public void OnPhotoTapListener(View view, float v, float v1) {
+    public void OnPhotoTapListener() {
 
     }
 

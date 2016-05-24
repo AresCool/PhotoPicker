@@ -18,13 +18,18 @@ package com.luosifan.photopicker.demo.loader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.view.View;
+import android.view.ViewGroup;
 import android.widget.AbsListView;
 
 import com.luosifan.photopicker.ImageLoader;
+import com.luosifan.photopicker.OnPhotoClickListener;
 import com.luosifan.photopicker.view.GFImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+
+import uk.co.senab.photoview.PhotoView;
 
 
 /**
@@ -57,6 +62,24 @@ public class PicassoImageLoader extends ImageLoader {
                 .centerCrop()
                 .tag(tagId)
                 .into(imageView);
+    }
+
+    @Override
+    public View displayPreview(Context mCxt, String path, int placeholderResId, int errorResId, OnPhotoClickListener listener) {
+        PhotoView photoView = new PhotoView(mCxt);
+
+        ViewGroup.LayoutParams params = new ViewGroup.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.MATCH_PARENT);
+        photoView.setLayoutParams(params);
+
+        Picasso.with(mCxt)
+                .load(new File(path))
+                .placeholder(placeholderResId)
+                .error(errorResId)
+                .into(photoView);
+
+        return photoView;
     }
 
     @Override
