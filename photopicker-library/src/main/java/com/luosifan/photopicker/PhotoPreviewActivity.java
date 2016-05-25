@@ -66,7 +66,6 @@ public class PhotoPreviewActivity extends AppCompatActivity implements
         }
 
         adapter = new PhotoPreviewAdapter(this, paths, imageLoader);
-        adapter.setPhotoViewClickListener(this);
 
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(pickerParams.currentIndex);

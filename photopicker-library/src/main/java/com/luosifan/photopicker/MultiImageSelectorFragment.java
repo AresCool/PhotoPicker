@@ -258,7 +258,7 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
 
     @Override
     public void onCameraClick() {
-
+        showCameraAction();
     }
 
     @Override
@@ -302,9 +302,11 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
      */
     private void showCameraAction() {
 
-        if(pickerParams.maxPickSize >= resultList.size()){
-            Toast.makeText(getActivity(), R.string.msg_amount_limit, Toast.LENGTH_SHORT).show();
-            return;
+        if(pickerParams.mode == SelectMode.MULTI) {
+            if (pickerParams.maxPickSize >= resultList.size()) {
+                Toast.makeText(getActivity(), R.string.msg_amount_limit, Toast.LENGTH_SHORT).show();
+                return;
+            }
         }
 
         if(ContextCompat.checkSelfPermission(getContext(), Manifest.permission.WRITE_EXTERNAL_STORAGE)
