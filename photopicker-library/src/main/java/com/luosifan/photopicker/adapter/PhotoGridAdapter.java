@@ -23,7 +23,7 @@ import java.util.List;
 /**
  * Created by wzfu on 2016/5/25.
  */
-public class PhotoGridAdapter extends SelectableAdapter<RecyclerView.ViewHolder>{
+public class PhotoGridAdapter extends SelectableAdapter {
 
     public final static int ITEM_TYPE_CAMERA = 100;
     public final static int ITEM_TYPE_PHOTO  = 101;
@@ -62,14 +62,22 @@ public class PhotoGridAdapter extends SelectableAdapter<RecyclerView.ViewHolder>
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        RecyclerView.ViewHolder holder= null;
-        View itemView = null;
+        RecyclerView.ViewHolder holder;
+        View itemView;
         if(viewType == ITEM_TYPE_PHOTO) {
             itemView = inflater.inflate(R.layout.list_item_image, parent, false);
             holder = new PhotoViewHolder(itemView);
         }else{
             itemView = inflater.inflate(R.layout.list_item_camera, parent, false);
             holder = new CaremaViewHolder(itemView);
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(onPhotoGridClickListener != null) {
+                        onPhotoGridClickListener.onCameraClick();
+                    }
+                }
+            });
         }
         return holder;
     }
