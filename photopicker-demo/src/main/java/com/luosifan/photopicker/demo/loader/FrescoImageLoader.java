@@ -22,6 +22,7 @@ import android.graphics.Canvas;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
+import android.support.v7.widget.RecyclerView;
 import android.widget.AbsListView;
 
 import com.facebook.common.util.UriUtil;
@@ -103,11 +104,6 @@ public class FrescoImageLoader extends ImageLoader {
 
     @Override
     public void clearMemoryCache() {
-
-    }
-
-    @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState, int tagId) {
 
     }
 }

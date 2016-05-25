@@ -18,6 +18,7 @@ package com.luosifan.photopicker.demo.loader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AbsListView;
 import android.widget.ImageView;
@@ -90,11 +91,12 @@ public class UILImageLoader extends com.luosifan.photopicker.ImageLoader {
     }
 
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState, int tag) {
-        if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
-            ImageLoader.getInstance().pause();
-        } else {
-            ImageLoader.getInstance().resume();
-        }
+    public void pauseRequests(Context mCxt, int tagId) {
+        ImageLoader.getInstance().pause();
+    }
+
+    @Override
+    public void resumeRequests(Context mCxt, int tagId) {
+        ImageLoader.getInstance().resume();
     }
 }

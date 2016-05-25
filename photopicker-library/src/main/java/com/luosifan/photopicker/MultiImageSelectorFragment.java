@@ -20,23 +20,26 @@ import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.Loader;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.ListPopupWindow;
+import android.support.v7.widget.OrientationHelper;
+import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.StaggeredGridLayoutManager;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.luosifan.photopicker.adapter.FolderAdapter;
-import com.luosifan.photopicker.adapter.ImageGridAdapter;
+import com.luosifan.photopicker.adapter.PhotoGridAdapter;
 import com.luosifan.photopicker.bean.Folder;
 import com.luosifan.photopicker.bean.Image;
+import com.luosifan.photopicker.event.OnPhotoGridClickListener;
+import com.luosifan.photopicker.event.PauseOnScrollListener;
 import com.luosifan.photopicker.picker.PickerParams;
 import com.luosifan.photopicker.picker.SelectMode;
 import com.luosifan.photopicker.utils.ImageCaptureManager;
@@ -56,7 +59,7 @@ import static android.app.Activity.RESULT_OK;
  * Updated by nereo on 2016/5/18.
  * Updated by wzfu on 2016/5/22.
  */
-public class MultiImageSelectorFragment extends Fragment {
+public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridClickListener{
 
     private static final int REQUEST_STORAGE_WRITE_ACCESS_PERMISSION = 110;
 
@@ -65,10 +68,8 @@ public class MultiImageSelectorFragment extends Fragment {
     // folder result data set
     private ArrayList<Folder> mResultFolder = new ArrayList<>();
 
-    private GridView mGridView;
     private Callback mCallback;
 
-    private ImageGridAdapter mImageAdapter;
     private FolderAdapter mFolderAdapter;
 
     private ListPopupWindow mFolderPopupWindow;
@@ -76,6 +77,8 @@ public class MultiImageSelectorFragment extends Fragment {
     private TextView mCategoryText;
     private View mPopupAnchorView;
     private Button btnPreview;
+    private RecyclerView rv_photos;
+    private PhotoGridAdapter photoGridAdapter;
 
     private boolean hasFolderGened = false;
 
@@ -149,9 +152,6 @@ public class MultiImageSelectorFragment extends Fragment {
             }
             refreshPreviewButtonState(resultList);
         }
-        mImageAdapter = new ImageGridAdapter(getActivity(), imageLoader, pickerParams.showCamera,
-                pickerParams.gridColumns);
-        mImageAdapter.showSelectIndicator(pickerParams.mode == SelectMode.MULTI);
 
         mCategoryText.setText(R.string.folder_all);
         mCategoryText.setOnClickListener(new View.OnClickListener() {
@@ -173,40 +173,20 @@ public class MultiImageSelectorFragment extends Fragment {
             }
         });
 
-        mGridView = (GridView) view.findViewById(R.id.grid);
-        mGridView.setNumColumns(pickerParams.gridColumns);
-        mGridView.setAdapter(mImageAdapter);
-        mGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                if (mImageAdapter.isShowCamera()) {
-                    if (i == 0) {
-                        showCameraAction();
-                    } else {
-                        Image image = (Image) adapterView.getAdapter().getItem(i);
-                        selectImageFromGrid(image, pickerParams.mode);
-                    }
-                } else {
-                    Image image = (Image) adapterView.getAdapter().getItem(i);
-                    selectImageFromGrid(image, pickerParams.mode);
-                }
-            }
-        });
-        mGridView.setOnScrollListener(new AbsListView.OnScrollListener() {
-            @Override
-            public void onScrollStateChanged(AbsListView view, int scrollState) {
-                if(imageLoader != null) {
-                    imageLoader.onScrollStateChanged(view, scrollState, R.id.photopicker_item_tag_id);
-                }
-            }
-
-            @Override
-            public void onScroll(AbsListView view, int firstVisibleItem, int visibleItemCount, int totalItemCount) {
-
-            }
-        });
-
         mFolderAdapter = new FolderAdapter(getActivity(), imageLoader);
+
+        photoGridAdapter = new PhotoGridAdapter(getActivity(), pickerParams.showCamera,
+                pickerParams.gridColumns, imageLoader);
+        photoGridAdapter.showSelectIndicator(pickerParams.mode == SelectMode.MULTI);
+        photoGridAdapter.setOnPhotoGridClickListener(this);
+
+        rv_photos = (RecyclerView) view.findViewById(R.id.rv_photos);
+        StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(pickerParams.gridColumns, OrientationHelper.VERTICAL);
+        layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
+        rv_photos.setLayoutManager(layoutManager);
+        rv_photos.setAdapter(photoGridAdapter);
+        rv_photos.setItemAnimator(new DefaultItemAnimator());
+        rv_photos.addOnScrollListener(new PauseOnScrollListener(false, true, imageLoader));
     }
 
     /**
@@ -250,24 +230,25 @@ public class MultiImageSelectorFragment extends Fragment {
                         if (index == 0) {
                             getActivity().getSupportLoaderManager().restartLoader(0, null, mLoaderCallback);
                             mCategoryText.setText(R.string.folder_all);
-                            if (pickerParams.showCamera) {
-                                mImageAdapter.setShowCamera(true);
-                            } else {
-                                mImageAdapter.setShowCamera(false);
-                            }
+//                                mImageAdapter.setShowCamera(pickerParams.showCamera);
+                            photoGridAdapter.setShowCamera(pickerParams.showCamera);
                         } else {
                             Folder folder = (Folder) v.getAdapter().getItem(index);
                             if (null != folder) {
-                                mImageAdapter.setData(folder.images);
+//                                mImageAdapter.setData(folder.images);
+                                photoGridAdapter.setData(folder.images);
                                 mCategoryText.setText(folder.name);
                                 if (resultList != null && resultList.size() > 0) {
-                                    mImageAdapter.setDefaultSelected(resultList);
+//                                    mImageAdapter.setDefaultSelected(resultList);
+                                    photoGridAdapter.setDefaultSelected(resultList);
                                 }
                             }
-                            mImageAdapter.setShowCamera(false);
+//                            mImageAdapter.setShowCamera(false);
+                            photoGridAdapter.setShowCamera(false);
                         }
 
-                        mGridView.smoothScrollToPosition(0);
+//                        mGridView.smoothScrollToPosition(0);
+                        rv_photos.smoothScrollToPosition(0);
                     }
                 }, 100);
 
@@ -276,15 +257,13 @@ public class MultiImageSelectorFragment extends Fragment {
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
-        captureManager.onSaveInstanceState(outState);
-        super.onSaveInstanceState(outState);
+    public void onCameraClick() {
+
     }
 
     @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        captureManager.onRestoreInstanceState(savedInstanceState);
-        super.onViewStateRestored(savedInstanceState);
+    public void onPhotoClick(Image image, int position) {
+        selectImageFromGrid(image, position);
     }
 
     @Override
@@ -377,9 +356,9 @@ public class MultiImageSelectorFragment extends Fragment {
      * notify callback
      * @param image image data
      */
-    private void selectImageFromGrid(Image image, SelectMode mode) {
+    private void selectImageFromGrid(Image image, int position) {
         if(image != null) {
-            if(mode == SelectMode.MULTI) {
+            if(pickerParams.mode == SelectMode.MULTI) {
                 if (resultList.contains(image.path)) {
                     resultList.remove(image.path);
                     if (mCallback != null) {
@@ -395,9 +374,9 @@ public class MultiImageSelectorFragment extends Fragment {
                         mCallback.onImageSelected(image.path);
                     }
                 }
-                mImageAdapter.select(image);
+                photoGridAdapter.select(image, position);
                 refreshPreviewButtonState(resultList);
-            }else if(mode == SelectMode.SINGLE) {
+            }else if(pickerParams.mode == SelectMode.SINGLE) {
                 if(mCallback != null){
                     mCallback.onSingleImageSelected(image.path);
                 }
@@ -467,9 +446,9 @@ public class MultiImageSelectorFragment extends Fragment {
 
                     }while(data.moveToNext());
 
-                    mImageAdapter.setData(images);
-                    if(resultList != null && resultList.size()>0){
-                        mImageAdapter.setDefaultSelected(resultList);
+                    photoGridAdapter.setData(images);
+                    if(resultList != null && resultList.size() > 0) {
+                        photoGridAdapter.setDefaultSelected(resultList);
                     }
                     if(!hasFolderGened) {
                         mFolderAdapter.setData(mResultFolder);
@@ -511,6 +490,18 @@ public class MultiImageSelectorFragment extends Fragment {
         void onImageSelected(String path);
         void onImageUnselected(String path);
         void onCameraShot(String filePath);
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        captureManager.onSaveInstanceState(outState);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        captureManager.onRestoreInstanceState(savedInstanceState);
+        super.onViewStateRestored(savedInstanceState);
     }
 
     @Override

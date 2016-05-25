@@ -18,6 +18,7 @@ package com.luosifan.photopicker.demo.loader;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
+import android.util.Log;
 import android.view.View;
 import android.widget.AbsListView;
 
@@ -91,11 +92,12 @@ public class GlideImageLoader extends ImageLoader {
     }
 
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState, int tagId) {
-        if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
-            Glide.with(view.getContext()).pauseRequests();
-        } else {
-            Glide.with(view.getContext()).resumeRequests();
-        }
+    public void resumeRequests(Context mCxt, int tagId) {
+        Glide.with(mCxt).resumeRequests();
+    }
+
+    @Override
+    public void pauseRequests(Context mCxt, int tagId) {
+        Glide.with(mCxt).pauseRequests();
     }
 }

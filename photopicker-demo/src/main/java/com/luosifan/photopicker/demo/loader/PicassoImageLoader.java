@@ -18,6 +18,7 @@ package com.luosifan.photopicker.demo.loader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.widget.AbsListView;
 
@@ -78,14 +79,16 @@ public class PicassoImageLoader extends ImageLoader {
 
     @Override
     public void clearMemoryCache() {
+
     }
 
     @Override
-    public void onScrollStateChanged(AbsListView view, int scrollState, int tagId) {
-        if (scrollState == AbsListView.OnScrollListener.SCROLL_STATE_FLING) {
-            Picasso.with(view.getContext()).pauseTag(tagId);
-        } else {
-            Picasso.with(view.getContext()).resumeTag(tagId);
-        }
+    public void resumeRequests(Context mCxt, int tagId) {
+        Picasso.with(mCxt).resumeTag(tagId);
+    }
+
+    @Override
+    public void pauseRequests(Context mCxt, int tagId) {
+        Picasso.with(mCxt).pauseTag(tagId);
     }
 }

@@ -19,6 +19,7 @@ package com.luosifan.photopicker;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.drawable.Drawable;
+import android.support.v7.widget.RecyclerView;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
@@ -54,13 +55,7 @@ public abstract class ImageLoader {
 
     }
 
-    /**
-     * 图片列表滑动监听
-     * @param view
-     * @param scrollState <a href="http://dwz.cn/3pQB58" >OnScrollListener回调分析</>
-     */
+    public void resumeRequests(Context mCxt, int tagId) {}
 
-    public void onScrollStateChanged(AbsListView view, int scrollState, int tag) {
-
-    }
+    public void pauseRequests(Context mCxt, int tagId) {}
 }
