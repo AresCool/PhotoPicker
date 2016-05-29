@@ -14,9 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
-import com.foamtrace.photopicker.widget.ViewPagerFixed;
 import com.luosifan.photopicker.demo.R;
 import com.luosifan.photopicker.picker.PreviewBaseActivity;
+import com.luosifan.photopicker.view.FixedViewPager;
 
 import java.io.File;
 import java.util.List;
@@ -28,7 +28,7 @@ import uk.co.senab.photoview.PhotoView;
  */
 public class PreviewActivity extends PreviewBaseActivity {
 
-    ViewPagerFixed mViewPager;
+    FixedViewPager mViewPager;
     PreviewAdapter adapter;
 
     @Override
@@ -49,7 +49,7 @@ public class PreviewActivity extends PreviewBaseActivity {
         }
 
         adapter = new PreviewAdapter(this, paths);
-        mViewPager = (ViewPagerFixed) findViewById(R.id.viewPager);
+        mViewPager = (FixedViewPager) findViewById(R.id.viewPager);
         mViewPager.setOffscreenPageLimit(5);
         mViewPager.setAdapter(adapter);
         mViewPager.setCurrentItem(currentItem);
@@ -128,7 +128,6 @@ public class PreviewActivity extends PreviewBaseActivity {
 
             Glide.with(mCxt)
                 .load(Uri.fromFile(new File(paths.get(position))))
-                .error(com.foamtrace.photopicker.R.mipmap.default_error)
                 .crossFade()
                 .into(photoView);
 

@@ -50,6 +50,10 @@ public abstract class ImageLoader {
 
     }
 
+    public View instantiateItem(Context context) {
+        return null;
+    };
+
     public void resumeRequests(Context mCxt, int tagId) {}
 
     public void pauseRequests(Context mCxt, int tagId) {}
