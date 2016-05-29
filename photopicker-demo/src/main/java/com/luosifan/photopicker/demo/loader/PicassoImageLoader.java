@@ -65,7 +65,7 @@ public class PicassoImageLoader extends ImageLoader {
     @Override
     public View instantiateItem(Context context, String imagePath) {
         PhotoView photoView = new PhotoView(context);
-
+        // TODO: 16/5/29  Bitmap too large to be uploaded into a texture 
         Picasso.with(context)
                 .load(Uri.fromFile(new File(imagePath)))
                 .into(photoView);
