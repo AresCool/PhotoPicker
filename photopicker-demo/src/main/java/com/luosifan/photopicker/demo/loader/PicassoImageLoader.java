@@ -18,14 +18,9 @@ package com.luosifan.photopicker.demo.loader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
-import android.support.v7.widget.RecyclerView;
-import android.view.View;
-import android.widget.AbsListView;
 
 import com.luosifan.photopicker.ImageLoader;
-import com.luosifan.photopicker.OnPhotoClickListener;
 import com.luosifan.photopicker.view.GFImageView;
-import com.luosifan.photopicker.view.PinchImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
@@ -61,20 +56,6 @@ public class PicassoImageLoader extends ImageLoader {
                 .centerCrop()
                 .tag(tagId)
                 .into(imageView);
-    }
-
-    @Override
-    public View displayPreview(Context mCxt, String path, int placeholderResId, int errorResId, OnPhotoClickListener listener) {
-
-        PinchImageView pinchImageView = new PinchImageView(mCxt);
-
-        Picasso.with(mCxt)
-                .load(new File(path))
-                .placeholder(placeholderResId)
-                .error(errorResId)
-                .into(pinchImageView);
-
-        return pinchImageView;
     }
 
     @Override

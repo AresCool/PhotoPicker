@@ -18,10 +18,6 @@ package com.luosifan.photopicker.demo.loader;
 
 import android.content.Context;
 import android.support.v4.content.ContextCompat;
-import android.util.Log;
-import android.view.View;
-import android.widget.AbsListView;
-
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -29,9 +25,7 @@ import com.bumptech.glide.load.resource.drawable.GlideDrawable;
 import com.bumptech.glide.request.Request;
 import com.bumptech.glide.request.target.ImageViewTarget;
 import com.luosifan.photopicker.ImageLoader;
-import com.luosifan.photopicker.OnPhotoClickListener;
 import com.luosifan.photopicker.view.GFImageView;
-import com.luosifan.photopicker.view.PinchImageView;
 
 import java.io.File;
 
@@ -53,7 +47,7 @@ public class GlideImageLoader extends ImageLoader {
                 .error(ContextCompat.getDrawable(mCxt, errorResId))
                 .override(width, height)
                 .diskCacheStrategy(DiskCacheStrategy.NONE) //不缓存到SD卡
-                .skipMemoryCache(true)
+                .skipMemoryCache(false)
                 .centerCrop()
                 .into(new ImageViewTarget<GlideDrawable>(imageView) {
                     @Override
@@ -71,20 +65,6 @@ public class GlideImageLoader extends ImageLoader {
                         return (Request) imageView.getTag(tagId);
                     }
                 });
-    }
-
-    @Override
-    public View displayPreview(Context mCxt, String path, int placeholderResId, int errorResId, OnPhotoClickListener listener) {
-
-        PinchImageView pinchImageView = new PinchImageView(mCxt);
-
-        Glide.with(mCxt)
-                .load(new File(path))
-                .placeholder(placeholderResId)
-                .error(errorResId)
-                .into(pinchImageView);
-
-        return pinchImageView;
     }
 
     @Override

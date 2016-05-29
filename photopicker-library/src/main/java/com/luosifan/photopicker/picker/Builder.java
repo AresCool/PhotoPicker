@@ -18,12 +18,6 @@ import com.luosifan.photopicker.R;
  */
 public abstract class Builder {
 
-    protected PickerParams params;
-
-    public Builder(PickerParams params) {
-        this.params = params;
-    }
-
     public void start(Fragment fragment){
         start(fragment, 0, 0);
     }
@@ -69,11 +63,5 @@ public abstract class Builder {
         return true;
     }
 
-    private Intent createIntent(Context mContext){
-        Intent intent = new Intent(mContext, intentClass());
-        intent.putExtra(PhotoPicker.PARAMS, params);
-        return intent;
-    }
-
-    public abstract Class<? extends Activity> intentClass();
+    protected abstract Intent createIntent(Activity aty);
 }

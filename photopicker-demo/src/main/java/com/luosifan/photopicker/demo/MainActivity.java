@@ -29,6 +29,7 @@ import com.luosifan.photopicker.demo.loader.GlideImageLoader;
 import com.luosifan.photopicker.demo.loader.PicassoImageLoader;
 import com.luosifan.photopicker.demo.loader.UILImageLoader;
 import com.luosifan.photopicker.demo.loader.XUtilsImageLoader;
+import com.luosifan.photopicker.demo.preview.PreviewFragment;
 import com.luosifan.photopicker.picker.Load;
 import com.luosifan.photopicker.picker.PhotoFilter;
 import com.luosifan.photopicker.picker.PhotoSelectBuilder;
@@ -122,11 +123,16 @@ public class MainActivity extends AppCompatActivity {
                 columns = Integer.parseInt(mRequestColumns.getText().toString());
             }
 
-            Load load = PhotoPicker.with(getImageLoader(spinner_imageloader.getSelectedItem().toString()))
-                    .load()
+            Load load = PhotoPicker.load(getImageLoader(spinner_imageloader.getSelectedItem().toString()))
                     .showCamera(showCamera)
 //                    .filter(PhotoFilter.build().showGif(false).minSize(2 * 1024))
                     .gridColumns(columns);
+
+            if("Fresco".equals(spinner_imageloader.getSelectedItem().toString())) {
+
+            } else {
+                load.previewPage(PreviewFragment.class);
+            }
 
             PhotoSelectBuilder builder;
 

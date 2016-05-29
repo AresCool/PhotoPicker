@@ -45,11 +45,6 @@ public abstract class ImageLoader {
                       int errorResId,
                       int width, int height);
 
-    public View displayPreview(Context mCxt, String path,
-                               int placeholderResId, int errorResId,
-                               OnPhotoClickListener listener) {
-        return null;
-    }
 
     public void clearMemoryCache() {
 

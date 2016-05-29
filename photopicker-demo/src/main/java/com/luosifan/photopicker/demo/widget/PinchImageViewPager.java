@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.luosifan.photopicker.view;
+package com.luosifan.photopicker.demo.widget;
 
 import android.content.Context;
 import android.content.res.Resources;
@@ -67,7 +67,7 @@ import java.util.Comparator;
 /**
  * Layout manager that allows the user to flip left and right
  * through pages of data.  You supply an implementation of a
- * {@link PagerAdapter} to generate the pages that the view shows.
+ * {@link android.support.v4.view.PagerAdapter} to generate the pages that the view shows.
  *
  * <p>Note this class is currently under early design and
  * development.  The API will likely change in later updates of

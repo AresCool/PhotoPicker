@@ -30,6 +30,5 @@ public class PickerParams implements java.io.Serializable{
     // 已选照片地址
     public ArrayList<String> selectedPaths;
 
-    // 当前选中照片的下标, 预览照片时使用
-    public int currentIndex;
+    public Class<? extends PagerFragment> previewFragmentClass;
 }

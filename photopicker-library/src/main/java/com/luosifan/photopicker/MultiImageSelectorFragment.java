@@ -36,6 +36,7 @@ import android.widget.Toast;
 
 import com.luosifan.photopicker.adapter.FolderAdapter;
 import com.luosifan.photopicker.adapter.PhotoGridAdapter;
+import com.luosifan.photopicker.utils.GridSpacingItemDecoration;
 import com.luosifan.photopicker.bean.Folder;
 import com.luosifan.photopicker.bean.Image;
 import com.luosifan.photopicker.event.OnPhotoGridClickListener;
@@ -89,7 +90,7 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
     public static MultiImageSelectorFragment newInstance(PickerParams params){
         MultiImageSelectorFragment fragment = new MultiImageSelectorFragment();
         Bundle bundle = new Bundle();
-        bundle.putSerializable(PhotoPicker.PARAMS, params);
+        bundle.putSerializable(PhotoPicker.PARAMS_PICKER, params);
         fragment.setArguments(bundle);
         return fragment;
     }
@@ -108,11 +109,11 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        if(null == getArguments() || null == getArguments().getSerializable(PhotoPicker.PARAMS)) {
+        if(null == getArguments() || null == getArguments().getSerializable(PhotoPicker.PARAMS_PICKER)) {
             throw new IllegalArgumentException("The Fragment Arguments must contain the PhotoPicker.PARMAS attributes");
         }
 
-        pickerParams = (PickerParams) getArguments().getSerializable(PhotoPicker.PARAMS);
+        pickerParams = (PickerParams) getArguments().getSerializable(PhotoPicker.PARAMS_PICKER);
 
         // init ImageLoader
         try {
@@ -145,7 +146,7 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
         });
 
         if(pickerParams.mode == SelectMode.MULTI) {
-            btnPreview.setVisibility(View.VISIBLE);
+            btnPreview.setVisibility(canPreview() ? View.VISIBLE : View.GONE);
             ArrayList<String> tmp = pickerParams.selectedPaths;
             if(tmp != null && tmp.size()>0) {
                 resultList = tmp;
@@ -184,6 +185,8 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
         StaggeredGridLayoutManager layoutManager = new StaggeredGridLayoutManager(pickerParams.gridColumns, OrientationHelper.VERTICAL);
         layoutManager.setGapStrategy(StaggeredGridLayoutManager.GAP_HANDLING_MOVE_ITEMS_BETWEEN_SPANS);
         rv_photos.setLayoutManager(layoutManager);
+        int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.space_size);
+        rv_photos.addItemDecoration(new GridSpacingItemDecoration(pickerParams.gridColumns, spacingInPixels, false));
         rv_photos.setAdapter(photoGridAdapter);
         rv_photos.setItemAnimator(new DefaultItemAnimator());
         rv_photos.addOnScrollListener(new PauseOnScrollListener(false, true, imageLoader));
@@ -230,24 +233,19 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
                         if (index == 0) {
                             getActivity().getSupportLoaderManager().restartLoader(0, null, mLoaderCallback);
                             mCategoryText.setText(R.string.folder_all);
-//                                mImageAdapter.setShowCamera(pickerParams.showCamera);
                             photoGridAdapter.setShowCamera(pickerParams.showCamera);
                         } else {
                             Folder folder = (Folder) v.getAdapter().getItem(index);
                             if (null != folder) {
-//                                mImageAdapter.setData(folder.images);
                                 photoGridAdapter.setData(folder.images);
                                 mCategoryText.setText(folder.name);
                                 if (resultList != null && resultList.size() > 0) {
-//                                    mImageAdapter.setDefaultSelected(resultList);
                                     photoGridAdapter.setDefaultSelected(resultList);
                                 }
                             }
-//                            mImageAdapter.setShowCamera(false);
                             photoGridAdapter.setShowCamera(false);
                         }
 
-//                        mGridView.smoothScrollToPosition(0);
                         rv_photos.smoothScrollToPosition(0);
                     }
                 }, 100);
@@ -387,6 +385,9 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
     }
 
     private void refreshPreviewButtonState(ArrayList<String> resultList){
+        if(!canPreview()) {
+            return;
+        }
         String text = getString(R.string.preview);
         if(resultList.size() > 0) {
             text += "(" + resultList.size() + ")";
@@ -477,10 +478,15 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
         return null;
     }
 
+    private boolean canPreview() {
+        return pickerParams == null ? false : pickerParams.previewFragmentClass != null;
+    }
+
     private void previewPhotos(){
-        PhotoPicker.with(pickerParams.imageLoaderClass)
-                .preview()
+        PhotoPicker.preview()
+                .theme(pickerParams.theme)
                 .paths(resultList)
+                .previewPage(pickerParams.previewFragmentClass)
                 .start(this);
     }
 

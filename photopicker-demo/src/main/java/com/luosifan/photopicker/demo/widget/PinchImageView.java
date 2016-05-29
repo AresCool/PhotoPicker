@@ -1,4 +1,4 @@
-package com.luosifan.photopicker.view;
+package com.luosifan.photopicker.demo.widget;
 
 import android.animation.ValueAnimator;
 import android.content.Context;

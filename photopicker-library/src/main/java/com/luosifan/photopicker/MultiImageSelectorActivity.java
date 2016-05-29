@@ -61,7 +61,7 @@ public class MultiImageSelectorActivity extends AppCompatActivity
 
         Intent intent = getIntent();
 
-        PickerParams pickerParams = (PickerParams) intent.getSerializableExtra(PhotoPicker.PARAMS);
+        PickerParams pickerParams = (PickerParams) intent.getSerializableExtra(PhotoPicker.PARAMS_PICKER);
 
         mDefaultCount = pickerParams.maxPickSize;
 
@@ -72,8 +72,9 @@ public class MultiImageSelectorActivity extends AppCompatActivity
             }
         }
         getSupportFragmentManager().beginTransaction()
-                .add(R.id.image_grid, MultiImageSelectorFragment.newInstance(pickerParams))
-                .commit();
+                .add(R.id.fragment_container, MultiImageSelectorFragment.newInstance(pickerParams))
+                .commitAllowingStateLoss();
+        getSupportFragmentManager().executePendingTransactions();
     }
 
     @Override
