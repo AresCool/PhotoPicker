@@ -32,6 +32,4 @@ dependencies {
     compile 'org.xutils:xutils:3.3.34'
 
     compile 'com.github.chrisbanes.photoview:library:1.2.4'
-    
-    compile project(path: ':photopicker')
 }

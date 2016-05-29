@@ -292,6 +292,7 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
                     photoGridAdapter.clearSelection();
                     photoGridAdapter.setDefaultSelected(resultList);
                     photoGridAdapter.notifyDataSetChanged();
+                    refreshPreviewButtonState(resultList);
                     if (mCallback != null) {
                         mCallback.onImagePathsChange(resultList);
                     }

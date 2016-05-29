@@ -90,15 +90,15 @@ public class PreviewActivity extends PreviewBaseActivity {
 
         if (paths.size() == 1) {
             new AlertDialog.Builder(this)
-                    .setMessage("确定要删除吗?")
-                    .setPositiveButton("确认", new DialogInterface.OnClickListener() {
+                    .setMessage(getString(R.string.tip_delete))
+                    .setPositiveButton(getString(R.string.photo_delete_ok), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
                             paths.remove(index);
                             back();
                         }
                     })
-                    .setNegativeButton("取消", null)
+                    .setNegativeButton(getString(R.string.photo_delete_cancel), null)
                     .show();
 
         } else {
