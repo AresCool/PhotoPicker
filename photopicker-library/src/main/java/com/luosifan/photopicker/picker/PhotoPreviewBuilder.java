@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
+import com.luosifan.photopicker.ImageLoader;
 import com.luosifan.photopicker.PhotoPicker;
+import com.luosifan.photopicker.PhotoPreviewActivity;
 import com.luosifan.photopicker.R;
 
 import java.util.ArrayList;
@@ -15,9 +17,16 @@ import java.util.ArrayList;
  */
 public class PhotoPreviewBuilder extends Builder {
 
-    public Class<? extends PreviewBaseActivity> previewPager;
-    public int currentItem;
-    public ArrayList<String> paths;
+    private Class<? extends ImageLoader> imageLoaderClass;
+    private PickerTheme theme;
+    private int currentItem;
+    private ArrayList<String> paths;
+
+
+    public PhotoPreviewBuilder(Class<? extends ImageLoader> imageLoaderClass, PickerTheme theme) {
+        this.imageLoaderClass = imageLoaderClass;
+        this.theme = theme;
+    }
 
     public PhotoPreviewBuilder currentItem(int currentItem) {
         this.currentItem = currentItem;
@@ -26,11 +35,6 @@ public class PhotoPreviewBuilder extends Builder {
 
     public PhotoPreviewBuilder paths(ArrayList<String> paths) {
         this.paths = paths;
-        return this;
-    }
-
-    public PhotoPreviewBuilder previewPage(Class<? extends PreviewBaseActivity> previewPager) {
-        this.previewPager = previewPager;
         return this;
     }
 
@@ -48,6 +52,7 @@ public class PhotoPreviewBuilder extends Builder {
 
     @Override
     public void start(Fragment fragment, int enterAnim, int exitAnim) {
+
         if(!hasPermission(fragment.getActivity())) {
             Toast.makeText(fragment.getActivity(), R.string.error_no_permission, Toast.LENGTH_SHORT).show();
             return;
@@ -59,9 +64,10 @@ public class PhotoPreviewBuilder extends Builder {
 
     @Override
     protected Intent createIntent(Activity aty) {
-        Intent intent = new Intent(aty, previewPager);
+        Intent intent = new Intent(aty, PhotoPreviewActivity.class);
         intent.putExtra(PreviewBaseActivity.CURRENT_ITEM, currentItem);
         intent.putStringArrayListExtra(PreviewBaseActivity.PHOTO_PATHS, paths);
+        intent.putExtra("imageLoader", imageLoaderClass);
         return intent;
     }
 }

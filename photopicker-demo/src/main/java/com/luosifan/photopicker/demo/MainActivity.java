@@ -23,12 +23,12 @@ import android.widget.TextView;
 
 import com.luosifan.photopicker.ImageLoader;
 import com.luosifan.photopicker.PhotoPicker;
+import com.luosifan.photopicker.PhotoPreviewActivity;
 import com.luosifan.photopicker.demo.loader.FrescoImageLoader;
 import com.luosifan.photopicker.demo.loader.GlideImageLoader;
 import com.luosifan.photopicker.demo.loader.PicassoImageLoader;
 import com.luosifan.photopicker.demo.loader.UILImageLoader;
 import com.luosifan.photopicker.demo.loader.XUtilsImageLoader;
-import com.luosifan.photopicker.demo.preview.PreviewActivity;
 import com.luosifan.photopicker.picker.Load;
 import com.luosifan.photopicker.picker.PhotoSelectBuilder;
 
@@ -120,16 +120,11 @@ public class MainActivity extends AppCompatActivity {
                 columns = Integer.parseInt(mRequestColumns.getText().toString());
             }
 
-            Load load = PhotoPicker.load(getImageLoader(spinner_imageloader.getSelectedItem().toString()))
+            Load load = PhotoPicker.with(getImageLoader(spinner_imageloader.getSelectedItem().toString()))
+                    .load()
                     .showCamera(showCamera)
 //                    .filter(PhotoFilter.build().showGif(false).minSize(2 * 1024))
                     .gridColumns(columns);
-
-            if("Fresco".equals(spinner_imageloader.getSelectedItem().toString())) {
-
-            } else {
-                load.previewPage(PreviewActivity.class);
-            }
 
             PhotoSelectBuilder builder;
 

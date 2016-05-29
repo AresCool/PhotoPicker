@@ -8,6 +8,7 @@ import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import com.luosifan.photopicker.ImageLoader;
 import com.luosifan.photopicker.PhotoPicker;
 import com.luosifan.photopicker.R;
 
@@ -22,6 +23,7 @@ public abstract class PreviewBaseActivity extends AppCompatActivity {
     public static final String CURRENT_ITEM = "photo_preview_current_item";
     public static final String PHOTO_PATHS = "photo_preview_paths";
 
+    protected ImageLoader imageLoader;
     public int currentItem;
     public ArrayList<String> paths;
     public List<String> tmpPaths = new ArrayList<>();
@@ -43,6 +45,17 @@ public abstract class PreviewBaseActivity extends AppCompatActivity {
         }
 
         tmpPaths.addAll(paths);
+
+        if(getIntent().getSerializableExtra("imageLoader") != null) {
+            Class<? extends ImageLoader> imc = (Class<? extends ImageLoader>) getIntent().getSerializableExtra("imageLoader");
+            try {
+                imageLoader = imc.newInstance();
+            } catch (InstantiationException e) {
+                e.printStackTrace();
+            } catch (IllegalAccessException e) {
+                e.printStackTrace();
+            }
+        }
 
         initWidget();
     }

@@ -29,5 +29,4 @@ public class PickerParams implements java.io.Serializable{
 
     public ArrayList<String> selectedPaths;
 
-    public Class<? extends PreviewBaseActivity> previewPager;
 }

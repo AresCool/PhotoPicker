@@ -50,7 +50,7 @@ public abstract class ImageLoader {
 
     }
 
-    public View instantiateItem(Context context) {
+    public View instantiateItem(Context context, String imagePath) {
         return null;
     };
 

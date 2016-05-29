@@ -18,12 +18,16 @@ package com.luosifan.photopicker.demo.loader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.net.Uri;
+import android.view.View;
 
 import com.luosifan.photopicker.ImageLoader;
 import com.luosifan.photopicker.view.GFImageView;
 import com.squareup.picasso.Picasso;
 
 import java.io.File;
+
+import uk.co.senab.photoview.PhotoView;
 
 
 /**
@@ -56,6 +60,17 @@ public class PicassoImageLoader extends ImageLoader {
                 .centerCrop()
                 .tag(tagId)
                 .into(imageView);
+    }
+
+    @Override
+    public View instantiateItem(Context context, String imagePath) {
+        PhotoView photoView = new PhotoView(context);
+
+        Picasso.with(context)
+                .load(Uri.fromFile(new File(imagePath)))
+                .into(photoView);
+
+        return photoView;
     }
 
     @Override

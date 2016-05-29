@@ -27,6 +27,7 @@ public abstract class Builder {
     }
 
     public abstract void start(Activity aty, int enterAnim, int exitAnim);
+
     public abstract void start(Fragment fragment, int enterAnim, int exitAnim);
 
     protected void overridePendingTransition(Activity aty, int enterAnim, int exitAnim){

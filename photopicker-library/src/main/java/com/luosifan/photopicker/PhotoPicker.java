@@ -19,15 +19,30 @@ public class PhotoPicker {
     /** Result data set，ArrayList&lt;String&gt;*/
     public static final String EXTRA_RESULT = "select_result";
 
+    private Class<? extends ImageLoader> imageLoaderClass;
+    private PickerTheme theme;
 
-    public static Load load(Class<? extends ImageLoader> imageLoaderClass) {
+    public PhotoPicker(Class<? extends ImageLoader> imageLoaderClass) {
+        this.imageLoaderClass = imageLoaderClass;
+    }
+
+    public static PhotoPicker with(Class<? extends ImageLoader> imageLoaderClass) {
         if (imageLoaderClass == null) {
             throw new IllegalArgumentException("ImageLoader must not be null.");
         }
-        return new Load(imageLoaderClass);
+        return new PhotoPicker(imageLoaderClass);
     }
 
-    public static PhotoPreviewBuilder preview() {
-        return new PhotoPreviewBuilder();
+    public PhotoPicker theme(PickerTheme theme) {
+        this.theme = theme;
+        return this;
+    }
+
+    public Load load() {
+        return new Load(imageLoaderClass, theme);
+    }
+
+    public PhotoPreviewBuilder preview() {
+        return new PhotoPreviewBuilder(imageLoaderClass, theme);
     }
 }

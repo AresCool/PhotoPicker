@@ -9,9 +9,10 @@ public class Load {
 
     private PickerParams params;
 
-    public Load(Class<? extends ImageLoader> imageLoaderClass) {
+    public Load(Class<? extends ImageLoader> imageLoaderClass, PickerTheme theme) {
         this.params = new PickerParams();
         this.params.imageLoaderClass = imageLoaderClass;
+        this.params.theme = theme;
     }
 
     public Load filter(PhotoFilter filter) {
@@ -28,11 +29,6 @@ public class Load {
         if(columns > 0) {
             this.params.gridColumns = columns;
         }
-        return this;
-    }
-
-    public Load previewPage(Class<? extends PreviewBaseActivity> previewPager) {
-        this.params.previewPager = previewPager;
         return this;
     }
 

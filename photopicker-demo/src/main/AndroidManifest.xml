@@ -28,7 +28,7 @@
             android:theme="@style/NO_ACTIONBAR" />
 
         <activity
-            android:name=".preview.PreviewActivity"
-            android:theme="@style/NO_ACTIONBAR" />
+            android:name="com.luosifan.photopicker.PhotoPreviewActivity"
+            android:theme="@style/NO_ACTIONBAR"/>
     </application>
 </manifest>

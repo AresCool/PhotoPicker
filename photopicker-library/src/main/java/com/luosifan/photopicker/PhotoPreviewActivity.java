@@ -1,9 +1,8 @@
-package com.luosifan.photopicker.demo.preview;
+package com.luosifan.photopicker;
 
 import android.content.Context;
 import android.content.DialogInterface;
 import android.graphics.Color;
-import android.net.Uri;
 import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
@@ -13,20 +12,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.view.ViewGroup;
 
-import com.bumptech.glide.Glide;
-import com.luosifan.photopicker.demo.R;
 import com.luosifan.photopicker.picker.PreviewBaseActivity;
 import com.luosifan.photopicker.view.FixedViewPager;
 
-import java.io.File;
 import java.util.List;
 
-import uk.co.senab.photoview.PhotoView;
 
 /**
  * Created by eddie on 16/5/29.
  */
-public class PreviewActivity extends PreviewBaseActivity {
+public class PhotoPreviewActivity extends PreviewBaseActivity {
 
     FixedViewPager mViewPager;
     PreviewAdapter adapter;
@@ -38,7 +33,7 @@ public class PreviewActivity extends PreviewBaseActivity {
             getWindow().setStatusBarColor(Color.BLACK);
         }
 
-        Toolbar toolbar = (Toolbar) findViewById(com.luosifan.photopicker.R.id.toolbar);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         if(toolbar != null){
             setSupportActionBar(toolbar);
         }
@@ -124,17 +119,19 @@ public class PreviewActivity extends PreviewBaseActivity {
 
         @Override
         public View instantiateItem(ViewGroup container, int position) {
-            PhotoView photoView = new PhotoView(container.getContext());
 
-            Glide.with(mCxt)
-                .load(Uri.fromFile(new File(paths.get(position))))
-                .crossFade()
-                .into(photoView);
+            View view = null;
 
-            container.addView(photoView, ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT);
+            if(imageLoader != null) {
+                view = imageLoader.instantiateItem(mCxt, paths.get(position));
+            }
 
-            return photoView;
+            if(view != null) {
+                container.addView(view, ViewGroup.LayoutParams.MATCH_PARENT,
+                        ViewGroup.LayoutParams.MATCH_PARENT);
+            }
+
+            return view;
         }
 
         @Override

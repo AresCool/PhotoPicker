@@ -17,7 +17,10 @@
 package com.luosifan.photopicker.demo.loader;
 
 import android.content.Context;
+import android.net.Uri;
 import android.support.v4.content.ContextCompat;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
@@ -28,6 +31,8 @@ import com.luosifan.photopicker.ImageLoader;
 import com.luosifan.photopicker.view.GFImageView;
 
 import java.io.File;
+
+import uk.co.senab.photoview.PhotoView;
 
 /**
  * Desction:
@@ -65,6 +70,18 @@ public class GlideImageLoader extends ImageLoader {
                         return (Request) imageView.getTag(tagId);
                     }
                 });
+    }
+
+    @Override
+    public View instantiateItem(Context context, String imagePath) {
+        PhotoView photoView = new PhotoView(context);
+
+        Glide.with(context)
+                .load(Uri.fromFile(new File(imagePath)))
+                .crossFade()
+                .into(photoView);
+
+        return photoView;
     }
 
     @Override

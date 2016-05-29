@@ -146,7 +146,7 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
         });
 
         if(pickerParams.mode == SelectMode.MULTI) {
-            btnPreview.setVisibility(canPreview() ? View.VISIBLE : View.GONE);
+            btnPreview.setVisibility(View.VISIBLE);
             ArrayList<String> tmp = pickerParams.selectedPaths;
             if(tmp != null && tmp.size()>0) {
                 resultList = tmp;
@@ -401,9 +401,6 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
     }
 
     private void refreshPreviewButtonState(ArrayList<String> resultList){
-        if(!canPreview()) {
-            return;
-        }
         String text = getString(R.string.preview);
         if(resultList.size() > 0) {
             text += "(" + resultList.size() + ")";
@@ -494,14 +491,10 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
         return null;
     }
 
-    private boolean canPreview() {
-        return pickerParams == null ? false : pickerParams.previewPager != null;
-    }
-
     private void previewPhotos(){
-        PhotoPicker.preview()
+        PhotoPicker.with(pickerParams.imageLoaderClass)
+                .preview()
                 .paths(resultList)
-                .previewPage(pickerParams.previewPager)
                 .start(this);
     }
 
