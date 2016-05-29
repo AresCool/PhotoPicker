@@ -42,7 +42,6 @@ public class MultiImageSelectorActivity extends AppCompatActivity
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTheme(R.style.NO_ACTIONBAR);
         setContentView(R.layout.activity_default);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -101,11 +100,17 @@ public class MultiImageSelectorActivity extends AppCompatActivity
         return super.onOptionsItemSelected(item);
     }
 
+    @Override
+    public void onImagePathsChange(ArrayList<String> paths) {
+        resultList = paths;
+        updateDoneText(resultList);
+    }
+
     /**
      * Update done button by select image data
      * @param resultList selected image data
      */
-    private void updateDoneText(ArrayList<String> resultList){
+    public void updateDoneText(ArrayList<String> resultList){
 
         if(menuItemDone == null || resultList == null){
             return;

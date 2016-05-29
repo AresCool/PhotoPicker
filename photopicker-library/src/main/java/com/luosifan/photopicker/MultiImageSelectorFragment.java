@@ -275,12 +275,27 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
 
-        if (requestCode == ImageCaptureManager.REQUEST_TAKE_PHOTO && resultCode == RESULT_OK) {
+        if (resultCode == RESULT_OK) {
 
-            captureManager.galleryAddPic();
+            switch (requestCode) {
 
-            if (mCallback != null) {
-                mCallback.onCameraShot(captureManager.getCurrentPhotoPath());
+                case ImageCaptureManager.REQUEST_TAKE_PHOTO:
+                    captureManager.galleryAddPic();
+
+                    if (mCallback != null) {
+                        mCallback.onCameraShot(captureManager.getCurrentPhotoPath());
+                    }
+                    break;
+
+                case PhotoPicker.REQUEST_PREVIEW:
+                    resultList = data.getStringArrayListExtra(PhotoPicker.PATHS);
+                    photoGridAdapter.clearSelection();
+                    photoGridAdapter.setDefaultSelected(resultList);
+                    photoGridAdapter.notifyDataSetChanged();
+                    if (mCallback != null) {
+                        mCallback.onImagePathsChange(resultList);
+                    }
+                    break;
             }
         }
     }
@@ -479,14 +494,13 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
     }
 
     private boolean canPreview() {
-        return pickerParams == null ? false : pickerParams.previewFragmentClass != null;
+        return pickerParams == null ? false : pickerParams.previewPager != null;
     }
 
     private void previewPhotos(){
         PhotoPicker.preview()
-                .theme(pickerParams.theme)
                 .paths(resultList)
-                .previewPage(pickerParams.previewFragmentClass)
+                .previewPage(pickerParams.previewPager)
                 .start(this);
     }
 
@@ -498,6 +512,7 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
         void onImageSelected(String path);
         void onImageUnselected(String path);
         void onCameraShot(String filePath);
+        void onImagePathsChange(ArrayList<String> paths);
     }
 
     @Override

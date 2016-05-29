@@ -42,7 +42,8 @@ public class PhotoPagerAdapter extends PagerAdapter {
     this.listener = listener;
   }
 
-  @Override public Object instantiateItem(ViewGroup container, int position) {
+  @Override
+  public Object instantiateItem(ViewGroup container, int position) {
 
     View itemView = mLayoutInflater.inflate(R.layout.item_preview, container, false);
 

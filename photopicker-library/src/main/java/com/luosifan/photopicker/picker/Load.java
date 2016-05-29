@@ -31,8 +31,8 @@ public class Load {
         return this;
     }
 
-    public Load previewPage(Class<? extends PagerFragment> previewFragmentClass) {
-        this.params.previewFragmentClass = previewFragmentClass;
+    public Load previewPage(Class<? extends PreviewBaseActivity> previewPager) {
+        this.params.previewPager = previewPager;
         return this;
     }
 

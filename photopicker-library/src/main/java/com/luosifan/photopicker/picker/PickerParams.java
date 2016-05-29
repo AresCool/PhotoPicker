@@ -27,8 +27,7 @@ public class PickerParams implements java.io.Serializable{
     // 选择图片列表默认列数
     public int gridColumns = 3;
 
-    // 已选照片地址
     public ArrayList<String> selectedPaths;
 
-    public Class<? extends PagerFragment> previewFragmentClass;
+    public Class<? extends PreviewBaseActivity> previewPager;
 }

@@ -21,7 +21,6 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.luosifan.photopicker.ImageLoader;
 import com.luosifan.photopicker.PhotoPicker;
 import com.luosifan.photopicker.demo.loader.FrescoImageLoader;
@@ -29,13 +28,11 @@ import com.luosifan.photopicker.demo.loader.GlideImageLoader;
 import com.luosifan.photopicker.demo.loader.PicassoImageLoader;
 import com.luosifan.photopicker.demo.loader.UILImageLoader;
 import com.luosifan.photopicker.demo.loader.XUtilsImageLoader;
-import com.luosifan.photopicker.demo.preview.PreviewFragment;
+import com.luosifan.photopicker.demo.preview.PreviewActivity;
 import com.luosifan.photopicker.picker.Load;
-import com.luosifan.photopicker.picker.PhotoFilter;
 import com.luosifan.photopicker.picker.PhotoSelectBuilder;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -131,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
             if("Fresco".equals(spinner_imageloader.getSelectedItem().toString())) {
 
             } else {
-                load.previewPage(PreviewFragment.class);
+                load.previewPage(PreviewActivity.class);
             }
 
             PhotoSelectBuilder builder;

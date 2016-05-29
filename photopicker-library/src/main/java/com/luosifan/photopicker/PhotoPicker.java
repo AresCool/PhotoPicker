@@ -14,7 +14,7 @@ public class PhotoPicker {
     public static final int REQUEST_PREVIEW = 216;
 
     public static final String PARAMS_PICKER = "photo_picker_params";
-    public static final String PARAMS_PREVIEW = "photo_picker_preview_params";
+    public static final String PATHS = "photo_picker_paths";
 
     /** Result data set，ArrayList&lt;String&gt;*/
     public static final String EXTRA_RESULT = "select_result";
