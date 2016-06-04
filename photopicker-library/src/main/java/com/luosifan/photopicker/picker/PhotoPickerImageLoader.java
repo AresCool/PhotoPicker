@@ -55,7 +55,7 @@ public abstract class PhotoPickerImageLoader<IV extends ImageView, PV extends Im
     protected abstract void loadPreviewItemView(PV view, String imagePath, int width, int height);
 
     /**
-     * 缓慢滑动图片列表的时候不去加载图片
+     * 手指缓慢滑动图片列表的时候不去加载图片
      * @return
      */
     protected boolean pauseOnScroll() {
@@ -63,7 +63,7 @@ public abstract class PhotoPickerImageLoader<IV extends ImageView, PV extends Im
     }
 
     /**
-     * 手指在滑动或者猛地一滑动图片列表的时候不去加载图片
+     * 手指猛地一滑动图片列表的时候不去加载图片
      * @return
      */
     protected boolean pauseOnFling() {
