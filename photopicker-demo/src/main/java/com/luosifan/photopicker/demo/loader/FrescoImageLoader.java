@@ -19,23 +19,30 @@ package com.luosifan.photopicker.demo.loader;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.Canvas;
+import android.graphics.drawable.Animatable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.widget.RecyclerView;
+import android.view.View;
 import android.widget.AbsListView;
 
 import com.facebook.common.util.UriUtil;
 import com.facebook.drawee.backends.pipeline.Fresco;
+import com.facebook.drawee.backends.pipeline.PipelineDraweeControllerBuilder;
+import com.facebook.drawee.controller.BaseControllerListener;
 import com.facebook.drawee.generic.GenericDraweeHierarchy;
 import com.facebook.drawee.generic.GenericDraweeHierarchyBuilder;
 import com.facebook.drawee.interfaces.DraweeController;
 import com.facebook.drawee.view.DraweeHolder;
 import com.facebook.imagepipeline.common.ResizeOptions;
+import com.facebook.imagepipeline.image.ImageInfo;
 import com.facebook.imagepipeline.request.ImageRequest;
 import com.facebook.imagepipeline.request.ImageRequestBuilder;
 import com.luosifan.photopicker.ImageLoader;
 import com.luosifan.photopicker.view.GFImageView;
+
+import me.relex.photodraweeview.PhotoDraweeView;
 
 
 /**
@@ -100,6 +107,40 @@ public class FrescoImageLoader extends ImageLoader {
                 .setImageRequest(imageRequest)
                 .build();
         draweeHolder.setController(controller);
+    }
+
+    @Override
+    public View instantiateItem(Context context, String imagePath, int imageWidth, int imageHeight) {
+        final PhotoDraweeView mPhotoDraweeView = new PhotoDraweeView(context);
+        PipelineDraweeControllerBuilder controller = Fresco.newDraweeControllerBuilder();
+
+        Uri uri = new Uri.Builder()
+                .scheme(UriUtil.LOCAL_FILE_SCHEME)
+                .path(imagePath)
+                .build();
+        controller.setUri(uri);
+
+        controller.setOldController(mPhotoDraweeView.getController());
+
+        ImageRequest imageRequest = ImageRequestBuilder
+                .newBuilderWithSource(uri)
+                .setResizeOptions(new ResizeOptions(imageWidth, imageHeight))//图片目标大小
+                .build();
+        controller.setImageRequest(imageRequest);
+
+        controller.setControllerListener(new BaseControllerListener<ImageInfo>() {
+            @Override
+            public void onFinalImageSet(String id, ImageInfo imageInfo, Animatable animatable) {
+                super.onFinalImageSet(id, imageInfo, animatable);
+                if (imageInfo == null || mPhotoDraweeView == null) {
+                    return;
+                }
+                mPhotoDraweeView.update(imageInfo.getWidth(), imageInfo.getHeight());
+            }
+        });
+        mPhotoDraweeView.setController(controller.build());
+
+        return mPhotoDraweeView;
     }
 
     @Override

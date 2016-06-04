@@ -31,6 +31,8 @@ import com.nostra13.universalimageloader.core.assist.ImageSize;
 import com.nostra13.universalimageloader.core.imageaware.ImageViewAware;
 import com.nostra13.universalimageloader.core.listener.ImageLoadingListener;
 
+import uk.co.senab.photoview.PhotoView;
+
 /**
  * Desction:
  * Author:pengjianbo
@@ -88,6 +90,43 @@ public class UILImageLoader extends com.luosifan.photopicker.ImageLoader {
 
             }
         }, null);
+    }
+
+    @Override
+    public View instantiateItem(Context context, String imagePath, int imageWidth, int imageHeight) {
+        PhotoView photoView = new PhotoView(context);
+        photoView.setScaleType(ImageView.ScaleType.CENTER_INSIDE);
+        DisplayImageOptions options = new DisplayImageOptions.Builder()
+                .cacheOnDisk(false)
+                .cacheInMemory(true)
+                .bitmapConfig(mImageConfig)
+                .build();
+
+        ImageSize imageSize = new ImageSize(imageWidth, imageHeight);
+        ImageLoader.getInstance().displayImage("file://" + imagePath,
+                new ImageViewAware(photoView), options, imageSize, new ImageLoadingListener() {
+            @Override
+            public void onLoadingStarted(String imageUri, View view) {
+
+            }
+
+            @Override
+            public void onLoadingFailed(String imageUri, View view, FailReason failReason) {
+
+            }
+
+            @Override
+            public void onLoadingComplete(String imageUri, View view, Bitmap loadedImage) {
+
+            }
+
+            @Override
+            public void onLoadingCancelled(String imageUri, View view) {
+
+            }
+        }, null);
+
+        return photoView;
     }
 
     @Override

@@ -73,11 +73,12 @@ public class GlideImageLoader extends ImageLoader {
     }
 
     @Override
-    public View instantiateItem(Context context, String imagePath) {
+    public View instantiateItem(Context context, String imagePath, int imageWidth, int iamgeHeight) {
         PhotoView photoView = new PhotoView(context);
 
         Glide.with(context)
                 .load(Uri.fromFile(new File(imagePath)))
+                .override(imageWidth, iamgeHeight)
                 .crossFade()
                 .into(photoView);
 

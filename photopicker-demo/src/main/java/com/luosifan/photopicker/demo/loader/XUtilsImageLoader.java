@@ -18,6 +18,7 @@ package com.luosifan.photopicker.demo.loader;
 
 import android.content.Context;
 import android.graphics.Bitmap;
+import android.view.View;
 import android.widget.AbsListView;
 
 import com.luosifan.photopicker.ImageLoader;
@@ -25,6 +26,8 @@ import com.luosifan.photopicker.view.GFImageView;
 
 import org.xutils.image.ImageOptions;
 import org.xutils.x;
+
+import uk.co.senab.photoview.PhotoView;
 
 /**
  * Desction:
@@ -55,6 +58,18 @@ public class XUtilsImageLoader extends ImageLoader {
                 .setUseMemCache(true)
                 .build();
         x.image().bind(imageView, "file://" + path, options);
+    }
+
+    @Override
+    public View instantiateItem(Context context, String imagePath, int imageWidth, int imageHeight) {
+        PhotoView photoView = new PhotoView(context);
+        ImageOptions options = new ImageOptions.Builder()
+                .setConfig(mImageConfig)
+                .setSize(imageWidth, imageHeight)
+                .setUseMemCache(true)
+                .build();
+        x.image().bind(photoView, "file://" + imagePath, options);
+        return photoView;
     }
 
     @Override

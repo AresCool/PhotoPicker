@@ -2,13 +2,18 @@ package com.luosifan.photopicker;
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Point;
 import android.os.Build;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -25,9 +30,16 @@ public class PhotoPreviewActivity extends PreviewBaseActivity {
 
     FixedViewPager mViewPager;
     PreviewAdapter adapter;
+    DisplayMetrics displayMetrics;
+
+    int screenWidth, screenHeight;
 
     @Override
     protected void initWidget() {
+
+        displayMetrics = getResources().getDisplayMetrics();
+        screenWidth = displayMetrics.widthPixels;
+        screenHeight = displayMetrics.heightPixels;
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             getWindow().setStatusBarColor(Color.BLACK);
@@ -121,9 +133,11 @@ public class PhotoPreviewActivity extends PreviewBaseActivity {
         public View instantiateItem(ViewGroup container, int position) {
 
             View view = null;
-
+            getScaledSize(paths.get(position));
             if(imageLoader != null) {
-                view = imageLoader.instantiateItem(mCxt, paths.get(position));
+                Point scaledSize = getScaledSize(paths.get(position));
+                view = imageLoader.instantiateItem(mCxt, paths.get(position),
+                        scaledSize.x, scaledSize.y);
             }
 
             if(view != null) {
@@ -146,5 +160,19 @@ public class PhotoPreviewActivity extends PreviewBaseActivity {
 
         @Override
         public int getItemPosition (Object object) { return POSITION_NONE; }
+    }
+
+    private Point getScaledSize(String imagePath) {
+        Point point = new Point();
+        BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(imagePath, options);
+        // 根据原始照片宽高缩放
+        int imageWidth = options.outWidth;
+        int imageHeight = options.outHeight;
+        imageWidth = imageWidth > screenWidth ? screenWidth : imageWidth;
+        imageHeight = imageHeight > screenHeight ? screenHeight : imageHeight;
+        point.set(imageWidth, imageHeight);
+        return point;
     }
 }
