@@ -1,7 +1,5 @@
 package com.luosifan.photopicker.picker;
 
-import com.luosifan.photopicker.ImageLoader;
-
 import java.util.ArrayList;
 
 /**
@@ -9,10 +7,6 @@ import java.util.ArrayList;
  * Created by wzfu on 16/5/21.
  */
 public class PickerParams implements java.io.Serializable{
-
-    public Class<? extends ImageLoader> imageLoaderClass;
-
-    public PickerTheme theme;
 
     public PhotoFilter filter;
 

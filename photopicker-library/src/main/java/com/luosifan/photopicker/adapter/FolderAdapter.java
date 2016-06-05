@@ -5,15 +5,15 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.luosifan.photopicker.PhotoPicker;
 import com.luosifan.photopicker.R;
 import com.luosifan.photopicker.bean.Folder;
-import com.luosifan.photopicker.ImageLoader;
 import com.luosifan.photopicker.utils.ScreenUtils;
-import com.luosifan.photopicker.view.GFImageView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,7 +26,6 @@ import java.util.List;
 public class FolderAdapter extends BaseAdapter {
 
     private Context mContext;
-    private ImageLoader imageLoader;
     private LayoutInflater mInflater;
 
     private List<Folder> mFolders = new ArrayList<>();
@@ -36,9 +35,8 @@ public class FolderAdapter extends BaseAdapter {
     int lastSelected = 0;
 
 
-    public FolderAdapter(Context context, ImageLoader imageLoader){
+    public FolderAdapter(Context context){
         this.mContext = context;
-        this.imageLoader = imageLoader;
         mInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mImageSize = mContext.getResources().getDimensionPixelOffset(R.dimen.folder_cover_size);
 //        getDimensionPixelSize
@@ -95,17 +93,15 @@ public class FolderAdapter extends BaseAdapter {
                         getTotalImageSize(), mContext.getResources().getString(R.string.photo_unit)));
                 if(mFolders.size() > 0) {
                     Folder f = mFolders.get(0);
-                    if (f != null && imageLoader != null) {
+                    if (f != null && PhotoPicker.getInstance() != null) {
 
-                        imageLoader.displayImage(mContext,
-                                f.cover.path,
-                                holder.cover,
-                                R.id.photopicker_item_tag_id,
-                                R.drawable.default_error,
-                                R.drawable.default_error,
-                                mImageSize, mImageSize);
-                    }else{
-                        holder.cover.setImageResource(R.drawable.default_error);
+                        PhotoPicker.getInstance().pickerImageLoader
+                                .loadGridItemView(
+                                        holder.thumbView,
+                                        f.cover.path,
+                                        R.id.photopicker_item_tag_id,
+                                        mImageSize,
+                                        mImageSize);
                     }
                 }
             }else {
@@ -143,17 +139,27 @@ public class FolderAdapter extends BaseAdapter {
     }
 
     class ViewHolder{
-        GFImageView cover;
         TextView name;
         TextView path;
         TextView size;
         ImageView indicator;
+        FrameLayout itemViewFrame;
+        ImageView thumbView;
+
         ViewHolder(View view){
-            cover = (GFImageView)view.findViewById(R.id.cover);
             name = (TextView) view.findViewById(R.id.name);
             path = (TextView) view.findViewById(R.id.path);
             size = (TextView) view.findViewById(R.id.size);
             indicator = (ImageView) view.findViewById(R.id.indicator);
+            itemViewFrame = (FrameLayout) view.findViewById(R.id.itemViewFrame);
+            // Add ItemView
+            if (PhotoPicker.getInstance() != null) {
+                thumbView = PhotoPicker.getInstance().pickerImageLoader.onCreateGridItemView(view.getContext());
+                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+                );
+                itemViewFrame.addView(thumbView, lp);
+            }
             view.setTag(this);
         }
 
@@ -168,17 +174,14 @@ public class FolderAdapter extends BaseAdapter {
             }else{
                 size.setText("*"+mContext.getResources().getString(R.string.photo_unit));
             }
-            if (data.cover != null && imageLoader != null) {
-                // 显示图片
-                imageLoader.displayImage(mContext,
-                        data.cover.path,
-                        cover,
-                        R.id.photopicker_item_tag_id,
-                        R.drawable.default_error,
-                        R.drawable.default_error,
-                        mImageSize, mImageSize);
-            }else{
-                cover.setImageResource(R.drawable.default_error);
+            if (data.cover != null && PhotoPicker.getInstance() != null) {
+                PhotoPicker.getInstance().pickerImageLoader
+                        .loadGridItemView(
+                                thumbView,
+                                data.cover.path,
+                                R.id.photopicker_item_tag_id,
+                                mImageSize,
+                                mImageSize);
             }
         }
     }

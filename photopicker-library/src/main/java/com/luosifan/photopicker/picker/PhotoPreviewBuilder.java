@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.widget.Toast;
 
-import com.luosifan.photopicker.ImageLoader;
 import com.luosifan.photopicker.PhotoPicker;
 import com.luosifan.photopicker.PhotoPreviewActivity;
 import com.luosifan.photopicker.R;
@@ -17,16 +16,8 @@ import java.util.ArrayList;
  */
 public class PhotoPreviewBuilder extends Builder {
 
-    private Class<? extends ImageLoader> imageLoaderClass;
-    private PickerTheme theme;
     private int currentItem;
     private ArrayList<String> paths;
-
-
-    public PhotoPreviewBuilder(Class<? extends ImageLoader> imageLoaderClass, PickerTheme theme) {
-        this.imageLoaderClass = imageLoaderClass;
-        this.theme = theme;
-    }
 
     public PhotoPreviewBuilder currentItem(int currentItem) {
         this.currentItem = currentItem;
@@ -67,7 +58,6 @@ public class PhotoPreviewBuilder extends Builder {
         Intent intent = new Intent(aty, PhotoPreviewActivity.class);
         intent.putExtra(PreviewBaseActivity.CURRENT_ITEM, currentItem);
         intent.putStringArrayListExtra(PreviewBaseActivity.PHOTO_PATHS, paths);
-        intent.putExtra("imageLoader", imageLoaderClass);
         return intent;
     }
 }

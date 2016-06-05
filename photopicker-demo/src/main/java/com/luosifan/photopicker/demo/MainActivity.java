@@ -21,14 +21,12 @@ import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 
-import com.luosifan.photopicker.ImageLoader;
 import com.luosifan.photopicker.PhotoPicker;
-import com.luosifan.photopicker.PhotoPreviewActivity;
-import com.luosifan.photopicker.demo.loader.FrescoImageLoader;
-import com.luosifan.photopicker.demo.loader.GlideImageLoader;
-import com.luosifan.photopicker.demo.loader.PicassoImageLoader;
-import com.luosifan.photopicker.demo.loader.UILImageLoader;
-import com.luosifan.photopicker.demo.loader.XUtilsImageLoader;
+import com.luosifan.photopicker.demo.imagloader.FrescoImageLoader;
+import com.luosifan.photopicker.demo.imagloader.GlideImageLoader;
+import com.luosifan.photopicker.demo.imagloader.PicassoImageLoader;
+import com.luosifan.photopicker.demo.imagloader.UILImageLoader;
+import com.luosifan.photopicker.demo.imagloader.XUtilsImageLoader;
 import com.luosifan.photopicker.picker.Load;
 import com.luosifan.photopicker.picker.PhotoSelectBuilder;
 
@@ -104,6 +102,7 @@ public class MainActivity extends AppCompatActivity {
                     getString(R.string.permission_rationale),
                     REQUEST_STORAGE_READ_ACCESS_PERMISSION);
         } else {
+            initImageLoader(spinner_imageloader.getSelectedItem().toString());
             boolean showCamera = mShowCamera.getCheckedRadioButtonId() == R.id.show;
             int maxNum = 9;
 
@@ -120,8 +119,7 @@ public class MainActivity extends AppCompatActivity {
                 columns = Integer.parseInt(mRequestColumns.getText().toString());
             }
 
-            Load load = PhotoPicker.with(getImageLoader(spinner_imageloader.getSelectedItem().toString()))
-                    .load()
+            Load load = PhotoPicker.load()
                     .showCamera(showCamera)
 //                    .filter(PhotoFilter.build().showGif(false).minSize(2 * 1024))
                     .gridColumns(columns);
@@ -182,26 +180,24 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private Class<? extends ImageLoader> getImageLoader(String selectedItem){
-        Class<? extends ImageLoader> imageloader = null;
+    private void initImageLoader(String selectedItem){
         switch (selectedItem){
             case "Picasso":
-                imageloader = PicassoImageLoader.class;
+                PhotoPicker.init(new PicassoImageLoader(), null);
                 break;
             case "Glide":
-                imageloader = GlideImageLoader.class;
+                PhotoPicker.init(new GlideImageLoader(), null);
                 break;
             case "Fresco":
-                imageloader = FrescoImageLoader.class;
+                PhotoPicker.init(new FrescoImageLoader(), null);
                 break;
             case "Universal-Image-Loader":
-                imageloader = UILImageLoader.class;
+                PhotoPicker.init(new UILImageLoader(), null);
                 break;
             case "Xutils3":
-                imageloader = XUtilsImageLoader.class;
+                PhotoPicker.init(new XUtilsImageLoader(), null);
                 break;
         }
-        return imageloader;
     }
 
     @Override

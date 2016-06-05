@@ -165,4 +165,12 @@ public class MultiImageSelectorActivity extends AppCompatActivity
         updateDoneText(resultList);;
         return true;
     }
+
+    @Override
+    protected void onDestroy() {
+        if (PhotoPicker.getInstance() != null) {
+            PhotoPicker.getInstance().pickerImageLoader.clearMemoryCache();
+        }
+        super.onDestroy();
+    }
 }

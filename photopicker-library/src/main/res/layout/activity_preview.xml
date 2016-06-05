@@ -14,7 +14,7 @@
         app:theme="@style/PhotoPicker.ToolbarTheme"
         app:titleTextAppearance="@style/PhotoPicker.Toolbar.TitleText" />
 
-    <com.luosifan.photopicker.view.FixedViewPager
+    <com.luosifan.photopicker.view.HackyViewPager
         android:id="@+id/viewPager"
         android:layout_width="match_parent"
         android:layout_height="match_parent" />

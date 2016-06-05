@@ -8,19 +8,18 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
-    <com.luosifan.photopicker.view.GFImageView
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="10dp"
-        android:id="@+id/cover"
-        tools:src="@drawable/btn_back"
-        android:layout_gravity="center_vertical"
-        android:scaleType="centerInside"
-        android:src="@drawable/default_error"
+    <FrameLayout
+        android:id="@+id/itemViewFrame"
         android:layout_width="@dimen/folder_cover_size"
-        android:layout_height="@dimen/folder_cover_size" />
+        android:layout_height="@dimen/folder_cover_size"
+        android:layout_marginLeft="10dp"
+        android:layout_gravity="center_vertical"
+        android:layout_centerVertical="true">
+
+    </FrameLayout>
 
     <LinearLayout
-        android:layout_toRightOf="@+id/cover"
+        android:layout_toRightOf="@+id/itemViewFrame"
         android:layout_toLeftOf="@+id/indicator"
         android:layout_centerVertical="true"
         android:layout_marginLeft="16dp"

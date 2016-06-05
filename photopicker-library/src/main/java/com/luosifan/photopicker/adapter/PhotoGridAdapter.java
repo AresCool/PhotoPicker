@@ -4,21 +4,17 @@ import android.content.Context;
 import android.graphics.Point;
 import android.os.Build;
 import android.support.v7.widget.RecyclerView;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.luosifan.photopicker.ImageLoader;
+import com.luosifan.photopicker.PhotoPicker;
 import com.luosifan.photopicker.R;
 import com.luosifan.photopicker.bean.Image;
 import com.luosifan.photopicker.event.OnPhotoGridClickListener;
-import com.luosifan.photopicker.view.GFImageView;
-
-import java.util.List;
 
 /**
  * Created by wzfu on 2016/5/25.
@@ -29,7 +25,6 @@ public class PhotoGridAdapter extends SelectableAdapter {
     public final static int ITEM_TYPE_PHOTO  = 101;
 
     private Context mCxt;
-    private ImageLoader imageLoader;
     private LayoutInflater inflater;
 
     private int imageSize;
@@ -38,10 +33,9 @@ public class PhotoGridAdapter extends SelectableAdapter {
     private boolean showSelectIndicator = true;
     private OnPhotoGridClickListener onPhotoGridClickListener;
 
-    public PhotoGridAdapter(Context mCxt, boolean showCamera, int colNum, ImageLoader imageLoader){
+    public PhotoGridAdapter(Context mCxt, boolean showCamera, int colNum){
         this.mCxt = mCxt;
         this.showCamera = showCamera;
-        this.imageLoader = imageLoader;
         inflater = LayoutInflater.from(mCxt);
 
         WindowManager wm = (WindowManager) mCxt.getSystemService(Context.WINDOW_SERVICE);
@@ -66,7 +60,7 @@ public class PhotoGridAdapter extends SelectableAdapter {
         View itemView;
         if(viewType == ITEM_TYPE_PHOTO) {
             itemView = inflater.inflate(R.layout.list_item_image, parent, false);
-            holder = new PhotoViewHolder(itemView);
+            holder = new PhotoViewHolder(itemView, imageSize);
         }else{
             itemView = inflater.inflate(R.layout.list_item_camera, parent, false);
             holder = new CaremaViewHolder(itemView);
@@ -100,27 +94,28 @@ public class PhotoGridAdapter extends SelectableAdapter {
                         : R.drawable.btn_unselected);
             }
             // 显示图片
-            if(imageLoader != null) {
-                imageLoader.displayImage(holder.image.getContext(),
-                        image.path,
-                        holder.image,
-                        R.id.photopicker_item_tag_id,
-                        R.drawable.default_error,
-                        R.drawable.default_error,
-                        imageSize, imageSize);
-            }
+            if(PhotoPicker.getInstance() != null) {
 
-            holder.image.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
+                PhotoPicker.getInstance().pickerImageLoader
+                        .loadGridItemView(
+                                holder.gridItemView,
+                                image.path,
+                                R.id.photopicker_item_tag_id,
+                                imageSize, imageSize
+                        );
 
-                    int pos = holder.getAdapterPosition();
+                holder.gridItemView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
 
-                    if(onPhotoGridClickListener != null){
-                        onPhotoGridClickListener.onPhotoClick(image, pos);
+                        int pos = holder.getAdapterPosition();
+
+                        if(onPhotoGridClickListener != null){
+                            onPhotoGridClickListener.onPhotoClick(image, pos);
+                        }
                     }
-                }
-            });
+                });
+            }
         }
     }
 
@@ -150,15 +145,23 @@ public class PhotoGridAdapter extends SelectableAdapter {
 
     public static class PhotoViewHolder extends RecyclerView.ViewHolder{
 
-        GFImageView image;
+        FrameLayout imageFrame;
+        ImageView gridItemView;
         View mask;
         ImageView indicator;
 
-        public PhotoViewHolder(View itemView) {
+        public PhotoViewHolder(View itemView, int imageSize) {
             super(itemView);
-            image = (GFImageView) itemView.findViewById(R.id.image);
             mask = itemView.findViewById(R.id.mask);
             indicator = (ImageView) itemView.findViewById(R.id.checkmark);
+            imageFrame = (FrameLayout) itemView.findViewById(R.id.imageFrame);
+            if (PhotoPicker.getInstance() != null) {
+                gridItemView = PhotoPicker.getInstance().pickerImageLoader
+                        .onCreateGridItemView(itemView.getContext());
+                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                        imageSize, imageSize);
+                imageFrame.addView(gridItemView, lp);
+            }
         }
     }
 

@@ -2,7 +2,7 @@ package com.luosifan.photopicker.event;
 
 import android.support.v7.widget.RecyclerView;
 
-import com.luosifan.photopicker.ImageLoader;
+import com.luosifan.photopicker.PhotoPickerImageLoader;
 import com.luosifan.photopicker.R;
 
 /**
@@ -12,41 +12,39 @@ public class PauseOnScrollListener extends RecyclerView.OnScrollListener{
 
     private final boolean pauseOnScroll;
     private final boolean pauseOnFling;
-    private final ImageLoader imageLoader;
+    private final PhotoPickerImageLoader imageLoader;
 
     private static final int TAG_ID = R.id.photopicker_item_tag_id;
 
-    public PauseOnScrollListener(boolean pauseOnScroll, boolean pauseOnFling, ImageLoader imageLoader) {
-        this.pauseOnScroll = pauseOnScroll;
-        this.pauseOnFling = pauseOnFling;
+    public PauseOnScrollListener(PhotoPickerImageLoader imageLoader) {
+        this.pauseOnScroll = imageLoader.pauseOnScroll();
+        this.pauseOnFling = imageLoader.pauseOnFling();
         this.imageLoader = imageLoader;
     }
 
     @Override
     public void onScrollStateChanged(RecyclerView recyclerView, int newState) {
-        if(imageLoader != null) {
-            switch (newState) {
+        switch (newState) {
 
-                case RecyclerView.SCROLL_STATE_IDLE:
+            case RecyclerView.SCROLL_STATE_IDLE:
+                resume(recyclerView);
+                break;
+
+            case RecyclerView.SCROLL_STATE_DRAGGING:
+                if (pauseOnScroll) {
+                    pause(recyclerView);
+                } else {
                     resume(recyclerView);
-                    break;
+                }
+                break;
 
-                case RecyclerView.SCROLL_STATE_DRAGGING:
-                    if (pauseOnScroll) {
-                        pause(recyclerView);
-                    } else {
-                        resume(recyclerView);
-                    }
-                    break;
-
-                case RecyclerView.SCROLL_STATE_SETTLING:
-                    if (pauseOnFling) {
-                        pause(recyclerView);
-                    } else {
-                        resume(recyclerView);
-                    }
-                    break;
-            }
+            case RecyclerView.SCROLL_STATE_SETTLING:
+                if (pauseOnFling) {
+                    pause(recyclerView);
+                } else {
+                    resume(recyclerView);
+                }
+                break;
         }
     }
 

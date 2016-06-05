@@ -84,7 +84,6 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
     private boolean hasFolderGened = false;
 
     private PickerParams pickerParams;
-    private ImageLoader imageLoader;
     private ImageCaptureManager captureManager;
 
     public static MultiImageSelectorFragment newInstance(PickerParams params){
@@ -114,14 +113,6 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
         }
 
         pickerParams = (PickerParams) getArguments().getSerializable(PhotoPicker.PARAMS_PICKER);
-
-        // init ImageLoader
-        try {
-            imageLoader = pickerParams.imageLoaderClass.newInstance();
-        } catch (Exception e) {
-            throw new IllegalArgumentException(e);
-        }
-
         captureManager = new ImageCaptureManager(getActivity());
     }
 
@@ -174,10 +165,10 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
             }
         });
 
-        mFolderAdapter = new FolderAdapter(getActivity(), imageLoader);
+        mFolderAdapter = new FolderAdapter(getActivity());
 
         photoGridAdapter = new PhotoGridAdapter(getActivity(), pickerParams.showCamera,
-                pickerParams.gridColumns, imageLoader);
+                pickerParams.gridColumns);
         photoGridAdapter.showSelectIndicator(pickerParams.mode == SelectMode.MULTI);
         photoGridAdapter.setOnPhotoGridClickListener(this);
 
@@ -189,7 +180,9 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
         rv_photos.addItemDecoration(new GridSpacingItemDecoration(pickerParams.gridColumns, spacingInPixels, false));
         rv_photos.setAdapter(photoGridAdapter);
         rv_photos.setItemAnimator(new DefaultItemAnimator());
-        rv_photos.addOnScrollListener(new PauseOnScrollListener(false, true, imageLoader));
+        if (PhotoPicker.getInstance() != null) {
+            rv_photos.addOnScrollListener(new PauseOnScrollListener(PhotoPicker.getInstance().pickerImageLoader));
+        }
     }
 
     /**
@@ -492,8 +485,7 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
     }
 
     private void previewPhotos(){
-        PhotoPicker.with(pickerParams.imageLoaderClass)
-                .preview()
+        PhotoPicker.preview()
                 .paths(resultList)
                 .start(this);
     }
@@ -521,13 +513,4 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
         super.onViewStateRestored(savedInstanceState);
     }
 
-    @Override
-    public void onDestroyView() {
-        super.onDestroyView();
-        // 释放缓存
-        if(imageLoader != null){
-            imageLoader.clearMemoryCache();
-            imageLoader = null;
-        }
-    }
 }

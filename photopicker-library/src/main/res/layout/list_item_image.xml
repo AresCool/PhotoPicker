@@ -4,12 +4,12 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <com.luosifan.photopicker.view.GFImageView
-        android:id="@+id/image"
+    <FrameLayout
+        android:id="@+id/imageFrame"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:scaleType="centerInside"
-        android:src="@drawable/default_error" />
+        android:layout_height="match_parent">
+
+    </FrameLayout>
 
     <View
         android:id="@+id/mask"

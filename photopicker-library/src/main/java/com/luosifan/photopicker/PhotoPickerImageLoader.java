@@ -1,4 +1,4 @@
-package com.luosifan.photopicker.picker;
+package com.luosifan.photopicker;
 
 import android.content.Context;
 import android.widget.ImageView;
@@ -13,7 +13,7 @@ public abstract class PhotoPickerImageLoader<IV extends ImageView, PV extends Im
      * 创建列表图片
      * @return
      */
-    protected abstract IV onCreateGridItemView(Context context);
+    public abstract IV onCreateGridItemView(Context context);
 
     /**
      * 加载选择列表图片
@@ -23,7 +23,7 @@ public abstract class PhotoPickerImageLoader<IV extends ImageView, PV extends Im
      * @param width
      * @param height
      */
-    protected abstract void loadGridItemView(IV view, String imagePath, int tag, int width, int height);
+    public abstract void loadGridItemView(IV view, String imagePath, int tag, int width, int height);
 
     /**
      * 执行加载图片
@@ -58,7 +58,7 @@ public abstract class PhotoPickerImageLoader<IV extends ImageView, PV extends Im
      * 手指缓慢滑动图片列表的时候不去加载图片
      * @return
      */
-    protected boolean pauseOnScroll() {
+    public boolean pauseOnScroll() {
         return false;
     }
 
@@ -66,7 +66,7 @@ public abstract class PhotoPickerImageLoader<IV extends ImageView, PV extends Im
      * 手指猛地一滑动图片列表的时候不去加载图片
      * @return
      */
-    protected boolean pauseOnFling() {
+    public boolean pauseOnFling() {
         return true;
     }
 

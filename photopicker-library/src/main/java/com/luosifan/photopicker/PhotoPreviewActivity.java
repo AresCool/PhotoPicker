@@ -16,9 +16,10 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 
 import com.luosifan.photopicker.picker.PreviewBaseActivity;
-import com.luosifan.photopicker.view.FixedViewPager;
+import com.luosifan.photopicker.view.HackyViewPager;
 
 import java.util.List;
 
@@ -28,7 +29,7 @@ import java.util.List;
  */
 public class PhotoPreviewActivity extends PreviewBaseActivity {
 
-    FixedViewPager mViewPager;
+    HackyViewPager mViewPager;
     PreviewAdapter adapter;
     DisplayMetrics displayMetrics;
 
@@ -56,7 +57,7 @@ public class PhotoPreviewActivity extends PreviewBaseActivity {
         }
 
         adapter = new PreviewAdapter(this, paths);
-        mViewPager = (FixedViewPager) findViewById(R.id.viewPager);
+        mViewPager = (HackyViewPager) findViewById(R.id.viewPager);
         mViewPager.setOffscreenPageLimit(5);
         mViewPager.setAdapter(adapter);
         mViewPager.setCurrentItem(currentItem);
@@ -132,20 +133,24 @@ public class PhotoPreviewActivity extends PreviewBaseActivity {
         @Override
         public View instantiateItem(ViewGroup container, int position) {
 
-            View view = null;
-            getScaledSize(paths.get(position));
-            if(imageLoader != null) {
-                Point scaledSize = getScaledSize(paths.get(position));
-                view = imageLoader.instantiateItem(mCxt, paths.get(position),
-                        scaledSize.x, scaledSize.y);
-            }
+            ImageView imageView = null;
 
-            if(view != null) {
-                container.addView(view, ViewGroup.LayoutParams.MATCH_PARENT,
-                        ViewGroup.LayoutParams.MATCH_PARENT);
-            }
+            if (PhotoPicker.getInstance() != null) {
+                imageView = PhotoPicker.getInstance().pickerImageLoader.onCreatePreviewItemView(container.getContext());
 
-            return view;
+                if(imageView != null) {
+                    Point scaledSize = getScaledSize(paths.get(position));
+                    PhotoPicker.getInstance().pickerImageLoader.loadPreviewItemView(
+                            imageView,
+                            paths.get(position),
+                            scaledSize.x,
+                            scaledSize.y
+                    );
+                    container.addView(imageView, ViewGroup.LayoutParams.MATCH_PARENT,
+                            ViewGroup.LayoutParams.MATCH_PARENT);
+                }
+            }
+            return imageView;
         }
 
         @Override
@@ -170,8 +175,8 @@ public class PhotoPreviewActivity extends PreviewBaseActivity {
         // 根据原始照片宽高缩放
         int imageWidth = options.outWidth;
         int imageHeight = options.outHeight;
-        imageWidth = imageWidth > screenWidth ? screenWidth : imageWidth;
-        imageHeight = imageHeight > screenHeight ? screenHeight : imageHeight;
+        imageWidth = imageWidth > screenWidth ? imageWidth / 2 : imageWidth;
+        imageHeight = imageHeight > screenHeight ? imageHeight / 2 : imageHeight;
         point.set(imageWidth, imageHeight);
         return point;
     }
