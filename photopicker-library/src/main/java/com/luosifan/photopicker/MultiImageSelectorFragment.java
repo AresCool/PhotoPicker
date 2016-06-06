@@ -179,6 +179,7 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
         int spacingInPixels = getResources().getDimensionPixelSize(R.dimen.space_size);
         rv_photos.addItemDecoration(new GridSpacingItemDecoration(pickerParams.gridColumns, spacingInPixels, false));
         rv_photos.setAdapter(photoGridAdapter);
+        rv_photos.setHasFixedSize(true);
         rv_photos.setItemAnimator(new DefaultItemAnimator());
         if (PhotoPicker.getInstance() != null) {
             rv_photos.addOnScrollListener(new PauseOnScrollListener(PhotoPicker.getInstance().pickerImageLoader));

@@ -154,13 +154,18 @@ public class PhotoGridAdapter extends SelectableAdapter {
             super(itemView);
             mask = itemView.findViewById(R.id.mask);
             indicator = (ImageView) itemView.findViewById(R.id.checkmark);
+
+            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
+                    imageSize, imageSize);
             imageFrame = (FrameLayout) itemView.findViewById(R.id.imageFrame);
+            imageFrame.setLayoutParams(lp);
+
             if (PhotoPicker.getInstance() != null) {
                 gridItemView = PhotoPicker.getInstance().pickerImageLoader
                         .onCreateGridItemView(itemView.getContext());
-                FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                        imageSize, imageSize);
-                imageFrame.addView(gridItemView, lp);
+                imageFrame.addView(gridItemView, new FrameLayout.LayoutParams(
+                        ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT
+                ));
             }
         }
     }

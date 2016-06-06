@@ -175,8 +175,8 @@ public class PhotoPreviewActivity extends PreviewBaseActivity {
         // 根据原始照片宽高缩放
         int imageWidth = options.outWidth;
         int imageHeight = options.outHeight;
-        imageWidth = imageWidth > screenWidth ? imageWidth / 2 : imageWidth;
-        imageHeight = imageHeight > screenHeight ? imageHeight / 2 : imageHeight;
+        imageWidth = imageWidth > screenWidth ? screenWidth / 2 : imageWidth;
+        imageHeight = imageHeight > screenHeight ? screenHeight / 2 : imageHeight;
         point.set(imageWidth, imageHeight);
         return point;
     }
