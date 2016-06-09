@@ -95,7 +95,6 @@ public class PhotoGridAdapter extends SelectableAdapter {
             }
             // 显示图片
             if(PhotoPicker.getInstance() != null) {
-
                 PhotoPicker.getInstance().pickerImageLoader
                         .loadGridItemView(
                                 holder.gridItemView,
@@ -152,13 +151,13 @@ public class PhotoGridAdapter extends SelectableAdapter {
 
         public PhotoViewHolder(View itemView, int imageSize) {
             super(itemView);
+
+            ViewGroup.LayoutParams layoutParams = new ViewGroup.LayoutParams(imageSize, imageSize);
+            itemView.setLayoutParams(layoutParams);
+
             mask = itemView.findViewById(R.id.mask);
             indicator = (ImageView) itemView.findViewById(R.id.checkmark);
-
-            FrameLayout.LayoutParams lp = new FrameLayout.LayoutParams(
-                    imageSize, imageSize);
             imageFrame = (FrameLayout) itemView.findViewById(R.id.imageFrame);
-            imageFrame.setLayoutParams(lp);
 
             if (PhotoPicker.getInstance() != null) {
                 gridItemView = PhotoPicker.getInstance().pickerImageLoader
