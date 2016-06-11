@@ -282,14 +282,14 @@ public class MultiImageSelectorFragment extends Fragment implements OnPhotoGridC
                     break;
 
                 case PhotoPicker.REQUEST_PREVIEW:
-                    resultList = data.getStringArrayListExtra(PhotoPicker.PATHS);
-                    photoGridAdapter.clearSelection();
-                    photoGridAdapter.setDefaultSelected(resultList);
-                    photoGridAdapter.notifyDataSetChanged();
-                    refreshPreviewButtonState(resultList);
-                    if (mCallback != null) {
-                        mCallback.onImagePathsChange(resultList);
-                    }
+//                    resultList = data.getStringArrayListExtra(PhotoPicker.PATHS);
+//                    photoGridAdapter.clearSelection();
+//                    photoGridAdapter.setDefaultSelected(resultList);
+//                    photoGridAdapter.notifyDataSetChanged();
+//                    refreshPreviewButtonState(resultList);
+//                    if (mCallback != null) {
+//                        mCallback.onImagePathsChange(resultList);
+//                    }
                     break;
             }
         }
