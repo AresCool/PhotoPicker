@@ -13,7 +13,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.widget.ImageView;
 
-import com.lzy.imagepicker.loader.ImageLoader;
+import cc.dagger.photopicker.loader.ImageLoader;
+
 
 public class UILImageLoader extends ImageLoader<ImageView, ImageView> {
 
@@ -26,6 +27,11 @@ public class UILImageLoader extends ImageLoader<ImageView, ImageView> {
     public void displayImage(Activity activity, String path, ImageView imageView, int width, int height) {
 //        ImageSize size = new ImageSize(width, height);
 //        ImageLoader.getInstance().displayImage("file://" + path, imageView, size);
+    }
+
+    @Override
+    public ImageView onCreatePreviewItemView(Context mCxt) {
+        return null;
     }
 
     @Override

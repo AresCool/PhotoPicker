@@ -13,7 +13,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.widget.ImageView;
 
-import com.lzy.imagepicker.loader.ImageLoader;
+import cc.dagger.photopicker.loader.ImageLoader;
+
 
 public class PicassoImageLoader extends ImageLoader<ImageView, ImageView> {
 
@@ -32,6 +33,11 @@ public class PicassoImageLoader extends ImageLoader<ImageView, ImageView> {
 //                .centerInside()
 //                .memoryPolicy(MemoryPolicy.NO_CACHE, MemoryPolicy.NO_STORE)
 //                .into(imageView);
+    }
+
+    @Override
+    public ImageView onCreatePreviewItemView(Context mCxt) {
+        return null;
     }
 
     @Override

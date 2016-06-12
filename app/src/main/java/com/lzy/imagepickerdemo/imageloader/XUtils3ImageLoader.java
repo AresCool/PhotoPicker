@@ -13,7 +13,8 @@ import android.app.Activity;
 import android.content.Context;
 import android.widget.ImageView;
 
-import com.lzy.imagepicker.loader.ImageLoader;
+import cc.dagger.photopicker.loader.ImageLoader;
+
 
 public class XUtils3ImageLoader extends ImageLoader<ImageView, ImageView> {
 
@@ -31,6 +32,11 @@ public class XUtils3ImageLoader extends ImageLoader<ImageView, ImageView> {
 //                .setSize(width, height).setCrop(true)
 //                .setUseMemCache(false).build();
 //        x.image().bind(imageView, "file://" + path, options);
+    }
+
+    @Override
+    public ImageView onCreatePreviewItemView(Context mCxt) {
+        return null;
     }
 
     @Override

@@ -23,7 +23,7 @@
         android:background="#cc22292c"
         android:visibility="gone">
 
-        <com.lzy.imagepicker.view.SuperCheckBox
+        <cc.dagger.photopicker.view.SuperCheckBox
             android:id="@+id/cb_origin"
             style="@style/SuperCheckboxTheme"
             android:layout_width="wrap_content"

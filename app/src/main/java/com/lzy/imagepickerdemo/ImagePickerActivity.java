@@ -20,11 +20,7 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.bean.ImageItem;
-import com.lzy.imagepicker.loader.GlideImageLoader;
-import com.lzy.imagepicker.ui.ImageGridActivity;
-import com.lzy.imagepicker.view.CropImageView;
+import com.lzy.imagepickerdemo.imageloader.GlideImageLoader;
 import com.lzy.imagepickerdemo.imageloader.PicassoImageLoader;
 import com.lzy.imagepickerdemo.imageloader.UILImageLoader;
 import com.lzy.imagepickerdemo.imageloader.XUtils3ImageLoader;
@@ -32,6 +28,11 @@ import com.lzy.imagepickerdemo.wxdemo.WxDemoActivity;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cc.dagger.photopicker.ImagePicker;
+import cc.dagger.photopicker.bean.ImageItem;
+import cc.dagger.photopicker.ui.ImageGridActivity;
+import cc.dagger.photopicker.view.CropImageView;
 
 /**
  * ================================================

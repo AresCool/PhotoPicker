@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<manifest package="com.lzy.imagepickerdemo"
-          xmlns:android="http://schemas.android.com/apk/res/android">
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.lzy.imagepickerdemo">
+
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
     <application
         android:allowBackup="true"
@@ -10,16 +13,24 @@
         android:theme="@style/AppTheme">
         <activity android:name=".ImagePickerActivity">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
+                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER"/>
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".wxdemo.WxDemoActivity"/>
+
+        <activity android:name=".wxdemo.WxDemoActivity" />
 
         <activity
-            android:name="com.lzy.imagepicker.ui.ImagePreviewDelActivity"
-            android:theme="@style/ImagePickerThemeFullScreen"/>
+            android:name="cc.dagger.photopicker.ui.ImagePreviewDelActivity"
+            android:theme="@style/ImagePickerThemeFullScreen" />
+        <activity
+            android:name="cc.dagger.photopicker.ui.ImageGridActivity"
+            android:theme="@style/ImagePickerThemeFullScreen" />
+
+        <activity
+            android:name="cc.dagger.photopicker.ui.ImagePreviewActivity"
+            android:theme="@style/ImagePickerThemeFullScreen" />
     </application>
 
 </manifest>

@@ -8,12 +8,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 
-import com.lzy.imagepicker.ImagePicker;
-import com.lzy.imagepicker.bean.ImageItem;
 import com.lzy.imagepickerdemo.R;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import cc.dagger.photopicker.ImagePicker;
+import cc.dagger.photopicker.bean.ImageItem;
 
 /**
  * ================================================
