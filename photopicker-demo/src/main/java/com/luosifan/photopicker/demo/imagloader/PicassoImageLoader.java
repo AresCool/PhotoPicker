@@ -22,7 +22,7 @@ public class PicassoImageLoader extends PhotoPickerImageLoader<ImageView, PhotoV
 
     public PicassoImageLoader() {
         this.holderResId = com.luosifan.photopicker.R.drawable.default_error;
-        this.mConfig = Bitmap.Config.ARGB_8888;
+        this.mConfig = Bitmap.Config.RGB_565;
     }
 
     @Override
@@ -66,6 +66,8 @@ public class PicassoImageLoader extends PhotoPickerImageLoader<ImageView, PhotoV
         Picasso.with(view.getContext())
                 .load(Uri.fromFile(new File(imagePath)))
                 .resize(width, height)
+                // 加载大图不使用内存缓存。
+                .skipMemoryCache()
                 .into(view);
     }
 }
