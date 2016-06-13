@@ -24,11 +24,12 @@
 
         <activity
             android:name="cc.dagger.photopicker.MultiImageSelectorActivity"
-            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"
             android:theme="@style/NO_ACTIONBAR" />
 
         <activity
             android:name="cc.dagger.photopicker.PhotoPreviewActivity"
+            android:screenOrientation="portrait"
             android:theme="@style/NO_ACTIONBAR"/>
     </application>
 

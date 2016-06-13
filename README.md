@@ -15,6 +15,7 @@
 ![](https://github.com/wzfu/PhotoPicker/raw/1.0/renderings/image_04.png)
 
 ## 使用介绍
+
 ```
 compile 'cc.dagger:photopicker:1.0'
 ```
