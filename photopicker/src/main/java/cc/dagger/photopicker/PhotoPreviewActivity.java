@@ -12,6 +12,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.Toolbar;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -173,9 +174,14 @@ public class PhotoPreviewActivity extends PreviewBaseActivity {
         // 根据原始照片宽高缩放
         int imageWidth = options.outWidth;
         int imageHeight = options.outHeight;
-        imageWidth = imageWidth > screenWidth ? screenWidth / 2 : imageWidth;
-        imageHeight = imageHeight > screenHeight ? screenHeight / 2 : imageHeight;
-        point.set(imageWidth, imageHeight);
+
+        int newW = imageWidth, newH = imageHeight;
+
+        if (imageWidth > screenWidth  && imageHeight > screenHeight) {
+            newW = screenWidth;
+            newH = newW * imageHeight / imageWidth;
+        }
+        point.set(newW, newH);
         return point;
     }
 }

@@ -1,12 +1,12 @@
 apply plugin: 'com.android.library'
 
 android {
-    compileSdkVersion 23
-    buildToolsVersion "23.0.3"
+    compileSdkVersion setup.compileSdk
+    buildToolsVersion setup.buildTools
 
     defaultConfig {
-        minSdkVersion 14
-        targetSdkVersion 23
+        minSdkVersion setup.minSdk
+        targetSdkVersion setup.targetSdk
         versionCode 1
         versionName "1.0"
     }
@@ -16,6 +16,10 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    lintOptions{
+        abortOnError false
+        warning 'InvalidPackage'
+    }
 }
 
 dependencies {
@@ -24,3 +28,5 @@ dependencies {
     compile "com.android.support:appcompat-v7:${versions.supportLib}"
     compile "com.android.support:recyclerview-v7:${versions.supportLib}"
 }
+
+apply from: '../bintray.gradle'
