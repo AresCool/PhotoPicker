@@ -16,8 +16,81 @@
 
 ## 使用介绍
 
-- Applicaton 初始化
-````
+- Application 配置
+
+```
 PhotoPicker.init(ImageLoader, null);
- - [PicassoImageLoader](/sample/src/main/java/cc/dagger/photopicker/demo/imagloader/PicassoImageLoader.java)
+```
+
+- AndroidManifest 配置
+
+```
+<activity
+    android:name="cc.dagger.photopicker.MultiImageSelectorActivity"
+    android:screenOrientation="portrait"
+    android:theme="@style/NO_ACTIONBAR" />
+
+<activity
+    android:name="cc.dagger.photopicker.PhotoPreviewActivity"
+    android:screenOrientation="portrait"
+    android:theme="@style/NO_ACTIONBAR"/>
+```
+
+- 选择照片
+
+```
+// 单选
+PhotoPicker.load()
+        .filter(PhotoFilter) // 照片属性过滤
+        .gridColumns(4) // 照片列表显示列数
+        .showCamera(false)
+        .single()
+        .start(Activity/Fragment); // 从Fragment、Activity中启动
+
+
+// 多选
+PhotoPicker.load()
+        .filter(PhotoFilter) // 照片属性过滤
+        .gridColumns(4) // 照片列表显示列数
+        .showCamera(true)
+        .multi()
+        .maxPickSize(9) // 最大选择数
+        .selectedPaths(ArrayList<String>) // 已选择的照片地址
+        .start(Activity/Fragment); // 从Fragment、Activity中启动
+
+// 接收选择的照片
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == PhotoPicker.REQUEST_SELECTED) {
+        if (resultCode == RESULT_OK) {
+            ArrayList<String> paths = data.getStringArrayListExtra(PhotoPicker.EXTRA_RESULT);
+            // ...
+        }
+    }
+}
+
+```
+
+- 预览照片
+
+```
+
+PhotoPicker.preview()
+        .paths(ArrayList<String>)
+        .currentItem(0)
+        .start(Activity、Fragment);
+
+// 预览后返回照片地址
+@Override
+protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+    super.onActivityResult(requestCode, resultCode, data);
+    if (requestCode == PhotoPicker.REQUEST_PREVIEW) {
+        if (resultCode == RESULT_OK) {
+            ArrayList<String> paths = data.getStringArrayListExtra(PhotoPicker.PATHS);
+            // ...
+        }
+    }
+}
+
 ```
