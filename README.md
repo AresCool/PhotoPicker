@@ -15,16 +15,22 @@
 ![](https://github.com/wzfu/PhotoPicker/raw/1.0/renderings/image_04.png)
 
 ## 使用介绍
+```
+compile 'cc.dagger:photopicker:1.0'
+```
 
 - Application 配置
 
-```
+```java
 PhotoPicker.init(ImageLoader, null);
 ```
 
 - AndroidManifest 配置
 
-```
+```java
+<uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+<uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
 <activity
     android:name="cc.dagger.photopicker.MultiImageSelectorActivity"
     android:screenOrientation="portrait"
@@ -38,7 +44,7 @@ PhotoPicker.init(ImageLoader, null);
 
 - 选择照片
 
-```
+```java
 // 单选
 PhotoPicker.load()
         .filter(PhotoFilter) // 照片属性过滤
@@ -69,13 +75,11 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         }
     }
 }
-
 ```
 
 - 预览照片
 
-```
-
+```java
 PhotoPicker.preview()
         .paths(ArrayList<String>)
         .currentItem(0)
@@ -92,5 +96,4 @@ protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         }
     }
 }
-
 ```
