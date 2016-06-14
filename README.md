@@ -2,7 +2,7 @@
 
 > 基于 [lovetuzitong/MultiImageSelector](https://github.com/lovetuzitong/MultiImageSelector) 修改的一个照片选择库。
 
-```
+```gradle
 compile 'cc.dagger:photopicker:1.0'
 ```
 
@@ -12,7 +12,7 @@ compile 'cc.dagger:photopicker:1.0'
 - 照片尺寸、Gif过滤
 - 运行时权限检查
 
-<embed type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" wmode="transparent" quality="high" height="480" width="480" src="http://video.weibo.com/player/1034:d894c9d8478c595aa7ddb832084e4437/v.swf"/>
+[Demo Video](http://weibo.com/p/230444d894c9d8478c595aa7ddb832084e4437)
 
 ## 使用介绍
 
@@ -24,7 +24,7 @@ PhotoPicker.init(ImageLoader, null);
 
 - AndroidManifest 配置
 
-```java
+```xml
 <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
 
@@ -41,7 +41,7 @@ PhotoPicker.init(ImageLoader, null);
 
 - 选择照片
 
-```java
+``` java
 // 单选
 PhotoPicker.load()
         .filter(PhotoFilter) // 照片属性过滤
