@@ -2,23 +2,19 @@
 
 > 基于 [lovetuzitong/MultiImageSelector](https://github.com/lovetuzitong/MultiImageSelector) 修改的一个照片选择库。
 
+```
+compile 'cc.dagger:photopicker:1.0'
+```
+
 功能：
 
 - 支持主流图片加载库
 - 照片尺寸、Gif过滤
 - 运行时权限检查
 
-## 截图
-![](http://ww1.sinaimg.cn/mw690/006fnUCcgw1f4tn5o3110j308c0etjsd.jpg)
-![](https://github.com/wzfu/PhotoPicker/raw/1.0/renderings/image_02.png)
-![](https://github.com/wzfu/PhotoPicker/raw/1.0/renderings/image_03.png)
-![](https://github.com/wzfu/PhotoPicker/raw/1.0/renderings/image_04.png)
+<embed type="application/x-shockwave-flash" allowscriptaccess="always" allowfullscreen="true" wmode="transparent" quality="high" height="480" width="480" src="http://video.weibo.com/player/1034:d894c9d8478c595aa7ddb832084e4437/v.swf"/>
 
 ## 使用介绍
-
-```
-compile 'cc.dagger:photopicker:1.0'
-```
 
 - Application 配置
 
