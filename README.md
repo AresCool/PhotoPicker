@@ -1,10 +1,13 @@
-# PhotoPicker
+# ~~PhotoPicker~~
 
-> 基于 [lovetuzitong/MultiImageSelector](https://github.com/lovetuzitong/MultiImageSelector) 修改的一个照片选择库。
+这个类库已经暂停维护，现版本尚未兼容Android7.0+， 推荐使用 [Bilibili / boxing](https://github.com/Bilibili/boxing)。
+
+> ~~基于 [lovetuzitong/MultiImageSelector](https://github.com/lovetuzitong/MultiImageSelector) 修改的一个照片选择库。~~
 
 ```gradle
 compile 'cc.dagger:photopicker:1.0'
 ```
+
 
 功能：
 
